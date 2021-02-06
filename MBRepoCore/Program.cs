@@ -89,11 +89,11 @@ namespace MBRepoCore
             //--------------------------------------------------
             //Get many
             //--------------------------------------------------
-            //var R = repo.GetMany<Client>(typeof(Client).GetProperty("Ville").Name, "Agadir");
-            //foreach (var c in R)
-            //{
-            //    Console.WriteLine($"{c.ID} {c.Nom} {c.Ville}");
-            //}
+            var R = repo.GetMany<Client>(typeof(Client).GetProperty("Ville").Name, "Agadir");
+            foreach (var c in R)
+            {
+                Console.WriteLine($"{c.Id} {c.Nom} {c.Ville}");
+            }
 
 
             //--------------------------------------------------
@@ -113,17 +113,17 @@ namespace MBRepoCore
             //--------------------------------------------------
             //Eager loading as Join
             //--------------------------------------------------
-            var db = new GVentesContext();
+            //var db = new GVentesContext();
 
-            var R = db.Clients.Include(cmd => cmd.Commandes).AsEnumerable();
+            //var R = db.Clients.Include(cmd => cmd.Commandes).AsEnumerable();
 
-            foreach (var c in R)
-            {
-                foreach (var cmd in c.Commandes)
-                {
-                    Console.WriteLine($"{cmd.Id} {c.Id} {c.Nom} {cmd.Qte * cmd.Pru}");
-                }
-            }
+            //foreach (var c in R)
+            //{
+            //    foreach (var cmd in c.Commandes)
+            //    {
+            //        Console.WriteLine($"{cmd.Id} {c.Id} {c.Nom} {cmd.Qte * cmd.Pru}");
+            //    }
+            //}
 
             Console.ReadKey();
         }
