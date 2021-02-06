@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30907.101
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MBRepoCore", "MBRepoCore\MBRepoCore.csproj", "{A444D06D-37BD-4AE3-9387-CD95412085D6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A444D06D-37BD-4AE3-9387-CD95412085D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A444D06D-37BD-4AE3-9387-CD95412085D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A444D06D-37BD-4AE3-9387-CD95412085D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A444D06D-37BD-4AE3-9387-CD95412085D6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AF30A1E9-6925-460E-981A-F84B539469E6}
+	EndGlobalSection
+EndGlobal
