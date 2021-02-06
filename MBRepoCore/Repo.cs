@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
-namespace MBRepo
+namespace MBRepoCore
 {
 
     /// <typeparam name="TContext"></typeparam>

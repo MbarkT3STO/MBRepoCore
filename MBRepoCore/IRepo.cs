@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
-namespace MBRepo
+namespace MBRepoCore
 {
     interface IRepo<Tcontext> where  Tcontext : DbContext, new()
     {
