@@ -42,6 +42,19 @@ namespace MBRepoCore
             _LazyLoaded                               = LazyLoaded;
             _Context.ChangeTracker.LazyLoadingEnabled = LazyLoaded;
         }
+        public Repo(DbContext context,bool LazyLoaded)
+        {
+            _Context                                  = context;
+            _LazyLoaded                               = LazyLoaded;
+            _Context.ChangeTracker.LazyLoadingEnabled = LazyLoaded;
+        }
+        public Repo(DbContextOptionsBuilder<TContext> optionsBuilder,bool LazyLoaded)
+        {
+            //_Context = new TContext(optionsBuilder);
+            _Context = (TContext)Activator.CreateInstance(typeof(TContext), optionsBuilder) as TContext;
+            _LazyLoaded = LazyLoaded;
+            _Context.ChangeTracker.LazyLoadingEnabled = LazyLoaded;
+        }
 
 
         #endregion
