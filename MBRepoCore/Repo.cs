@@ -4,12 +4,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace MBRepoCore
 {
 
-    /// <typeparam name="TContext"></typeparam>
-    public sealed class Repo<TContext> : IRepo<TContext>, IDisposable where TContext : DbContext, new()
+    /// <typeparam name="TContext">Entity Framework DbContext and should be inherited from <typeparamref name="IDbContextFactory"/></typeparam>
+    public sealed class Repo<TContext> : IRepo<TContext>, IDisposable where TContext : DbContext, IDbContextFactory<TContext>, new()
     {
 
         
@@ -48,11 +49,10 @@ namespace MBRepoCore
             _LazyLoaded                               = LazyLoaded;
             _Context.ChangeTracker.LazyLoadingEnabled = LazyLoaded;
         }
-        public Repo(DbContextOptionsBuilder<TContext> optionsBuilder,bool LazyLoaded)
+        public Repo(IConfiguration configuration, string connectionString,bool LazyLoaded)
         {
-            //_Context = new TContext(optionsBuilder);
-            _Context = (TContext)Activator.CreateInstance(typeof(TContext), optionsBuilder) as TContext;
-            _LazyLoaded = LazyLoaded;
+            _Context                                  = new TContext().GetInstance(configuration, connectionString);
+            _LazyLoaded                               = LazyLoaded;
             _Context.ChangeTracker.LazyLoadingEnabled = LazyLoaded;
         }
 

@@ -1,13 +1,15 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.Extensions.Configuration;
 
 #nullable disable
 
 namespace MBRepoCore.Models
 {
-    public partial class GVentesContext : DbContext
+    public partial class GVentesContext : DbContext,IDbContextFactory<GVentesContext>
     {
+
         public GVentesContext()
         {
         }
@@ -15,6 +17,14 @@ namespace MBRepoCore.Models
         public GVentesContext(DbContextOptions<GVentesContext> options)
             : base(options)
         {
+        }
+
+        public GVentesContext GetInstance(IConfiguration configuration, string connectionString)
+        {
+            var optionsBuilder = new DbContextOptionsBuilder<GVentesContext>();
+            optionsBuilder.UseSqlServer(connectionString);
+
+            return new GVentesContext(optionsBuilder.Options);
         }
 
         public virtual DbSet<ArchiveClient> ArchiveClients { get; set; }
