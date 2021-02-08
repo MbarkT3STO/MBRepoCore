@@ -11,8 +11,9 @@ namespace MBRepoCore
         /// <summary>
         /// Get a new nstance from <typeparamref name="TContext"/>
         /// </summary>
-        /// <param name="configuration"></param>
-        /// <param name="connectionString"></param>
+        /// <param name="configuration">The <typeparamref name="IConfiguration"/> object </param>
+        /// <param name="connectionString">Connection string as Section from settings file or as string expression
+        /// </param>
         /// <returns></returns>
         TContext GetInstance(IConfiguration configuration, string connectionString);
 
