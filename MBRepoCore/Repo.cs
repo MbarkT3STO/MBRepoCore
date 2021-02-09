@@ -9,7 +9,10 @@ using Microsoft.Extensions.Configuration;
 namespace MBRepoCore
 {
 
-    /// <typeparam name="TContext">Entity Framework DbContext and should be inherited from <typeparamref name="IDbContextFactory"/></typeparam>
+    /// <summary>
+    ///Full generic repository
+    /// </summary>
+    /// <typeparam name="TContext">The <b><see cref="DbContext"/></b> type</typeparam>
     public sealed class Repo<TContext> : IRepo<TContext>, IDisposable where TContext : DbContext, IDbContextFactory<TContext>, new()
     {
 
@@ -36,19 +39,46 @@ namespace MBRepoCore
 
         #region Construcors
 
-
+        /// <summary>
+        /// Use this constructor in Winform or console application
+        /// </summary>
+        /// <param name="LazyLoaded">Determine if lazy loading whether active or not</param>
         public Repo(bool LazyLoaded)
         {
             _Context                                  = new TContext();
             _LazyLoaded                               = LazyLoaded;
             _Context.ChangeTracker.LazyLoadingEnabled = LazyLoaded;
         }
+
+        /// <summary>
+        /// Use this constructor in both Winform or console or ASP.net Core application
+        /// </summary>
+        /// <param name="context">Object from <b><see cref="TContext"/></b></param>
+        /// <param name="LazyLoaded">Determine if lazy loading whether active or not</param>
         public Repo(DbContext context,bool LazyLoaded)
         {
             _Context                                  = context;
             _LazyLoaded                               = LazyLoaded;
             _Context.ChangeTracker.LazyLoadingEnabled = LazyLoaded;
         }
+
+        /// <summary>
+        /// Use this constructor in ASP.net Core application
+        /// </summary>
+        /// <param name="configuration">An <b><see cref="IConfiguration"/></b> object</param>
+        /// <param name="connectionString">
+        /// <para>The connection string for your SQL Server database</para>
+        ///<example>
+        /// <para><b>Example</b></para>
+        /// 
+        /// <para>The connection string can be :</para>
+        ///<code>Server=myServerAddress;Database=myDataBase;Trusted_Connection=True;</code>
+        /// 
+        /// <para>Or can be :</para>
+        /// <code>configuration.GetConnectionString("DB connection part in connectionStrings inside appSettings.json")</code>
+        /// </example>
+        /// </param>
+        /// <param name="LazyLoaded">Determine if lazy loading whether active or not</param>
         public Repo(IConfiguration configuration, string connectionString,bool LazyLoaded)
         {
             _Context                                  = new TContext().GetInstance(configuration, connectionString);
@@ -130,8 +160,8 @@ namespace MBRepoCore
             /// Get Many records from a table based on a property value
             /// </summary>
             /// <typeparam name="TEntity">The entity to select from</typeparam>
-            /// <param name="prop">The property used in the condition</param>
-            /// <param name="val">The value that will used in the search</param>
+            /// <param name="prop">The property to be used in the condition</param>
+            /// <param name="val">The value to be used in the search</param>
             /// <returns></returns>
             public IEnumerable<TEntity> GetMany<TEntity>(string prop, object val) where TEntity : class
             {

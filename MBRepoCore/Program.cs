@@ -1,129 +1,128 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using MBRepoCore.Models;
+using System.Threading.Tasks;
+using MBRepoCore.Models_Example;
 using Microsoft.EntityFrameworkCore;
 
 namespace MBRepoCore
 {
     class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
-            var repo = new Repo<GVentesContext>(false);
+            var repo = new Repo<SchoolContext>(false);
 
             //----------------
-            //Get COMMANDES
+            //Get Students
             //----------------
-            //var cmds = repo.GetAll<Commande>();
-            //foreach (var c in cmds)
-            //{
-            //    Console.WriteLine($"ID : {c.ID}, Client : {c.CLT}, Total : {c.QTE * c.PRU}");
-            //}
+            var students = repo.GetAll<Student>();
+            foreach (var s in students)
+            {
+                Console.WriteLine($"ID : {s.ID}, Name : {s.Name}, Branche : {s.BrancheID}");
+            }
 
 
-            //----------------
-            //Get CLIENTS
-            //----------------
-            //var clts = repo.GetAll<Client>();
-            //foreach (var c in clts)
-            //{
-            //    Console.WriteLine($"Client Name : {c.Nom} {c.Prenom}");
-            //}
 
 
 
             //----------------
-            //GeT ONE Client
+            //GeT ONE Student
             //----------------
-            //var C = repo.GetOne<Client>("CLT-5");
-            //Console.WriteLine($"{C.ID} {C.Nom} {C.Prenom} {C.Ville}");
+            //var s = repo.GetOne<Student>("S-3");
+            //Console.WriteLine($"{s.ID} {s.Name} {s.BrancheID}");
 
 
 
 
             //-------------------------------------------
-            //Insert one client record into a table
+            //Insert one Student record into a student table
             //-------------------------------------------
-            //var clt = new Client()
-            //          {
-            //              ID                = "CLT-XX",
-            //              Nom               = "xxxx",
-            //              Prenom            = "xxxx",
-            //              Ville             = "Agadir",
-            //              Date_De_Naissance = DateTime.Today
-            //          };
-            //repo.Insert(clt);
+            //var s = new Student()
+            //        {
+            //            ID        = "S-XX",
+            //            Name      = "Mohammad",
+            //            BrancheID = "IT",
+            //        };
+
+            ////Can use
+            ////repo.Insert<Student>(s);
+
+            //Or use
+            //repo.Insert(s);
+
+            //repo.Save();
+            //Console.WriteLine("Done !");
+
+
+            //--------------------------------------------------
+            //Insert a range of Branches into branche table
+            //--------------------------------------------------
+
+            //var branches = new List<Branche>()
+            //               {
+            //                   new Branche() {ID = "IT", Title    = "Information Technology"},
+            //                   new Branche() {ID = "MATH", Title  = "Maths"},
+            //                   new Branche() {ID = "HS", Title    = "History"},
+            //                   new Branche() {ID = "PHILO", Title = "Philosophy"},
+            //               };
+
+            //await repo.InsertRangeAsync(branches);
+            //repo.Save();
+            //Console.WriteLine("Done !");
+
+
+
+
+            //--------------------------------------------------
+            //Insert a range of Students into student table
+            //--------------------------------------------------
+            //var students = new List<Student>()
+            //               {
+            //                   new Student()
+            //                   {
+            //                       ID        = "S-1",
+            //                       Name       = "Mohammad",
+            //                       BrancheID = "IT",
+            //                   },  
+            //                   new Student()
+            //                   {
+            //                       ID        = "S-2",
+            //                       Name       = "Ahmed",
+            //                       BrancheID = "HS",
+            //                   },  
+            //                   new Student()
+            //                   {
+            //                       ID        = "S-3",
+            //                       Name       = "Ibtissam",
+            //                       BrancheID = "IT",
+            //                   },
+            //                   new Student()
+            //                   {
+            //                       ID        = "S-4",
+            //                       Name       = "kARIM",
+            //                       BrancheID = "MATH",
+            //                   },
+
+            //               };
+            //await repo.InsertRangeAsync(students);
             //repo.Save();
             //Console.WriteLine("Done !");
 
 
 
             //--------------------------------------------------
-            //Insert a range of client records into Client table
+            //Get many | search by a custom property
             //--------------------------------------------------
-            // var clts = new List<Client>()
-            //            {
-            //                new Client()
-            //                {
-            //                    ID                = "CLT-X",
-            //                    Nom               = "xxxx",
-            //                    Prenom            = "xxxx",
-            //                    Ville             = "Casa",
-            //                    Date_De_Naissance = DateTime.Today
-            //                },
-            //                new Client()
-            //                {
-            //                    ID                = "CLT-XX",
-            //                    Nom               = "xxxx",
-            //                    Prenom            = "xxxx",
-            //                    Ville             = "Agadir",
-            //                    Date_De_Naissance = DateTime.Today
-            //                }
-            //            };
-            //await repo.InsertRangeAsync(clts);
-            // repo.Save();
-            // Console.WriteLine("Done !");
-
-
-
-            //--------------------------------------------------
-            //Get many
-            //--------------------------------------------------
-            var R = repo.GetMany<Client>(typeof(Client).GetProperty("Ville").Name, "Agadir");
-            foreach (var c in R)
-            {
-                Console.WriteLine($"{c.Id} {c.Nom} {c.Ville}");
-            }
-
-
-            //--------------------------------------------------
-            //Contains
-            //--------------------------------------------------
-            //var R = repo.GetOne<Client>("CLT-9");
-            //Client c = new Client()
-            //           {
-            //               ID                = R.ID, Nom = R.Nom, Prenom = R.Prenom, Ville = R.Ville,
-            //               Date_De_Naissance = R.Date_De_Naissance
-            //           };
-            //Console.WriteLine(await repo.ContainsAsync<Client,ClientComparer>(c));
-
-
-
-
-            //--------------------------------------------------
-            //Eager loading as Join
-            //--------------------------------------------------
-            //var db = new GVentesContext();
-
-            //var R = db.Clients.Include(cmd => cmd.Commandes).AsEnumerable();
-
-            //foreach (var c in R)
+            //var R = repo.GetMany<Student>(typeof(Student).GetProperty("BrancheID").Name, "IT");
+            //foreach (var s in R)
             //{
-            //    foreach (var cmd in c.Commandes)
-            //    {
-            //        Console.WriteLine($"{cmd.Id} {c.Id} {c.Nom} {cmd.Qte * cmd.Pru}");
-            //    }
+            //    Console.WriteLine($"{s.ID} {s.Name} {s.BrancheID}");
             //}
+
+
+
+
 
             Console.ReadKey();
         }
