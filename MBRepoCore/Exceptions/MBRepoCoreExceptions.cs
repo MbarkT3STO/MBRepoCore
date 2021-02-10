@@ -1,15 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace MBRepoCore.Exceptions
 {
-    class MBRepoCoreExceptions
+    public class MBRepoCoreExceptions
     {
 
-        class NotMathDBContext<TContext_A, TContextB>:Exception
-        {
-            public NotMathDBContext():base($"The {typeof(TContext_A).Name} does not match with {typeof(TContextB).Name}") { }
+       public class NotMathDBContext:Exception
+       {
+           public NotMathDBContext(Type TContextType, Type RepoContextType) :
+               base($"The {TContextType.Name} does not match with {RepoContextType.Name}")
+            {
+                
+            }
         }
 
     }

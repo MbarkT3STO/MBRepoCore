@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MBRepoCore.Exceptions;
 using MBRepoCore.Models_Example;
 using MBRepoCore.Repo;
 using Microsoft.EntityFrameworkCore;
@@ -22,7 +23,6 @@ namespace MBRepoCore
             {
                 Console.WriteLine($"ID : {s.ID}, Name : {s.Name}, Branche : {s.BrancheID}");
             }
-
 
 
 

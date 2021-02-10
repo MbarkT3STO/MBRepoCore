@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Microsoft.EntityFrameworkCore;
 
-using Microsoft.EntityFrameworkCore;
-
-namespace MBRepoCore
+namespace MBRepoCore.UOW
 {
     interface IUow<TContext> where TContext : DbContext, IDbContextFactory<TContext>, new()
 
