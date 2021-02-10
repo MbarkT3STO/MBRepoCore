@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
-namespace MBRepoCore
+namespace MBRepoCore.Repo
 {
 
     /// <summary>
@@ -16,15 +15,15 @@ namespace MBRepoCore
     public sealed class Repo<TContext> : IRepo<TContext>, IDisposable where TContext : DbContext, IDbContextFactory<TContext>, new()
     {
 
-        
+
 
 
         #region properties
 
         /// <summary>
-        /// Private DBContext property
+        /// A <b><see cref="TContext"/></b> object as property
         /// </summary>
-        private DbContext _Context { get; } = null;
+        public DbContext Context { get; } = null;
 
 
         /// <summary>
@@ -45,9 +44,9 @@ namespace MBRepoCore
         /// <param name="LazyLoaded">Determine if lazy loading whether active or not</param>
         public Repo(bool LazyLoaded)
         {
-            _Context                                  = new TContext();
+            Context                                  = new TContext();
             _LazyLoaded                               = LazyLoaded;
-            _Context.ChangeTracker.LazyLoadingEnabled = LazyLoaded;
+            Context.ChangeTracker.LazyLoadingEnabled = LazyLoaded;
         }
 
         /// <summary>
@@ -57,9 +56,9 @@ namespace MBRepoCore
         /// <param name="LazyLoaded">Determine if lazy loading whether active or not</param>
         public Repo(DbContext context,bool LazyLoaded)
         {
-            _Context                                  = context;
+            Context                                  = context;
             _LazyLoaded                               = LazyLoaded;
-            _Context.ChangeTracker.LazyLoadingEnabled = LazyLoaded;
+            Context.ChangeTracker.LazyLoadingEnabled = LazyLoaded;
         }
 
         /// <summary>
@@ -81,9 +80,9 @@ namespace MBRepoCore
         /// <param name="LazyLoaded">Determine if lazy loading whether active or not</param>
         public Repo(IConfiguration configuration, string connectionString,bool LazyLoaded)
         {
-            _Context                                  = new TContext().GetInstance(configuration, connectionString);
+            Context                                  = new TContext().GetInstance(configuration, connectionString);
             _LazyLoaded                               = LazyLoaded;
-            _Context.ChangeTracker.LazyLoadingEnabled = LazyLoaded;
+            Context.ChangeTracker.LazyLoadingEnabled = LazyLoaded;
         }
 
 
@@ -106,7 +105,7 @@ namespace MBRepoCore
             /// <returns></returns>
             public IEnumerable<TEntity> GetAll<TEntity>() where TEntity : class
             {
-                return _Context.Set<TEntity>().ToList();
+                return Context.Set<TEntity>().ToList();
             }
 
 
@@ -132,7 +131,7 @@ namespace MBRepoCore
             /// <returns></returns>
             public TEntity GetOne<TEntity>(object pkValue) where TEntity : class
             {
-                return _Context.Set<TEntity>().Find(pkValue);
+                return Context.Set<TEntity>().Find(pkValue);
             }
 
 
@@ -165,7 +164,7 @@ namespace MBRepoCore
             /// <returns></returns>
             public IEnumerable<TEntity> GetMany<TEntity>(string prop, object val) where TEntity : class
             {
-                return _Context.Set<TEntity>().AsEnumerable()
+                return Context.Set<TEntity>().AsEnumerable()
                                .Where(x => typeof(TEntity).GetProperty(prop).GetValue(x, null).ToString()
                                                           .Contains(val.ToString())).ToList();
             }
@@ -189,7 +188,7 @@ namespace MBRepoCore
         /// <returns></returns>
         public bool Contains<TEntity>(TEntity obj) where TEntity : class
         {
-            return _Context.Set<TEntity>().AsEnumerable().Contains(obj);
+            return Context.Set<TEntity>().AsEnumerable().Contains(obj);
         }
 
 
@@ -218,7 +217,7 @@ namespace MBRepoCore
             where TEntity : class
             where TEntityComparer : IEqualityComparer<TEntity>, new()
         {
-            return _Context.Set<TEntity>().AsEnumerable().Contains(obj,new TEntityComparer() as IEqualityComparer<TEntity>);
+            return Context.Set<TEntity>().AsEnumerable().Contains(obj,new TEntityComparer() as IEqualityComparer<TEntity>);
         }
 
 
@@ -252,7 +251,7 @@ namespace MBRepoCore
         /// <param name="record">The record to be added</param>
         public void Insert<TEntity>(TEntity record) where TEntity : class
             {
-                _Context.Set<TEntity>().Add(record);
+                Context.Set<TEntity>().Add(record);
             }
 
 
@@ -276,7 +275,7 @@ namespace MBRepoCore
             /// <param name="records">Records to be inserted</param>
             public void InsertRange<TEntity>(List<TEntity> records) where TEntity : class
             {
-                _Context.Set<TEntity>().AddRange(records);
+                Context.Set<TEntity>().AddRange(records);
             }
 
 
@@ -307,7 +306,7 @@ namespace MBRepoCore
             /// <param name="record">The record to be removed</param>
             public void Delete<TEntity>(TEntity record) where TEntity : class
             {
-                this._Context.Set<TEntity>().Remove(record);
+                this.Context.Set<TEntity>().Remove(record);
             }
 
 
@@ -333,7 +332,7 @@ namespace MBRepoCore
             /// </summary>
             public void Save()
             {
-                _Context.SaveChanges();
+                Context.SaveChanges();
             }
 
 
@@ -358,7 +357,7 @@ namespace MBRepoCore
                 {
                     if (disposing)
                     {
-                        _Context.Dispose();
+                        Context.Dispose();
                     }
                 }
 

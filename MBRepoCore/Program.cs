@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MBRepoCore.Models_Example;
+using MBRepoCore.Repo;
 using Microsoft.EntityFrameworkCore;
 
 namespace MBRepoCore
