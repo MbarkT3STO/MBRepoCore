@@ -9,9 +9,11 @@ namespace MBRepoCore.Factories
 
     {
 
-        TContext GetInstance<TContext>() where TContext:DbContext,new()
+        TContext GetInstance<TContext>(DbContextOptions options) where TContext:DbContext
         {
-            return new TContext();
+            TContext context = (TContext) Activator.CreateInstance(typeof(TContext), new object[] {options});
+
+            return context;
         }
 
     }

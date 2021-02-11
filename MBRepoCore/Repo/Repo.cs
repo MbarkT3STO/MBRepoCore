@@ -12,7 +12,7 @@ namespace MBRepoCore.Repo
     ///Full generic repository
     /// </summary>
     /// <typeparam name="TContext">The <b><see cref="DbContext"/></b> type</typeparam>
-    public sealed class Repo<TContext> : IRepo<TContext>, IDisposable where TContext : DbContext, IDbContextFactory<TContext>, new()
+    public sealed class Repo<TContext> : IRepo<TContext>, IDisposable where TContext : DbContext,IDbContextFactory<TContext>, new()
     {
 
 
@@ -86,24 +86,31 @@ namespace MBRepoCore.Repo
         }
 
 
+        //public Repo(IConfiguration configuration, string connectionString, bool LazyLoaded)
+        //{
+        //    Context                                  = new TContext().GetInstance(configuration, connectionString);
+        //    _LazyLoaded                              = LazyLoaded;
+        //    Context.ChangeTracker.LazyLoadingEnabled = LazyLoaded;
+        //}
+
         #endregion
 
 
 
-        
+
         #region Routines
 
-        
+
 
 
         #region Select
 
-            /// <summary>
-            /// Get All records from a table
-            /// </summary>
-            /// <typeparam name="TEntity">The entity to select from</typeparam>
-            /// <returns></returns>
-            public IEnumerable<TEntity> GetAll<TEntity>() where TEntity : class
+        /// <summary>
+        /// Get All records from a table
+        /// </summary>
+        /// <typeparam name="TEntity">The entity to select from</typeparam>
+        /// <returns></returns>
+        public IEnumerable<TEntity> GetAll<TEntity>() where TEntity : class
             {
                 return Context.Set<TEntity>().ToList();
             }
