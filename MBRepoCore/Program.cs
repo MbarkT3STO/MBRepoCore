@@ -16,33 +16,31 @@ namespace MBRepoCore
     {
         private static IConfiguration _configuration;
 
-
-        private static void configureServices(IServiceCollection services)
+        private static void ConfigureServices()
         {
             _configuration = new ConfigurationBuilder()
-                           .SetBasePath(Directory.GetParent(AppContext.BaseDirectory).FullName)
-                           .AddJsonFile("appsettings.json", false).Build();
+                            .SetBasePath(Directory.GetParent(AppContext.BaseDirectory).FullName)
+                            .AddJsonFile("appsettings.json", false).Build();
         }
 
         static async Task Main(string[] args)
         {
+            //Configure the DI
+            ConfigureServices();
 
 
+            //var repo = new Repo<SchoolContext>(false);
+            var repo = new Repo<SchoolContext>(_configuration.GetConnectionString("MBARKLap"), false);
 
-            Console.WriteLine(_configuration.GetConnectionString("InitialDB"));
-
-
-
-            var repo = new Repo<SchoolContext>(false);
 
             //----------------
             //Get Students
             //----------------
-            //var students = repo.GetAll<Student>();
-            //foreach (var s in students)
-            //{
-            //    Console.WriteLine($"ID : {s.ID}, Name : {s.Name}, Branche : {s.BrancheID}");
-            //}
+            var students = repo.GetAll<Student>();
+            foreach (var s in students)
+            {
+                Console.WriteLine($"ID : {s.ID}, Name : {s.Name}, Branche : {s.BrancheID}");
+            }
 
 
 
@@ -105,13 +103,13 @@ namespace MBRepoCore
             //                       ID        = "S-1",
             //                       Name       = "Mohammad",
             //                       BrancheID = "IT",
-            //                   },  
+            //                   },
             //                   new Student()
             //                   {
             //                       ID        = "S-2",
             //                       Name       = "Ahmed",
             //                       BrancheID = "HS",
-            //                   },  
+            //                   },
             //                   new Student()
             //                   {
             //                       ID        = "S-3",

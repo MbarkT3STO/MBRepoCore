@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MBRepoCore.Factories;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Configuration;
 
 namespace MBRepoCore.Repo
@@ -86,12 +88,12 @@ namespace MBRepoCore.Repo
         }
 
 
-        //public Repo(IConfiguration configuration, string connectionString, bool LazyLoaded)
-        //{
-        //    Context                                  = new TContext().GetInstance(configuration, connectionString);
-        //    _LazyLoaded                              = LazyLoaded;
-        //    Context.ChangeTracker.LazyLoadingEnabled = LazyLoaded;
-        //}
+        public Repo(string connectionString, bool LazyLoaded)
+        {
+            Context                                  = RepoContextFactory.GetInstance<TContext>(connectionString);
+            _LazyLoaded                              = LazyLoaded;
+            Context.ChangeTracker.LazyLoadingEnabled = LazyLoaded;
+        }
 
         #endregion
 

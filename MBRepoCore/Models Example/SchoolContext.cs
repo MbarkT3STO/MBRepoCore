@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using System.IO;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
 namespace MBRepoCore.Models_Example
@@ -25,7 +27,13 @@ namespace MBRepoCore.Models_Example
         {
             //Relace [MBARK\\MBARK_SERVER] by your server name
             //Relace [MySchoolDB] by your own/Suggested database name
-            optionsBuilder.UseSqlServer("Server=MBARK\\MBARK_SERVER;Database=MySchoolDB;Trusted_Connection=True;");
+            optionsBuilder.UseSqlServer("Server=MBARK-LAP;Database=MySchoolDB;Trusted_Connection=True;");
+
+            //IConfiguration configuration = new ConfigurationBuilder()
+            //                              .SetBasePath(Directory.GetParent(AppContext.BaseDirectory).FullName)
+            //                              .AddJsonFile("appsettings", false).Build();
+
+            //optionsBuilder.UseSqlServer(configuration.GetConnectionString("MBARKLap"));
         }
 
         public DbSet<Branche> Branches { get; set; }
