@@ -1,28 +1,48 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using MBRepoCore.Exceptions;
 using MBRepoCore.Models_Example;
 using MBRepoCore.Repo;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace MBRepoCore
 {
     class Program
     {
+        private static IConfiguration _configuration;
+
+
+        private static void configureServices(IServiceCollection services)
+        {
+            _configuration = new ConfigurationBuilder()
+                           .SetBasePath(Directory.GetParent(AppContext.BaseDirectory).FullName)
+                           .AddJsonFile("appsettings.json", false).Build();
+        }
+
         static async Task Main(string[] args)
         {
+
+
+
+            Console.WriteLine(_configuration.GetConnectionString("InitialDB"));
+
+
+
             var repo = new Repo<SchoolContext>(false);
 
             //----------------
             //Get Students
             //----------------
-            var students = repo.GetAll<Student>();
-            foreach (var s in students)
-            {
-                Console.WriteLine($"ID : {s.ID}, Name : {s.Name}, Branche : {s.BrancheID}");
-            }
+            //var students = repo.GetAll<Student>();
+            //foreach (var s in students)
+            //{
+            //    Console.WriteLine($"ID : {s.ID}, Name : {s.Name}, Branche : {s.BrancheID}");
+            //}
 
 
 
@@ -127,5 +147,6 @@ namespace MBRepoCore
 
             Console.ReadKey();
         }
+
     }
 }
