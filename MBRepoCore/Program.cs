@@ -30,7 +30,7 @@ namespace MBRepoCore
 
 
             //var repo = new Repo<SchoolContext>(false);
-            var repo = new Repo<SchoolContext>(_configuration.GetConnectionString("MBARKLap"), false);
+            var repo = new Repo<SchoolContext>(_configuration.GetConnectionString("MBARKServer"), false);
 
 
             //----------------

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MBRepoCore.Factories;
+using MBRepoCore.Models_Example;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Configuration;
@@ -14,7 +15,7 @@ namespace MBRepoCore.Repo
     ///Full generic repository
     /// </summary>
     /// <typeparam name="TContext">The <b><see cref="DbContext"/></b> type</typeparam>
-    public sealed class Repo<TContext> : IRepo<TContext>, IDisposable where TContext : DbContext,IDbContextFactory<TContext>, new()
+    public sealed class Repo<TContext> : IRepo<TContext>, IDisposable where TContext : DbContext, new()
     {
 
 
@@ -41,7 +42,7 @@ namespace MBRepoCore.Repo
         #region Construcors
 
         /// <summary>
-        /// Use this constructor in Winform or console application
+        /// Use this constructor in Winforms or console application
         /// </summary>
         /// <param name="LazyLoaded">Determine if lazy loading whether active or not</param>
         public Repo(bool LazyLoaded)
@@ -82,15 +83,15 @@ namespace MBRepoCore.Repo
         /// <param name="LazyLoaded">Determine if lazy loading whether active or not</param>
         public Repo(IConfiguration configuration, string connectionString,bool LazyLoaded)
         {
-            Context                                  = new TContext().GetInstance(configuration, connectionString);
-            _LazyLoaded                               = LazyLoaded;
+            Context                                  = RepoDBContextFactory.GetInstance<SchoolContext>(connectionString);
+            _LazyLoaded                              = LazyLoaded;
             Context.ChangeTracker.LazyLoadingEnabled = LazyLoaded;
         }
 
 
         public Repo(string connectionString, bool LazyLoaded)
         {
-            Context                                  = RepoContextFactory.GetInstance<TContext>(connectionString);
+            Context                                  = RepoDBContextFactory.GetInstance<SchoolContext>(connectionString);
             _LazyLoaded                              = LazyLoaded;
             Context.ChangeTracker.LazyLoadingEnabled = LazyLoaded;
         }

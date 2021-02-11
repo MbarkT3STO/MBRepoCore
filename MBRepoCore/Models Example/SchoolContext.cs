@@ -5,7 +5,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace MBRepoCore.Models_Example
 {
-    class SchoolContext:DbContext,IDbContextFactory<SchoolContext>
+    class SchoolContext:DbContext
     {
         public SchoolContext()
         {
@@ -16,24 +16,15 @@ namespace MBRepoCore.Models_Example
             
         }
 
-        public SchoolContext GetInstance(IConfiguration configuration, string connectionString)
-        {
-            var optionsBuilder = new DbContextOptionsBuilder<SchoolContext>();
-            optionsBuilder.UseSqlServer(connectionString);
-            return new SchoolContext(optionsBuilder.Options);
-        }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            //Relace [MBARK\\MBARK_SERVER] by your server name
-            //Relace [MySchoolDB] by your own/Suggested database name
-            optionsBuilder.UseSqlServer("Server=MBARK-LAP;Database=MySchoolDB;Trusted_Connection=True;");
 
-            //IConfiguration configuration = new ConfigurationBuilder()
-            //                              .SetBasePath(Directory.GetParent(AppContext.BaseDirectory).FullName)
-            //                              .AddJsonFile("appsettings", false).Build();
+            IConfiguration configuration = new ConfigurationBuilder()
+                                          .SetBasePath(Directory.GetParent(AppContext.BaseDirectory).FullName)
+                                          .AddJsonFile("appsettings.json", false).Build();
 
-            //optionsBuilder.UseSqlServer(configuration.GetConnectionString("MBARKLap"));
+            optionsBuilder.UseSqlServer(configuration.GetConnectionString("MBARKServer"));
         }
 
         public DbSet<Branche> Branches { get; set; }

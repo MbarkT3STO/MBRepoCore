@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MBRepoCore.Factories
 {
-    class RepoContextFactory
+    static class RepoDBContextFactory
 
     {
 
@@ -18,7 +18,7 @@ namespace MBRepoCore.Factories
         
         public static TContext GetInstance<TContext>(string connectionString) where TContext:DbContext
         {
-            var      optionsBuilder = new DbContextOptionsBuilder();
+            var optionsBuilder = new DbContextOptionsBuilder<TContext>();
             optionsBuilder.UseSqlServer(connectionString);
             TContext context = (TContext) Activator.CreateInstance(typeof(TContext), optionsBuilder.Options);
  
