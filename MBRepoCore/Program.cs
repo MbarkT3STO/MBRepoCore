@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using MBRepoCore.Exceptions;
 using MBRepoCore.Models_Example;
 using MBRepoCore.Repo;
+using MBRepoCore.UOW;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -41,6 +42,14 @@ namespace MBRepoCore
             /*Method 2*/
             /*--------*/
             var repo = new Repo<SchoolContext>(_configuration.GetConnectionString("MBARKServer"), false);
+
+            //------------------------------------------------------------------------------------------------
+            //Create UOW<TContext> objet
+            //------------------------------------------------------------------------------------------------
+
+            var uow = new Uow<SchoolContext>(repo);
+
+
 
 
 
@@ -167,11 +176,25 @@ namespace MBRepoCore
             //--------------------------------------------------
             //Search by a custom filter with custom ordering
             //--------------------------------------------------
-            var students = await repo.FilterWithOrderAsync<Student>(s => s.BrancheID == "IT", s => s.OrderByDescending(x => x.ID));
-            foreach (Student s in students)
-            {
-                Console.WriteLine($"{s.ID} {s.Name} {s.BrancheID}");
-            }
+            //var students = await repo.FilterWithOrderAsync<Student>(s => s.BrancheID == "IT", s => s.OrderByDescending(x => x.ID));
+            //foreach (Student s in students)
+            //{
+            //    Console.WriteLine($"{s.ID} {s.Name} {s.BrancheID}");
+            //}
+
+
+            //--------------------------------------------------
+            //Using UOW
+            //--------------------------------------------------
+            //var student = new Student() { ID = "S-X", BrancheID = "PHILO", Name = "Amine" };
+            //await repo.InsertAsync<Student>(student);
+            //Console.WriteLine("Done !");
+            //await uow.CommitAsync();
+            //var students = repo.GetAll<Student>();
+            //foreach (Student s in students)
+            //{
+            //    Console.WriteLine($"{s.ID} {s.Name}");
+            //}
 
 
             Console.ReadKey();
