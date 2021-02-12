@@ -32,7 +32,11 @@ namespace MBRepoCore.Repo
         /// <summary>
         /// Determine if Lazy Loading either activate or not
         /// </summary>
-        private bool _LazyLoaded { get; set; }
+        public bool LazyLoaded
+        {
+            get => Context.ChangeTracker.LazyLoadingEnabled;
+            set => Context.ChangeTracker.LazyLoadingEnabled = value;
+        }
 
         #endregion
 
@@ -44,12 +48,12 @@ namespace MBRepoCore.Repo
         /// <summary>
         /// Use this constructor if you can create a <b><see cref="TContext"/></b> object without any parameters
         /// </summary>
-        /// <param name="LazyLoaded">Determine if lazy loading whether active or not</param>
-        public Repo(bool LazyLoaded)
+        /// <param name="lazyLoaded">Determine if lazy loading whether active or not</param>
+        public Repo(bool lazyLoaded)
         {
             Context                                  = RepoDBContextFactory.GetInstance<TContext>();
-            _LazyLoaded                              = LazyLoaded;
-            Context.ChangeTracker.LazyLoadingEnabled = LazyLoaded;
+            LazyLoaded                              = lazyLoaded;
+            Context.ChangeTracker.LazyLoadingEnabled = lazyLoaded;
         }
 
 
@@ -57,12 +61,12 @@ namespace MBRepoCore.Repo
         /// Use this constructor if you already have a created <b><see cref="TContext"/></b> object  
         /// </summary>
         /// <param name="context">Object from <b><see cref="TContext"/></b> context</param>
-        /// <param name="LazyLoaded">Determine if lazy loading whether active or not</param>
-        public Repo(DbContext context,bool LazyLoaded)
+        /// <param name="lazyLoaded">Determine if lazy loading whether active or not</param>
+        public Repo(DbContext context,bool lazyLoaded)
         {
             Context                                  = context;
-            _LazyLoaded                               = LazyLoaded;
-            Context.ChangeTracker.LazyLoadingEnabled = LazyLoaded;
+            LazyLoaded                               = lazyLoaded;
+            Context.ChangeTracker.LazyLoadingEnabled = lazyLoaded;
         }
 
 
@@ -82,12 +86,12 @@ namespace MBRepoCore.Repo
         /// <code>configuration.GetConnectionString("DB connection part in connectionStrings inside appSettings.json")</code>
         /// </example>
         /// </param>
-        /// <param name="LazyLoaded">Determine if lazy loading whether active or not</param>
-        public Repo(IConfiguration configuration, string connectionString,bool LazyLoaded)
+        /// <param name="lazyLoaded">Determine if lazy loading whether active or not</param>
+        public Repo(IConfiguration configuration, string connectionString,bool lazyLoaded)
         {
             Context                                  = RepoDBContextFactory.GetInstance<SchoolContext>(connectionString);
-            _LazyLoaded                              = LazyLoaded;
-            Context.ChangeTracker.LazyLoadingEnabled = LazyLoaded;
+            LazyLoaded                              = lazyLoaded;
+            Context.ChangeTracker.LazyLoadingEnabled = lazyLoaded;
         }
 
 
@@ -106,12 +110,12 @@ namespace MBRepoCore.Repo
         /// <code>configuration.GetConnectionString("DB connection part in connectionStrings inside appSettings.json")</code>
         /// </example>
         /// </param>
-        /// <param name="LazyLoaded">Determine if lazy loading whether active or not</param>
-        public Repo(string connectionString, bool LazyLoaded)
+        /// <param name="lazyLoaded">Determine if lazy loading whether active or not</param>
+        public Repo(string connectionString, bool lazyLoaded)
         {
             Context                                  = RepoDBContextFactory.GetInstance<SchoolContext>(connectionString);
-            _LazyLoaded                              = LazyLoaded;
-            Context.ChangeTracker.LazyLoadingEnabled = LazyLoaded;
+            LazyLoaded                              = lazyLoaded;
+            Context.ChangeTracker.LazyLoadingEnabled = lazyLoaded;
         }
 
         #endregion

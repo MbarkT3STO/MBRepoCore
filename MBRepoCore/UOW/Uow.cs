@@ -7,14 +7,14 @@ using MBRepoCore.Exceptions;
 namespace MBRepoCore.UOW
 {
     /// <summary>
-    /// Unit of work class to accept or decline the happened changes in the entities
+    /// Unit of work class to accept or decline the happened changes in the dbcontext repository
     /// </summary>
     /// <typeparam name="TContext">The same repository dbcontext</typeparam>
-    class Uow<TContext> : IUow<TContext> where TContext : DbContext, IDbContextFactory<TContext>, new()
+    class Uow<TContext> : IUow<TContext> where TContext : DbContext, new()
 
     {
 
-        private TContext _context { get; }
+        private readonly TContext _context;
 
         public Uow(Repo<TContext> repo)
         {
@@ -22,7 +22,7 @@ namespace MBRepoCore.UOW
             //Check if TContext type and RepoContext are differents
             if (typeof(TContext) != repo.Context.GetType())
             {
-                throw new MBRepoCoreExceptions.NotMathDBContext(typeof(TContext), repo.Context.GetType());
+                throw new MBRepoCoreExceptions.NotMatchDBContext(typeof(TContext), repo.Context.GetType());
             }
 
             _context = (TContext)repo.Context;
@@ -45,7 +45,7 @@ namespace MBRepoCore.UOW
         /// <returns></returns>
         public Task CommitAsync()
         {
-            return Task.Factory.StartNew(() => _context.SaveChangesAsync());
+            return _context.SaveChangesAsync();
         }
 
         /// <summary>

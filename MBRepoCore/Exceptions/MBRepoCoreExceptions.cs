@@ -8,10 +8,10 @@ namespace MBRepoCore.Exceptions
     public class MBRepoCoreExceptions
     {
 
-       public class NotMathDBContext:Exception
+       public class NotMatchDBContext:Exception
        {
-           public NotMathDBContext(Type TContextType, Type RepoContextType) :
-               base($"The {TContextType.Name} does not match with {RepoContextType.Name}")
+           public NotMatchDBContext(Type contextType, Type repoContextType) :
+               base($"The {contextType.Name} does not match with {repoContextType.Name}")
             {
                 
             }

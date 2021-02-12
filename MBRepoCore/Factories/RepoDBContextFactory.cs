@@ -18,9 +18,12 @@ namespace MBRepoCore.Factories
         /// <returns></returns>
         public static TContext GetInstance<TContext>() where TContext : DbContext
         {
-            TContext context = (TContext)Activator.CreateInstance(typeof(TContext));
+            lock ("")
+            {
+                TContext context = (TContext)Activator.CreateInstance(typeof(TContext));
 
-            return context;
+                return context;
+            }
         }
 
 
@@ -32,9 +35,12 @@ namespace MBRepoCore.Factories
         /// <returns></returns>
         public static TContext GetInstance<TContext>(DbContextOptions options) where TContext:DbContext
         {
-            TContext context = (TContext) Activator.CreateInstance(typeof(TContext), new object[] {options});
+            lock ("")
+            {
+                TContext context = (TContext) Activator.CreateInstance(typeof(TContext), new object[] {options});
  
-            return context;
+                return context;
+            }
         }
         
         /// <summary>
@@ -45,11 +51,14 @@ namespace MBRepoCore.Factories
         /// <returns></returns>
         public static TContext GetInstance<TContext>(string connectionString) where TContext:DbContext
         {
-            var optionsBuilder = new DbContextOptionsBuilder<TContext>();
-            optionsBuilder.UseSqlServer(connectionString);
-            TContext context = (TContext) Activator.CreateInstance(typeof(TContext), optionsBuilder.Options);
+            lock ("")
+            {
+                var optionsBuilder = new DbContextOptionsBuilder<TContext>();
+                optionsBuilder.UseSqlServer(connectionString);
+                TContext context = (TContext) Activator.CreateInstance(typeof(TContext), optionsBuilder.Options);
  
-            return context;
+                return context;
+            }
         }
 
     }

@@ -29,8 +29,18 @@ namespace MBRepoCore
             ConfigureServices();
 
 
+            //--------------------------------
+            //Create repo objets
+            //--------------------------------
+            /*--------*/
+            /*Method 1*/
+            /*--------*/
             //var repo = new Repo<SchoolContext>(false);
-            var repo = new Repo<SchoolContext>(_configuration.GetConnectionString("MBARKServer"), false);
+
+            /*--------*/
+            /*Method 2*/
+            /*--------*/
+            var repo = new Repo<SchoolContext>(_configuration.GetConnectionString("MBARKLap"), false);
 
 
             //----------------

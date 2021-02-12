@@ -2,7 +2,7 @@
 
 namespace MBRepoCore.UOW
 {
-    interface IUow<TContext> where TContext : DbContext, IDbContextFactory<TContext>, new()
+    interface IUow<TContext> where TContext : DbContext, new()
 
     {
 
