@@ -5,9 +5,19 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MBRepoCore.Factories
 {
+    /// <summary>
+    /// A factory that responsible about creating new instances from <b><see cref="DbContext"/></b> contexts
+    /// </summary>
     static class RepoDBContextFactory
 
     {
+
+        public static TContext GetInstance<TContext>() where TContext : DbContext
+        {
+            TContext context = (TContext)Activator.CreateInstance(typeof(TContext));
+
+            return context;
+        }
 
         public static TContext GetInstance<TContext>(DbContextOptions options) where TContext:DbContext
         {

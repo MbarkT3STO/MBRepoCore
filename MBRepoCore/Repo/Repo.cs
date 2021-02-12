@@ -42,20 +42,21 @@ namespace MBRepoCore.Repo
         #region Construcors
 
         /// <summary>
-        /// Use this constructor in Winforms or console application
+        /// Use this constructor if you can create a <b><see cref="TContext"/></b> object without any parameters
         /// </summary>
         /// <param name="LazyLoaded">Determine if lazy loading whether active or not</param>
         public Repo(bool LazyLoaded)
         {
-            Context                                  = new TContext();
-            _LazyLoaded                               = LazyLoaded;
+            Context                                  = RepoDBContextFactory.GetInstance<TContext>();
+            _LazyLoaded                              = LazyLoaded;
             Context.ChangeTracker.LazyLoadingEnabled = LazyLoaded;
         }
 
+
         /// <summary>
-        /// Use this constructor in both Winform or console or ASP.net Core application
+        /// Use this constructor if you already have a created <b><see cref="TContext"/></b> object  
         /// </summary>
-        /// <param name="context">Object from <b><see cref="TContext"/></b></param>
+        /// <param name="context">Object from <b><see cref="TContext"/></b> context</param>
         /// <param name="LazyLoaded">Determine if lazy loading whether active or not</param>
         public Repo(DbContext context,bool LazyLoaded)
         {
@@ -64,8 +65,9 @@ namespace MBRepoCore.Repo
             Context.ChangeTracker.LazyLoadingEnabled = LazyLoaded;
         }
 
+
         /// <summary>
-        /// Use this constructor in ASP.net Core application
+        /// Can use this constructor in ASP.net Core application
         /// </summary>
         /// <param name="configuration">An <b><see cref="IConfiguration"/></b> object</param>
         /// <param name="connectionString">
@@ -89,6 +91,22 @@ namespace MBRepoCore.Repo
         }
 
 
+        /// <summary>
+        /// This constructor can used inside any .Net Core application
+        /// </summary>
+        /// <param name="connectionString">
+        /// <para>The connection string for your SQL Server database</para>
+        ///<example>
+        /// <para><b>Example 1</b></para>
+        /// 
+        /// <para>The connection string can be :</para>
+        ///<code>Server=myServerAddress;Database=myDataBase;Trusted_Connection=True;</code>
+        /// <para><b>Example 2</b></para>
+        /// <para>The connection string can be :</para>
+        /// <code>configuration.GetConnectionString("DB connection part in connectionStrings inside appSettings.json")</code>
+        /// </example>
+        /// </param>
+        /// <param name="LazyLoaded">Determine if lazy loading whether active or not</param>
         public Repo(string connectionString, bool LazyLoaded)
         {
             Context                                  = RepoDBContextFactory.GetInstance<SchoolContext>(connectionString);
