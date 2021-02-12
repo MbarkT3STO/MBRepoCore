@@ -6,6 +6,9 @@ using Microsoft.Extensions.Configuration;
 
 namespace MBRepoCore
 {
+    /// <summary>
+    /// Can implement this interface from your <b><see cref="DbContext"/></b> to return a new instance from it
+    /// </summary>
     public interface IDbContextFactory<out TContext>
     {
         /// <summary>
