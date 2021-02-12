@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 
 namespace MBRepoCore.Repo
@@ -21,9 +24,14 @@ namespace MBRepoCore.Repo
             where TEntity : class
             where TEntityComparer : IEqualityComparer<TEntity>, new();
 
-        void Delete<TEntity>(TEntity record) where TEntity : class;
+        void Delete<TEntity>(TEntity           record) where TEntity : class;
+        void DeleteMany<TEntity>(List<TEntity> record) where TEntity : class;
 
-        void Save();
+        IEnumerable<TEntity> Filter<TEntity>(Expression<Func<TEntity, bool>>         filterExpression) where TEntity : class;
+
+        IEnumerable<TEntity> FilterWithOrder<TEntity>(Expression<Func<TEntity, bool>> filterExpression,
+                                                      Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderingFunc) where TEntity : class;
+        void                 Save();
 
 
     }

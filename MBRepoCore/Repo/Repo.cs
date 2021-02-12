@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using MBRepoCore.Factories;
 using MBRepoCore.Models_Example;
@@ -130,12 +131,12 @@ namespace MBRepoCore.Repo
 
         #region Select
 
-        /// <summary>
-        /// Get All records from a table
-        /// </summary>
-        /// <typeparam name="TEntity">The entity to select from</typeparam>
-        /// <returns></returns>
-        public IEnumerable<TEntity> GetAll<TEntity>() where TEntity : class
+            /// <summary>
+            /// Get All <b><see cref="TEntity"/></b> records
+            /// </summary>
+            /// <typeparam name="TEntity">The entity to select from</typeparam>
+            /// <returns></returns>
+            public IEnumerable<TEntity> GetAll<TEntity>() where TEntity : class
             {
                 return Context.Set<TEntity>().ToList();
             }
@@ -143,7 +144,7 @@ namespace MBRepoCore.Repo
 
 
             /// <summary>
-            /// Asynchronously, Get All records from a table
+            /// Asynchronously, Get All <b><see cref="TEntity"/></b> records
             /// </summary>
             /// <typeparam name="TEntity">The entity to select from</typeparam>
             /// <returns></returns>
@@ -156,7 +157,7 @@ namespace MBRepoCore.Repo
 
 
             /// <summary>
-            /// Get One record from a table, based on the primary key value
+            /// Get One <b><see cref="TEntity"/></b> record, based on the primary key value
             /// </summary>
             /// <typeparam name="TEntity">The entity to select from</typeparam>
             /// <param name="pkValue">The primary key value</param>
@@ -169,7 +170,7 @@ namespace MBRepoCore.Repo
 
 
             /// <summary>
-            /// Asynchronously, Get One record from a table, based on the primary key value
+            /// Asynchronously, Get One <b><see cref="TEntity"/></b> record, based on the primary key value
             /// </summary>
             /// <typeparam name="TEntity">The entity to select from</typeparam>
             /// <param name="pkValue">The primary key value</param>
@@ -184,36 +185,20 @@ namespace MBRepoCore.Repo
 
 
 
-            #region Preview feature
-
-
-             /// <summary>
-            /// Get Many records from a table based on a property value
-            /// </summary>
-            /// <typeparam name="TEntity">The entity to select from</typeparam>
-            /// <param name="prop">The property to be used in the condition</param>
-            /// <param name="val">The value to be used in the search</param>
-            /// <returns></returns>
-            public IEnumerable<TEntity> GetMany<TEntity>(string prop, object val) where TEntity : class
-            {
-                return Context.Set<TEntity>().AsEnumerable()
-                               .Where(x => typeof(TEntity).GetProperty(prop).GetValue(x, null).ToString()
-                                                          .Contains(val.ToString())).ToList();
-            }
-
-        #endregion
+ 
 
 
 
 
         #endregion
+
 
 
 
         #region Contains
 
         /// <summary>
-        /// Check if a entity contains an object
+        /// Check if <b><see cref="TEntity"/></b> contains an object
         /// </summary>
         /// <typeparam name="TEntity">Entity to be look in</typeparam>
         /// <param name="obj">The object to be looking for</param>
@@ -225,7 +210,7 @@ namespace MBRepoCore.Repo
 
 
         /// <summary>
-        /// Asynchronously Check if a entity contains an object
+        /// Asynchronously Check if <b><see cref="TEntity"/></b> contains an object
         /// </summary>
         /// <typeparam name="TEntity">Entity to be look in</typeparam>
         /// <param name="obj">The object to be looking for</param>
@@ -239,10 +224,10 @@ namespace MBRepoCore.Repo
 
 
         /// <summary>
-        ///  Check if a entity contains an object based on a custom EQUALITY Comparer
+        ///  Check if <b><see cref="TEntity"/></b> contains an object based on a custom <b><see cref="IEqualityComparer{T}"/></b>
         /// </summary>
         /// <typeparam name="TEntity">Entity to be look in</typeparam>
-        /// <typeparam name="TEntityComparer">The custom TEntity EQUALITY Comparer</typeparam>
+        /// <typeparam name="TEntityComparer">The custom TEntity <b><see cref="IEqualityComparer{T}"/></b></typeparam>
         /// <param name="obj">The object to be looking for</param>
         /// <returns></returns>
         public bool Contains<TEntity, TEntityComparer>(TEntity obj)
@@ -255,10 +240,10 @@ namespace MBRepoCore.Repo
 
 
         /// <summary>
-        ///  Asynchronously Check if a entity contains an object based on a custom EQUALITY Comparer
+        ///  Asynchronously Check if <b><see cref="TEntity"/></b> contains an object based on a custom <b><see cref="IEqualityComparer{T}"/></b>
         /// </summary>
         /// <typeparam name="TEntity">Entity to be look in</typeparam>
-        /// <typeparam name="TEntityComparer">The custom TEntity EQUALITY Comparer</typeparam>
+        /// <typeparam name="TEntityComparer">The custom TEntity <b><see cref="IEqualityComparer{T}"/></b></typeparam>
         /// <param name="obj">The object to be looking for</param>
         /// <returns></returns>
         public Task<bool> ContainsAsync<TEntity, TEntityComparer>(TEntity obj)
@@ -272,16 +257,17 @@ namespace MBRepoCore.Repo
 
 
 
+
         #region Insert
 
 
 
-        /// <summary>
-        /// Insert one record into the database table
-        /// </summary>
-        /// <typeparam name="TEntity">Entity to add into</typeparam>
-        /// <param name="record">The record to be added</param>
-        public void Insert<TEntity>(TEntity record) where TEntity : class
+            /// <summary>
+            /// Insert one <b><see cref="TEntity"/></b> record
+            /// </summary>
+            /// <typeparam name="TEntity">Entity to add into</typeparam>
+            /// <param name="record">The record to be added</param>
+            public void Insert<TEntity>(TEntity record) where TEntity : class
             {
                 Context.Set<TEntity>().Add(record);
             }
@@ -289,7 +275,7 @@ namespace MBRepoCore.Repo
 
 
             /// <summary>
-            /// Asynchronously, Insert one record into the database table
+            /// Asynchronously, Insert one <b><see cref="TEntity"/></b> record
             /// </summary>
             /// <typeparam name="TEntity">Entity to add into</typeparam>
             /// <param name="record">The record to be added</param>
@@ -301,7 +287,7 @@ namespace MBRepoCore.Repo
 
 
             /// <summary>
-            /// Insert a range of reords in a table
+            /// Insert a range of <b><see cref="TEntity"/></b> reords
             /// </summary>
             /// <typeparam name="TEntity">Entity to insert into</typeparam>
             /// <param name="records">Records to be inserted</param>
@@ -324,7 +310,7 @@ namespace MBRepoCore.Repo
 
 
 
-            #endregion
+        #endregion
 
 
 
@@ -332,7 +318,7 @@ namespace MBRepoCore.Repo
         #region Delete
 
             /// <summary>
-            /// Delete One record from a database table
+            /// Delete One <b><see cref="TEntity"/></b> record
             /// </summary>
             /// <typeparam name="TEntity">Entity to remove from</typeparam>
             /// <param name="record">The record to be removed</param>
@@ -344,9 +330,9 @@ namespace MBRepoCore.Repo
 
 
             /// <summary>
-            /// Asynchronously, Delete One record from a database table
+            /// Asynchronously, Delete One <b><see cref="TEntity"/></b> record
             /// </summary>
-            /// <typeparam name="TEntity">Entity to remove from</typeparam>
+            /// <typeparam name="TEntity">Entity to delete from</typeparam>
             /// <param name="record">The record to be removed</param>
             public Task DeleteAsync<TEntity>(TEntity record) where TEntity : class
             {
@@ -354,15 +340,124 @@ namespace MBRepoCore.Repo
             }
 
 
-            #endregion
-
-
-
 
             /// <summary>
-            /// Save the repository changes
+            /// Delete a range of <b><see cref="TEntity"/></b> records
             /// </summary>
-            public void Save()
+            /// <typeparam name="TEntity">Entity to delete from</typeparam>
+            /// <param name="records">Records to be deleted</param>
+            public void DeleteMany<TEntity>(List<TEntity> records) where TEntity : class
+            {
+
+                this.Context.Set<TEntity>().RemoveRange(records);
+
+            }
+
+            /// <summary>
+            /// Asynchronously, delete a range of <b><see cref="TEntity"/></b> records
+            /// </summary>
+            /// <typeparam name="TEntity"></typeparam>
+            /// <param name="records"></param>
+            /// <returns></returns>
+            public Task DeleteManyAsync<TEntity>(List<TEntity> records) where TEntity : class
+            {
+                return Task.Factory.StartNew(() => DeleteMany(records));
+            }
+
+
+        #endregion
+
+
+
+
+        #region Filter
+
+        /// <summary>
+        /// Filter <b><see cref="TEntity"/></b> objects by a custom expression
+        /// </summary>
+        /// <typeparam name="TEntity">The entity to be filtered</typeparam>
+        /// <param name="filterExpression">The <b><see cref="Expression"/></b> filter</param>
+        /// <returns></returns>
+        public IEnumerable<TEntity> Filter<TEntity>(Expression<Func<TEntity, bool>> filterExpression) where TEntity : class
+        {
+            IQueryable<TEntity> entity = Context.Set<TEntity>();
+
+            return entity.Where(filterExpression);
+        }
+
+
+        /// <summary>
+        /// Asynchronously, Filter <b><see cref="TEntity"/></b> objects by a custom expression
+        /// </summary>
+        /// <typeparam name="TEntity">The entity to be filtered</typeparam>
+        /// <param name="filterExpression">The <b><see cref="Expression"/></b> filter</param>
+        /// <returns></returns>
+        public Task<IEnumerable<TEntity>> FilterAsync<TEntity>(Expression<Func<TEntity, bool>> filterExpression) where TEntity : class
+        {
+            return Task<IEnumerable<TEntity>>.Factory.StartNew(() => Filter<TEntity>(filterExpression));
+        }
+
+
+        /// <summary>
+        /// Filter and order <b><see cref="TEntity"/></b> objects by custom feltering and ordering expressions
+        /// </summary>
+        /// <typeparam name="TEntity">The entity to be filtered and ordered</typeparam>
+        /// <param name="filterExpression">The <b><see cref="Expression"/></b> filter</param>
+        /// <param name="orderingFunc">The <b><see cref="IOrderedQueryable{T}"/></b> ordering expression</param>
+        /// <returns></returns>
+        public IEnumerable<TEntity> FilterWithOrder<TEntity>(Expression<Func<TEntity, bool>> filterExpression, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>orderingFunc) where TEntity : class
+        {
+            IQueryable<TEntity> entity = Context.Set<TEntity>();
+            entity = entity.Where(filterExpression);
+            entity = orderingFunc(entity);
+
+            return entity;
+        }
+
+
+        /// <summary>
+        /// Asynchronously, Filter and order <b><see cref="TEntity"/></b> objects by custom feltering and ordering expressions
+        /// </summary>
+        /// <typeparam name="TEntity">The entity to be filtered and ordered</typeparam>
+        /// <param name="filterExpression">The <b><see cref="Expression"/></b> filter</param>
+        /// <param name="orderingFunc">The <b><see cref="IOrderedQueryable{T}"/></b> ordering expression</param>
+        /// <returns></returns>
+        public Task<IEnumerable<TEntity>> FilterWithOrderAsync<TEntity>(Expression<Func<TEntity,bool>> filterExpression, Func<IQueryable<TEntity>,IOrderedQueryable<TEntity>> orderingFunc ) where TEntity:class
+        {
+            return Task<IEnumerable<TEntity>>.Factory.StartNew(() => FilterWithOrder(filterExpression, orderingFunc));
+        }
+
+        #endregion
+
+
+
+
+        #region Preview feature
+
+
+        /// <summary>
+        /// Get Many records from <b><see cref="TEntity"/></b> based on a property value
+        /// </summary>
+        /// <typeparam name="TEntity">The entity to select from</typeparam>
+        /// <param name="prop">The property to be used in the condition</param>
+        /// <param name="val">The value to be used in the search</param>
+        /// <returns></returns>
+        public IEnumerable<TEntity> GetMany<TEntity>(string prop, object val) where TEntity : class
+        {
+            return Context.Set<TEntity>().AsEnumerable()
+                          .Where(x => typeof(TEntity).GetProperty(prop).GetValue(x, null).ToString()
+                                                     .Contains(val.ToString())).ToList();
+        }
+
+        #endregion
+
+
+
+
+        /// <summary>
+        /// Save the repository changes
+        /// </summary>
+        public void Save()
             {
                 Context.SaveChanges();
             }

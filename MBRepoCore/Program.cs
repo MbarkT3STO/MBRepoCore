@@ -29,9 +29,9 @@ namespace MBRepoCore
             ConfigureServices();
 
 
-            //--------------------------------
-            //Create repo objets
-            //--------------------------------
+            //------------------------------------------------------------------------------------------------
+            //Create repo<TContext> objets
+            //------------------------------------------------------------------------------------------------
             /*--------*/
             /*Method 1*/
             /*--------*/
@@ -40,28 +40,30 @@ namespace MBRepoCore
             /*--------*/
             /*Method 2*/
             /*--------*/
-            var repo = new Repo<SchoolContext>(_configuration.GetConnectionString("MBARKLap"), false);
-
-
-            //----------------
-            //Get Students
-            //----------------
-            var students = repo.GetAll<Student>();
-            foreach (var s in students)
-            {
-                Console.WriteLine($"ID : {s.ID}, Name : {s.Name}, Branche : {s.BrancheID}");
-            }
+            var repo = new Repo<SchoolContext>(_configuration.GetConnectionString("MBARKServer"), false);
 
 
 
-
-            //----------------
-            //GeT ONE Student
-            //----------------
-            //var s = repo.GetOne<Student>("S-3");
-            //Console.WriteLine($"{s.ID} {s.Name} {s.BrancheID}");
+            //---------------------------------------------------------------------------------------------------
+            //Examples
+            //---------------------------------------------------------------------------------------------------
 
 
+            //--------------------------------------------------
+            //Insert a range of Branches into branche table
+            //--------------------------------------------------
+
+            //var branches = new List<Branche>()
+            //               {
+            //                   new Branche() {ID = "IT", Title    = "Information Technology"},
+            //                   new Branche() {ID = "MATH", Title  = "Maths"},
+            //                   new Branche() {ID = "HS", Title    = "History"},
+            //                   new Branche() {ID = "PHILO", Title = "Philosophy"},
+            //               };
+
+            //await repo.InsertRangeAsync(branches);
+            //repo.Save();
+            //Console.WriteLine("Done !");
 
 
             //-------------------------------------------
@@ -84,22 +86,23 @@ namespace MBRepoCore
             //Console.WriteLine("Done !");
 
 
-            //--------------------------------------------------
-            //Insert a range of Branches into branche table
-            //--------------------------------------------------
 
-            //var branches = new List<Branche>()
-            //               {
-            //                   new Branche() {ID = "IT", Title    = "Information Technology"},
-            //                   new Branche() {ID = "MATH", Title  = "Maths"},
-            //                   new Branche() {ID = "HS", Title    = "History"},
-            //                   new Branche() {ID = "PHILO", Title = "Philosophy"},
-            //               };
+            //----------------
+            //Get Students
+            //----------------
+            //var students = repo.GetAll<Student>();
+            //foreach (var s in students)
+            //{
+            //    Console.WriteLine($"ID : {s.ID}, Name : {s.Name}, Branche : {s.BrancheID}");
+            //}
 
-            //await repo.InsertRangeAsync(branches);
-            //repo.Save();
-            //Console.WriteLine("Done !");
 
+
+            //----------------
+            //GeT ONE Student
+            //----------------
+            //var s = repo.GetOne<Student>("S-3");
+            //Console.WriteLine($"{s.ID} {s.Name} {s.BrancheID}");
 
 
 
@@ -151,6 +154,24 @@ namespace MBRepoCore
 
 
 
+            //--------------------------------------------------
+            //Search by a custom filter
+            //--------------------------------------------------
+            //var students = await repo.FilterAsync<Student>(s => s.BrancheID == "IT");
+            //foreach (Student s in students)
+            //{
+            //    Console.WriteLine($"{s.ID} {s.Name} {s.BrancheID}");
+            //}
+
+
+            //--------------------------------------------------
+            //Search by a custom filter with custom ordering
+            //--------------------------------------------------
+            var students = await repo.FilterWithOrderAsync<Student>(s => s.BrancheID == "IT", s => s.OrderByDescending(x => x.ID));
+            foreach (Student s in students)
+            {
+                Console.WriteLine($"{s.ID} {s.Name} {s.BrancheID}");
+            }
 
 
             Console.ReadKey();
