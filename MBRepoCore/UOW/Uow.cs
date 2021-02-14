@@ -10,7 +10,7 @@ namespace MBRepoCore.UOW
     /// Unit of work class to accept or decline the happened changes in the dbcontext repository
     /// </summary>
     /// <typeparam name="TContext">The same repository dbcontext</typeparam>
-    class Uow<TContext> : IUow<TContext> where TContext : DbContext, new()
+    public class Uow<TContext> : IUow<TContext> where TContext : DbContext, new()
 
     {
 

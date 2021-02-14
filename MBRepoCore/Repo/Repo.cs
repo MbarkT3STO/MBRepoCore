@@ -89,7 +89,7 @@ namespace MBRepoCore.Repo
         /// <param name="lazyLoaded">Determine if lazy loading whether active or not</param>
         public Repo(IConfiguration configuration, string connectionString,bool lazyLoaded)
         {
-            Context                                  = RepoDBContextFactory<SchoolContext>.GetInstance(connectionString);
+            Context                                  = RepoDBContextFactory<TContext>.GetInstance(connectionString);
             LazyLoaded                              = lazyLoaded;
             Context.ChangeTracker.LazyLoadingEnabled = lazyLoaded;
         }
@@ -113,7 +113,7 @@ namespace MBRepoCore.Repo
         /// <param name="lazyLoaded">Determine if lazy loading whether active or not</param>
         public Repo(string connectionString, bool lazyLoaded)
         {
-            Context                                  = RepoDBContextFactory<SchoolContext>.GetInstance(connectionString);
+            Context                                  = RepoDBContextFactory<TContext>.GetInstance(connectionString);
             LazyLoaded                              = lazyLoaded;
             Context.ChangeTracker.LazyLoadingEnabled = lazyLoaded;
         }

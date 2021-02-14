@@ -9,7 +9,7 @@ namespace MBRepoCore.Factories
     /// A factory that responsible about creating new instances from <b><see cref="DbContext"/></b> contexts
     /// </summary>
     /// <typeparam name="TContext">The dbcontext as type</typeparam>
-    static class RepoDBContextFactory<TContext> where TContext:DbContext
+    public static class RepoDBContextFactory<TContext> where TContext:DbContext
 
     {
 
