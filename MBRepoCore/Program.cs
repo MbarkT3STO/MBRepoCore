@@ -181,7 +181,7 @@ namespace MBRepoCore
             //{
             //    Console.WriteLine($"{s.ID} {s.Name} {s.BrancheID}");
             //}
-
+            
 
             //--------------------------------------------------
             //Using UOW

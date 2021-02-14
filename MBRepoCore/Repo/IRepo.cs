@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MBRepoCore.Repo
 {
-    interface IRepo<Tcontext> where  Tcontext : DbContext, new()
+    interface IRepo<Tcontext> where  Tcontext : DbContext
     {
 
 

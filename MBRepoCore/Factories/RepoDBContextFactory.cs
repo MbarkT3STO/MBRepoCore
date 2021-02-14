@@ -8,15 +8,17 @@ namespace MBRepoCore.Factories
     /// <summary>
     /// A factory that responsible about creating new instances from <b><see cref="DbContext"/></b> contexts
     /// </summary>
-    static class RepoDBContextFactory
+    /// <typeparam name="TContext">The dbcontext as type</typeparam>
+    static class RepoDBContextFactory<TContext> where TContext:DbContext
 
     {
+
         /// <summary>
         /// Create a new instance from <b><see cref="TContext"/></b> where it hasn't any parameter
         /// </summary>
         /// <typeparam name="TContext">The dbcontext as type</typeparam>
         /// <returns></returns>
-        public static TContext GetInstance<TContext>() where TContext : DbContext
+        public static TContext GetInstance()
         {
             lock ("")
             {
@@ -33,7 +35,7 @@ namespace MBRepoCore.Factories
         /// <typeparam name="TContext">The dbcontext as type</typeparam>
         /// <param name="options">The dbcontext options</param>
         /// <returns></returns>
-        public static TContext GetInstance<TContext>(DbContextOptions options) where TContext:DbContext
+        public static TContext GetInstance(DbContextOptions options)
         {
             lock ("")
             {
@@ -43,13 +45,14 @@ namespace MBRepoCore.Factories
             }
         }
         
+
         /// <summary>
         /// Create a new instance from <b><see cref="TContext"/></b> from a connection string
         /// </summary>
         /// <typeparam name="TContext">The dbcontext as type</typeparam>
         /// <param name="connectionString">The sql server database connection string</param>
         /// <returns></returns>
-        public static TContext GetInstance<TContext>(string connectionString) where TContext:DbContext
+        public static TContext GetInstance(string connectionString)
         {
             lock ("")
             {
