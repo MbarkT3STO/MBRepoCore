@@ -71,63 +71,59 @@ namespace MBRepoCore.Repo
         }
 
 
-        /// <summary>
-        /// Can use this constructor in ASP.net Core application
-        /// </summary>
-        /// <param name="configuration">An <b><see cref="IConfiguration"/></b> object</param>
-        /// <param name="connectionString">
-        /// <para>The connection string for your SQL Server database</para>
-        ///<example>
-        /// <para><b>Example</b></para>
-        /// 
-        /// <para>The connection string can be :</para>
-        ///<code>Server=myServerAddress;Database=myDataBase;Trusted_Connection=True;</code>
-        /// 
-        /// <para>Or can be :</para>
-        /// <code>configuration.GetConnectionString("DB connection part in connectionStrings inside appSettings.json")</code>
-        /// </example>
-        /// </param>
-        /// <param name="lazyLoaded">Determine if lazy loading whether active or not</param>
-        public Repo(IConfiguration configuration, string connectionString,bool lazyLoaded)
-        {
-            Context                                  = RepoDBContextFactory<TContext>.GetInstance(connectionString);
-            LazyLoaded                              = lazyLoaded;
-            Context.ChangeTracker.LazyLoadingEnabled = lazyLoaded;
-        }
 
-
-        /// <summary>
-        /// This constructor can used inside any .Net Core application
-        /// </summary>
-        /// <param name="connectionString">
-        /// <para>The connection string for your SQL Server database</para>
-        ///<example>
-        /// <para><b>Example 1</b></para>
-        /// 
-        /// <para>The connection string can be :</para>
-        ///<code>Server=myServerAddress;Database=myDataBase;Trusted_Connection=True;</code>
-        /// <para><b>Example 2</b></para>
-        /// <para>The connection string can be :</para>
-        /// <code>configuration.GetConnectionString("DB connection part in connectionStrings inside appSettings.json")</code>
-        /// </example>
-        /// </param>
-        /// <param name="lazyLoaded">Determine if lazy loading whether active or not</param>
-        public Repo(string connectionString, bool lazyLoaded)
+        ///  <summary>
+        ///  This constructor can used inside any .Net Core application
+        ///  </summary>
+        ///  <param name="connectionString">
+        ///  <para>The database connection string</para>
+        /// <example>
+        ///  <para><b>Example 1</b></para>
+        ///  
+        ///  <para>The connection string can be :</para>
+        /// <code>Server=myServerAddress;Database=myDataBase;Trusted_Connection=True;</code>
+        ///  <para><b>Example 2</b></para>
+        ///  <para>The connection string can be :</para>
+        ///  <code>configuration.GetConnectionString("DB connection part in connectionStrings inside appSettings.json")</code>
+        /// <para>The <see cref="connectionString"/> also can be a <b>MySQL</b> or <b>Oracle</b> connection string</para>
+        ///  </example>
+        ///  </param>
+        ///  <param name="rdbmsProvider">The <b>RDBMS/<see cref="RdbmsProvider"/></b> to be configured with</param>
+        ///  <param name="lazyLoaded">Determine if lazy loading whether active or not</param>
+        public Repo(string connectionString,RdbmsProvider rdbmsProvider, bool lazyLoaded)
         {
-            Context                                  = RepoDBContextFactory<TContext>.GetInstance(connectionString);
+            Context = ConfigureDbContextInstanceOptions(connectionString, rdbmsProvider);
             LazyLoaded                              = lazyLoaded;
             Context.ChangeTracker.LazyLoadingEnabled = lazyLoaded;
         }
 
 
 
-        //Preview constructor
-        public Repo(string connectionString, bool lazyLoaded, RdbmsProvider rdbmsprovider)
+        #endregion
+
+
+
+
+        #region Private methods
+
+
+        /// <summary>
+        /// An intermediate that prepaire and configure <b><see cref="IDbContextInstanceOptions"/></b>
+        /// </summary>
+        /// <param name="connectionString">The database connection string</param>
+        /// <param name="rdbmsProvider">The <b>RDBMS/<see cref="RdbmsProvider"/></b> to be configured with</param>
+        /// <returns></returns>
+        private TContext ConfigureDbContextInstanceOptions(string connectionString, RdbmsProvider rdbmsProvider)
         {
-            Context                                  = RepoDBContextFactory<TContext>.GetInstance(connectionString);
-            LazyLoaded                               = lazyLoaded;
-            Context.ChangeTracker.LazyLoadingEnabled = lazyLoaded;
+            IDbContextInstanceOptions dbContextInstanceOptions = new DbContextInstanceOptions()
+                                                                 {
+                                                                     OptionsBuilder = new DbContextOptionsBuilder<TContext>(),
+                                                                     connectionString = connectionString,
+                                                                     RdbmsProvider    = rdbmsProvider
+                                                                 };
+            return RepoDBContextFactory<TContext>.GetInstance(dbContextInstanceOptions);
         }
+
 
         #endregion
 

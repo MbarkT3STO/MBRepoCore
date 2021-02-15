@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using MBRepoCore.Enums;
+using MBRepoCore.RDBMS_Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace MBRepoCore.Factories
@@ -14,7 +16,8 @@ namespace MBRepoCore.Factories
     {
 
         /// <summary>
-        /// Create a new instance from <b><see cref="TContext"/></b> where it hasn't any parameter
+        /// Create a new instance from <b><see cref="TContext"/></b> where it hasn't any constructor parameter
+        /// <para>This constructor can be used with a <b>DB First</b> context</para>
         /// </summary>
         /// <typeparam name="TContext">The dbcontext as type</typeparam>
         /// <returns></returns>
@@ -30,39 +33,57 @@ namespace MBRepoCore.Factories
 
 
         /// <summary>
-        /// Create a new instance from <b><see cref="TContext"/></b> where it has a <b><see cref="DbContextOptions"/></b> parameter
+        /// Create a new instance from <b><see cref="TContext"/></b> where it has a <b><see cref="DbContextOptions"/></b> constructor parameter
         /// </summary>
         /// <typeparam name="TContext">The dbcontext as type</typeparam>
-        /// <param name="options">The dbcontext options</param>
+        /// <param name="dbContextInstanceOptions">A <see cref="IDbContextInstanceOptions"/> object that contains a <see cref="TContext"/> configurations</param>
         /// <returns></returns>
-        public static TContext GetInstance(DbContextOptions options)
+        public static TContext GetInstance(IDbContextInstanceOptions dbContextInstanceOptions)
         {
+            //Configure the DbContext RDBMS provider
+            ConfigureRdbmsProvider(ref dbContextInstanceOptions);
+
             lock ("")
             {
-                TContext context = (TContext) Activator.CreateInstance(typeof(TContext), new object[] {options});
+                TContext context = (TContext) Activator.CreateInstance(typeof(TContext), new object[] {dbContextInstanceOptions.OptionsBuilder.Options});
  
                 return context;
             }
         }
+
+
+
+        #region Private methods
+
         
 
+
         /// <summary>
-        /// Create a new instance from <b><see cref="TContext"/></b> from a connection string
+        /// An intermediate that configure <see cref="IDbContextInstanceOptions"/> <see cref="DbContextOptionsBuilder"/> with a specific RDBMS/<b><see cref="RdbmsProvider"/></b>
         /// </summary>
-        /// <typeparam name="TContext">The dbcontext as type</typeparam>
-        /// <param name="connectionString">The sql server database connection string</param>
-        /// <returns></returns>
-        public static TContext GetInstance(string connectionString)
+        /// <param name="dbContextInstanceOptions">a <b><see cref="IDbContextInstanceOptions"/></b> object as reference</param>
+        private static void ConfigureRdbmsProvider(ref IDbContextInstanceOptions dbContextInstanceOptions)
         {
-            lock ("")
+
+            switch (dbContextInstanceOptions.RdbmsProvider)
             {
-                var optionsBuilder = new DbContextOptionsBuilder<TContext>();
-                optionsBuilder.UseSqlServer(connectionString);
-                TContext context = (TContext) Activator.CreateInstance(typeof(TContext), optionsBuilder.Options);
- 
-                return context;
+                case RdbmsProvider.SqlServer: ConfigureRdbms.ConfigureSqlServer(ref dbContextInstanceOptions);
+                    break;
+                case RdbmsProvider.MySql: ConfigureRdbms.ConfigureMySQL(ref dbContextInstanceOptions);
+                    break;
+                case RdbmsProvider.Oracle: ConfigureRdbms.ConfigureOracle(ref dbContextInstanceOptions);
+                    break;
+
             }
+
         }
+
+
+
+
+
+        #endregion
+
 
     }
 }

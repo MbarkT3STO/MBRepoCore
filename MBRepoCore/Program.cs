@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using MBRepoCore.Enums;
 using MBRepoCore.Exceptions;
 using MBRepoCore.Models_Example;
 using MBRepoCore.Repo;
@@ -41,7 +42,12 @@ namespace MBRepoCore
             /*--------*/
             /*Method 2*/
             /*--------*/
-            var repo = new Repo<SchoolContext>(_configuration.GetConnectionString("MBARKLap"), false);
+            //var repo = new Repo<SchoolContext>(_configuration.GetConnectionString("MBARKServer"), false);
+
+            /*--------*/
+            /*Method 3*/
+            /*--------*/
+            var repo = new Repo<SchoolContext>(_configuration.GetConnectionString("MBARKServer"), RdbmsProvider.SqlServer, false);
 
             //------------------------------------------------------------------------------------------------
             //Create UOW<TContext> objet

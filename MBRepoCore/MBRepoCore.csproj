@@ -17,6 +17,8 @@
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="5.0.0" />
+    <PackageReference Include="Oracle.EntityFrameworkCore" Version="5.21.1" />
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="3.2.4" />
   </ItemGroup>
 
   <ItemGroup>
