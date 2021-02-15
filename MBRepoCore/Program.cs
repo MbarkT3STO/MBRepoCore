@@ -41,7 +41,7 @@ namespace MBRepoCore
             /*--------*/
             /*Method 2*/
             /*--------*/
-            var repo = new Repo<SchoolContext>(_configuration.GetConnectionString("MBARKServer"), false);
+            var repo = new Repo<SchoolContext>(_configuration.GetConnectionString("MBARKLap"), false);
 
             //------------------------------------------------------------------------------------------------
             //Create UOW<TContext> objet
@@ -176,11 +176,11 @@ namespace MBRepoCore
             //--------------------------------------------------
             //Search by a custom filter with custom ordering
             //--------------------------------------------------
-            //var students = await repo.FilterWithOrderAsync<Student>(s => s.BrancheID == "IT", s => s.OrderByDescending(x => x.ID));
-            //foreach (Student s in students)
-            //{
-            //    Console.WriteLine($"{s.ID} {s.Name} {s.BrancheID}");
-            //}
+            var students = await repo.FilterWithOrderAsync<Student>(s => s.BrancheID == "IT", s => s.OrderByDescending(x => x.ID));
+            foreach (Student s in students)
+            {
+                Console.WriteLine($"{s.ID} {s.Name} {s.BrancheID}");
+            }
 
 
             //--------------------------------------------------

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using MBRepoCore.Enums;
 using MBRepoCore.Factories;
 using MBRepoCore.Models_Example;
 using Microsoft.EntityFrameworkCore;
@@ -118,6 +119,16 @@ namespace MBRepoCore.Repo
             Context.ChangeTracker.LazyLoadingEnabled = lazyLoaded;
         }
 
+
+
+        //Preview constructor
+        public Repo(string connectionString, bool lazyLoaded, RdbmsProvider rdbmsprovider)
+        {
+            Context                                  = RepoDBContextFactory<TContext>.GetInstance(connectionString);
+            LazyLoaded                               = lazyLoaded;
+            Context.ChangeTracker.LazyLoadingEnabled = lazyLoaded;
+        }
+
         #endregion
 
 
@@ -130,12 +141,12 @@ namespace MBRepoCore.Repo
 
         #region Select
 
-            /// <summary>
-            /// Get All <b><see cref="TEntity"/></b> records
-            /// </summary>
-            /// <typeparam name="TEntity">The entity to select from</typeparam>
-            /// <returns></returns>
-            public IEnumerable<TEntity> GetAll<TEntity>() where TEntity : class
+        /// <summary>
+        /// Get All <b><see cref="TEntity"/></b> records
+        /// </summary>
+        /// <typeparam name="TEntity">The entity to select from</typeparam>
+        /// <returns></returns>
+        public IEnumerable<TEntity> GetAll<TEntity>() where TEntity : class
             {
                 return Context.Set<TEntity>().ToList();
             }
