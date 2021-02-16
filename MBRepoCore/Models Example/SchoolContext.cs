@@ -25,7 +25,7 @@ namespace MBRepoCore.Models_Example
                                           .AddJsonFile("appsettings.json", false).Build();
 
             //optionsBuilder.UseSqlServer(configuration.GetConnectionString("MBARKServer"));
-            optionsBuilder.UseMySql(configuration.GetConnectionString("MySQL"), new MySqlServerVersion(new Version(8, 0, 21)));
+            optionsBuilder.UseMySql(configuration.GetConnectionString("MySQL"), ServerVersion.AutoDetect(configuration.GetConnectionString("MySQL")));
         }
 
         public DbSet<Branche> Branches { get; set; }
