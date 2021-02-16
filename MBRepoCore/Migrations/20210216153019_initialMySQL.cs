@@ -2,7 +2,7 @@
 
 namespace MBRepoCore.Migrations
 {
-    public partial class initialDB1 : Migration
+    public partial class initialMySQL : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -10,8 +10,8 @@ namespace MBRepoCore.Migrations
                 name: "Branches",
                 columns: table => new
                 {
-                    ID = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    ID = table.Column<string>(type: "varchar(50) CHARACTER SET utf8mb4", maxLength: 50, nullable: false),
+                    Title = table.Column<string>(type: "varchar(50) CHARACTER SET utf8mb4", maxLength: 50, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -22,9 +22,9 @@ namespace MBRepoCore.Migrations
                 name: "Students",
                 columns: table => new
                 {
-                    ID = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    BrancheID = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    ID = table.Column<string>(type: "varchar(50) CHARACTER SET utf8mb4", maxLength: 50, nullable: false),
+                    Name = table.Column<string>(type: "varchar(50) CHARACTER SET utf8mb4", maxLength: 50, nullable: true),
+                    BrancheID = table.Column<string>(type: "varchar(50) CHARACTER SET utf8mb4", maxLength: 50, nullable: true)
                 },
                 constraints: table =>
                 {

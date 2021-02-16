@@ -2,51 +2,61 @@
 
 namespace MBRepoCore.Migrations
 {
-    public partial class MySqlDB : Migration
+    public partial class initialSQLServerDB : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterColumn<string>(
                 name: "Name",
                 table: "Students",
-                type: "longtext CHARACTER SET utf8mb4",
+                type: "nvarchar(50)",
+                maxLength: 50,
                 nullable: true,
                 oldClrType: typeof(string),
-                oldType: "nvarchar(max)",
+                oldType: "varchar(50)",
+                oldMaxLength: 50,
                 oldNullable: true);
 
             migrationBuilder.AlterColumn<string>(
                 name: "BrancheID",
                 table: "Students",
-                type: "varchar(255) CHARACTER SET utf8mb4",
+                type: "nvarchar(50)",
+                maxLength: 50,
                 nullable: true,
                 oldClrType: typeof(string),
-                oldType: "nvarchar(450)",
+                oldType: "varchar(50)",
+                oldMaxLength: 50,
                 oldNullable: true);
 
             migrationBuilder.AlterColumn<string>(
                 name: "ID",
                 table: "Students",
-                type: "varchar(255) CHARACTER SET utf8mb4",
+                type: "nvarchar(50)",
+                maxLength: 50,
                 nullable: false,
                 oldClrType: typeof(string),
-                oldType: "nvarchar(450)");
+                oldType: "varchar(50)",
+                oldMaxLength: 50);
 
             migrationBuilder.AlterColumn<string>(
                 name: "Title",
                 table: "Branches",
-                type: "longtext CHARACTER SET utf8mb4",
+                type: "nvarchar(50)",
+                maxLength: 50,
                 nullable: false,
                 oldClrType: typeof(string),
-                oldType: "nvarchar(max)");
+                oldType: "varchar(50)",
+                oldMaxLength: 50);
 
             migrationBuilder.AlterColumn<string>(
                 name: "ID",
                 table: "Branches",
-                type: "varchar(255) CHARACTER SET utf8mb4",
+                type: "nvarchar(50)",
+                maxLength: 50,
                 nullable: false,
                 oldClrType: typeof(string),
-                oldType: "nvarchar(450)");
+                oldType: "varchar(50)",
+                oldMaxLength: 50);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -54,44 +64,54 @@ namespace MBRepoCore.Migrations
             migrationBuilder.AlterColumn<string>(
                 name: "Name",
                 table: "Students",
-                type: "nvarchar(max)",
+                type: "varchar(50)",
+                maxLength: 50,
                 nullable: true,
                 oldClrType: typeof(string),
-                oldType: "longtext CHARACTER SET utf8mb4",
+                oldType: "nvarchar(50)",
+                oldMaxLength: 50,
                 oldNullable: true);
 
             migrationBuilder.AlterColumn<string>(
                 name: "BrancheID",
                 table: "Students",
-                type: "nvarchar(450)",
+                type: "varchar(50)",
+                maxLength: 50,
                 nullable: true,
                 oldClrType: typeof(string),
-                oldType: "varchar(255) CHARACTER SET utf8mb4",
+                oldType: "nvarchar(50)",
+                oldMaxLength: 50,
                 oldNullable: true);
 
             migrationBuilder.AlterColumn<string>(
                 name: "ID",
                 table: "Students",
-                type: "nvarchar(450)",
+                type: "varchar(50)",
+                maxLength: 50,
                 nullable: false,
                 oldClrType: typeof(string),
-                oldType: "varchar(255) CHARACTER SET utf8mb4");
+                oldType: "nvarchar(50)",
+                oldMaxLength: 50);
 
             migrationBuilder.AlterColumn<string>(
                 name: "Title",
                 table: "Branches",
-                type: "nvarchar(max)",
+                type: "varchar(50)",
+                maxLength: 50,
                 nullable: false,
                 oldClrType: typeof(string),
-                oldType: "longtext CHARACTER SET utf8mb4");
+                oldType: "nvarchar(50)",
+                oldMaxLength: 50);
 
             migrationBuilder.AlterColumn<string>(
                 name: "ID",
                 table: "Branches",
-                type: "nvarchar(450)",
+                type: "varchar(50)",
+                maxLength: 50,
                 nullable: false,
                 oldClrType: typeof(string),
-                oldType: "varchar(255) CHARACTER SET utf8mb4");
+                oldType: "nvarchar(50)",
+                oldMaxLength: 50);
         }
     }
 }

@@ -46,6 +46,8 @@ namespace MBRepoCore.Repo
 
         #region Construcors
 
+
+
         /// <summary>
         /// Use this constructor if you can create a <b><see cref="TContext"/></b> object without any parameters
         /// </summary>
@@ -55,6 +57,7 @@ namespace MBRepoCore.Repo
             Context                                  = RepoDBContextFactory<TContext>.GetInstance();
             ConfigureLazyLoading(lazyLoaded);
         }
+
 
 
         /// <summary>

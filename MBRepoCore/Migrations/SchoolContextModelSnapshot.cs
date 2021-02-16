@@ -2,6 +2,7 @@
 using MBRepoCore.Models_Example;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace MBRepoCore.Migrations
@@ -13,8 +14,9 @@ namespace MBRepoCore.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("Relational:MaxIdentifierLength", 64)
-                .HasAnnotation("ProductVersion", "5.0.3");
+                .HasAnnotation("Relational:MaxIdentifierLength", 128)
+                .HasAnnotation("ProductVersion", "5.0.3")
+                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("MBRepoCore.Models_Example.Branche", b =>
                 {
@@ -39,12 +41,10 @@ namespace MBRepoCore.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("BrancheID")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
@@ -59,9 +59,7 @@ namespace MBRepoCore.Migrations
                 {
                     b.HasOne("MBRepoCore.Models_Example.Branche", "Branche")
                         .WithMany("Students")
-                        .HasForeignKey("BrancheID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("BrancheID");
 
                     b.Navigation("Branche");
                 });

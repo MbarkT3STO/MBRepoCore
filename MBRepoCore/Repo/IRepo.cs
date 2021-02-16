@@ -8,8 +8,13 @@ namespace MBRepoCore.Repo
 {
     interface IRepo<Tcontext> where  Tcontext : DbContext
     {
+        // Properties
+        DbContext Context    { get; }
+        bool      LazyLoaded { get; set; }
 
 
+
+        // Routins
         IEnumerable<TEntity> GetAll<TEntity>() where TEntity : class;
 
         TEntity GetOne<TEntity>(object pkValue) where TEntity : class;

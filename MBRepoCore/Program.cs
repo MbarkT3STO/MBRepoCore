@@ -31,29 +31,41 @@ namespace MBRepoCore
             ConfigureServices();
 
 
+
+
+
+
+
             //------------------------------------------------------------------------------------------------
-            //Create repo<TContext> objets
+            // Create repo<TContext> objets
             //------------------------------------------------------------------------------------------------
-            /*--------*/
-            /*Method 1*/
-            /*--------*/
+            /*--------------------------------*/
+            /* Method 1*/
+            /*--------------------------------*/
             //var repo = new Repo<SchoolContext>(false);
 
-            /*--------*/
-            /*Method 2*/
-            /*--------*/
+            /*--------------------------------*/
+            /* Method 2*/
+            /*--------------------------------*/
             //var repo = new Repo<SchoolContext>(_configuration.GetConnectionString("MBARKServer"), false);
 
-            /*--------*/
-            /*Method 3*/
-            /*--------*/
-            //var repo = new Repo<SchoolContext>(_configuration.GetConnectionString("MBARKServer"), RdbmsProvider.SqlServer, false);
-            var repo = new Repo<SchoolContext>(_configuration.GetConnectionString("MySQL"), RdbmsProvider.MySql, false);
+            /*--------------------------------*/
+            /* Method 3*/
+            /*--------------------------------*/
+
+            // Using SQL Server
+            var repo = new Repo<SchoolContext>(_configuration.GetConnectionString("MBARKServer"), RdbmsProvider.SqlServer, false);
+
+            // Using MySQL
+            //var repo = new Repo<SchoolContext>(_configuration.GetConnectionString("MySQL"), RdbmsProvider.MySql, false);
+
+
+
+
 
             //------------------------------------------------------------------------------------------------
-            //Create UOW<TContext> objet
+            // Create UOW<TContext> objet
             //------------------------------------------------------------------------------------------------
-
             var uow = new Uow<SchoolContext>(repo);
 
 
@@ -61,12 +73,12 @@ namespace MBRepoCore
 
 
             //---------------------------------------------------------------------------------------------------
-            //Examples
+            // Examples
             //---------------------------------------------------------------------------------------------------
 
 
             //--------------------------------------------------
-            //Insert a range of Branches into branche table
+            // Insert a range of Branches into branche table
             //--------------------------------------------------
 
             //var branches = new List<Branche>()
@@ -83,17 +95,17 @@ namespace MBRepoCore
 
 
             //-------------------------------------------
-            //Insert one Student record into a student table
+            // Insert one Student record into a student table
             //-------------------------------------------
             //var s = new Student()
-            //        {
-            //            ID        = "S-XX",
-            //            Name      = "Mohammad",
-            //            BrancheID = "IT",
-            //        };
+            //{
+            //    ID = "S-XX",
+            //    Name = "Mohammad",
+            //    BrancheID = "IT",
+            //};
 
-            ////Can use
-            ////repo.Insert<Student>(s);
+            //Can use
+            //await repo.InsertAsync<Student>(s);
 
             //Or use
             //repo.Insert(s);
@@ -104,7 +116,7 @@ namespace MBRepoCore
 
 
             //----------------
-            //Get Students
+            // Get Students
             //----------------
             //var students = repo.GetAll<Student>();
             //foreach (var s in students)
@@ -115,7 +127,7 @@ namespace MBRepoCore
 
 
             //----------------
-            //GeT ONE Student
+            // GeT ONE Student
             //----------------
             //var s = repo.GetOne<Student>("S-3");
             //Console.WriteLine($"{s.ID} {s.Name} {s.BrancheID}");
@@ -123,7 +135,7 @@ namespace MBRepoCore
 
 
             //--------------------------------------------------
-            //Insert a range of Students into student table
+            // Insert a range of Students into student table
             //--------------------------------------------------
             //var students = new List<Student>()
             //               {
@@ -160,7 +172,7 @@ namespace MBRepoCore
 
 
             //--------------------------------------------------
-            //Get many | search by a custom property
+            // Get many | search by a custom property
             //--------------------------------------------------
             //var R = repo.GetMany<Student>(typeof(Student).GetProperty("BrancheID").Name, "IT");
             //foreach (var s in R)
@@ -171,7 +183,7 @@ namespace MBRepoCore
 
 
             //--------------------------------------------------
-            //Search by a custom filter
+            // Search by a custom filter
             //--------------------------------------------------
             //var students = await repo.FilterAsync<Student>(s => s.BrancheID == "IT");
             //foreach (Student s in students)
@@ -181,17 +193,17 @@ namespace MBRepoCore
 
 
             //--------------------------------------------------
-            //Search by a custom filter with custom ordering
+            // Search by a custom filter with custom ordering
             //--------------------------------------------------
-            var students = await repo.FilterWithOrderAsync<Student>(s => s.BrancheID == "IT", s => s.OrderByDescending(x => x.ID));
-            foreach (Student s in students)
-            {
-                Console.WriteLine($"{s.ID} {s.Name} {s.BrancheID}");
-            }
+            //var students = await repo.FilterWithOrderAsync<Student>(s => s.BrancheID == "IT", s => s.OrderByDescending(x => x.ID));
+            //foreach (Student s in students)
+            //{
+            //    Console.WriteLine($"{s.ID} {s.Name} {s.BrancheID}");
+            //}
 
 
             //--------------------------------------------------
-            //Using UOW
+            // Using UOW
             //--------------------------------------------------
             //var student = new Student() { ID = "S-X", BrancheID = "PHILO", Name = "Amine" };
             //await repo.InsertAsync<Student>(student);

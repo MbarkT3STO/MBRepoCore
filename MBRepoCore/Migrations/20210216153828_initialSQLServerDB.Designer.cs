@@ -2,72 +2,66 @@
 using MBRepoCore.Models_Example;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace MBRepoCore.Migrations
 {
     [DbContext(typeof(SchoolContext))]
-    [Migration("20210216141221_MySQLDB3")]
-    partial class MySQLDB3
+    [Migration("20210216153828_initialSQLServerDB")]
+    partial class initialSQLServerDB
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("Relational:MaxIdentifierLength", 64)
-                .HasAnnotation("ProductVersion", "5.0.3");
+                .HasAnnotation("Relational:MaxIdentifierLength", 128)
+                .HasAnnotation("ProductVersion", "5.0.3")
+                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("MBRepoCore.Models_Example.Branche", b =>
                 {
                     b.Property<string>("ID")
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
-                    b.HasKey("ID")
-                        .HasName("PK_Branche");
+                    b.HasKey("ID");
 
-                    b.ToTable("Branche");
+                    b.ToTable("Branches");
                 });
 
             modelBuilder.Entity("MBRepoCore.Models_Example.Student", b =>
                 {
                     b.Property<string>("ID")
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("BrancheID")
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
-
-                    b.Property<string>("BrancheID1")
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
-                    b.HasKey("ID")
-                        .HasName("PK_Student");
+                    b.HasKey("ID");
 
                     b.HasIndex("BrancheID");
 
-                    b.HasIndex("BrancheID1");
-
-                    b.ToTable("Student");
+                    b.ToTable("Students");
                 });
 
             modelBuilder.Entity("MBRepoCore.Models_Example.Student", b =>
                 {
-                    b.HasOne("MBRepoCore.Models_Example.Branche", null)
-                        .WithMany()
-                        .HasForeignKey("BrancheID")
-                        .HasConstraintName("FK_Student_Branche")
-                        .OnDelete(DeleteBehavior.NoAction);
-
                     b.HasOne("MBRepoCore.Models_Example.Branche", "Branche")
                         .WithMany("Students")
-                        .HasForeignKey("BrancheID1");
+                        .HasForeignKey("BrancheID");
 
                     b.Navigation("Branche");
                 });

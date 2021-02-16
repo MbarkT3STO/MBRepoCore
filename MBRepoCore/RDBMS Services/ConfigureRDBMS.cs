@@ -11,30 +11,30 @@ namespace MBRepoCore.RDBMS_Services
         /// <summary>
         ///  Configure a <b><see cref="IDbContextInstanceOptions"/> <b><see cref="DbContextOptionsBuilder{TContext}"/></b> to use MySQL</b>
         /// </summary>
-        ///  <param name="instanceOptions">A <b><see cref="IDbContextInstanceOptions"/></b> instance as reference</param>
-        public static void ConfigureSqlServer(ref IDbContextInstanceOptions instanceOptions)
+        ///  <param name="dbContextInstanceOptions">A <b><see cref="IDbContextInstanceOptions"/></b> instance as reference</param>
+        public static void ConfigureSqlServer(ref IDbContextInstanceOptions dbContextInstanceOptions)
         {
-            instanceOptions.OptionsBuilder.UseSqlServer(instanceOptions.connectionString);
+            dbContextInstanceOptions.OptionsBuilder.UseSqlServer(dbContextInstanceOptions.connectionString);
         }
 
 
         ///  <summary>
         ///  Configure a <b><see cref="IDbContextInstanceOptions"/> <b><see cref="DbContextOptionsBuilder{TContext}"/></b> to use MySQL</b>
         ///  </summary>
-        ///  <param name="instanceOptions">A <b><see cref="IDbContextInstanceOptions"/></b> instance as reference</param>
-        public static void ConfigureMySQL(ref IDbContextInstanceOptions instanceOptions)
+        ///  <param name="dbContextInstanceOptions">A <b><see cref="IDbContextInstanceOptions"/></b> instance as reference</param>
+        public static void ConfigureMySQL(ref IDbContextInstanceOptions dbContextInstanceOptions)
         {
-            instanceOptions.OptionsBuilder.UseMySql(instanceOptions.connectionString, ServerVersion.AutoDetect(instanceOptions.connectionString));
+            dbContextInstanceOptions.OptionsBuilder.UseMySql(dbContextInstanceOptions.connectionString, ServerVersion.AutoDetect(dbContextInstanceOptions.connectionString));
         }
 
 
         ///  <summary>
         ///  Configure a <b><see cref="IDbContextInstanceOptions"/> <b><see cref="DbContextOptionsBuilder{TContext}"/></b> to use Oracle</b>
         ///  </summary>
-        ///  <param name="instanceOptions">A <b><see cref="IDbContextInstanceOptions"/></b> instance as reference</param>
-        public static void ConfigureOracle(ref IDbContextInstanceOptions instanceOptions)
+        ///  <param name="dbContextInstanceOptions">A <b><see cref="IDbContextInstanceOptions"/></b> instance as reference</param>
+        public static void ConfigureOracle(ref IDbContextInstanceOptions dbContextInstanceOptions)
         {
-            instanceOptions.OptionsBuilder.UseOracle(instanceOptions.connectionString);
+            dbContextInstanceOptions.OptionsBuilder.UseOracle(dbContextInstanceOptions.connectionString);
         }
     }
 }
