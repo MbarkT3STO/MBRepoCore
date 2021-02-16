@@ -5,9 +5,9 @@ namespace MBRepoCore.Models_Example
 {
     class Branche
     {
-        [Key]
+        [Key,MaxLength(50)]
         public string ID { get; set; }
-        [Required]
+        [Required,MaxLength(50)]
         public string Title { get; set; }
 
         public ICollection<Student> Students { get; set; }
