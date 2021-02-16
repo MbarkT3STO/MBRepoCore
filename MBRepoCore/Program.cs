@@ -104,10 +104,10 @@ namespace MBRepoCore
             //    BrancheID = "IT",
             //};
 
-            //Can use
+            // Can use
             //await repo.InsertAsync<Student>(s);
 
-            //Or use
+            // Or use
             //repo.Insert(s);
 
             //repo.Save();
