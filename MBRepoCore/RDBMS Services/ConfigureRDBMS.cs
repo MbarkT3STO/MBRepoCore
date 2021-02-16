@@ -24,7 +24,7 @@ namespace MBRepoCore.RDBMS_Services
         ///  <param name="instanceOptions">A <b><see cref="IDbContextInstanceOptions"/></b> instance as reference</param>
         public static void ConfigureMySQL(ref IDbContextInstanceOptions instanceOptions)
         {
-            instanceOptions.OptionsBuilder.UseMySql(instanceOptions.connectionString);
+            instanceOptions.OptionsBuilder.UseMySql(instanceOptions.connectionString, new MySqlServerVersion(new Version(8, 0, 21)));
         }
 
 

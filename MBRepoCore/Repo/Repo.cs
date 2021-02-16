@@ -53,8 +53,7 @@ namespace MBRepoCore.Repo
         public Repo(bool lazyLoaded)
         {
             Context                                  = RepoDBContextFactory<TContext>.GetInstance();
-            LazyLoaded                              = lazyLoaded;
-            Context.ChangeTracker.LazyLoadingEnabled = lazyLoaded;
+            ConfigureLazyLoading(lazyLoaded);
         }
 
 
@@ -63,11 +62,10 @@ namespace MBRepoCore.Repo
         /// </summary>
         /// <param name="context">Object from <b><see cref="TContext"/></b> context</param>
         /// <param name="lazyLoaded">Determine if lazy loading whether active or not</param>
-        public Repo(DbContext context,bool lazyLoaded)
+        public Repo(TContext context,bool lazyLoaded)
         {
-            Context                                  = context;
-            LazyLoaded                               = lazyLoaded;
-            Context.ChangeTracker.LazyLoadingEnabled = lazyLoaded;
+            Context = context;
+            ConfigureLazyLoading(lazyLoaded);
         }
 
 
@@ -93,8 +91,7 @@ namespace MBRepoCore.Repo
         public Repo(string connectionString,RdbmsProvider rdbmsProvider, bool lazyLoaded)
         {
             Context = ConfigureDbContextInstanceOptions(connectionString, rdbmsProvider);
-            LazyLoaded                              = lazyLoaded;
-            Context.ChangeTracker.LazyLoadingEnabled = lazyLoaded;
+            ConfigureLazyLoading(lazyLoaded);
         }
 
 
@@ -104,7 +101,7 @@ namespace MBRepoCore.Repo
 
 
 
-        #region Private methods
+        #region Repository private methods
 
 
         /// <summary>
@@ -122,6 +119,18 @@ namespace MBRepoCore.Repo
                                                                      RdbmsProvider    = rdbmsProvider
                                                                  };
             return RepoDBContextFactory<TContext>.GetInstance(dbContextInstanceOptions);
+        }
+
+
+
+        /// <summary>
+        /// Set the <b><see cref="TContext"/></b> lazy loading
+        /// </summary>
+        /// <param name="lazyLoaded">Determine if lazy loading whether active or not</param>
+        private void ConfigureLazyLoading(bool lazyLoaded)
+        {
+            LazyLoaded                               = lazyLoaded;
+            Context.ChangeTracker.LazyLoadingEnabled = LazyLoaded;
         }
 
 

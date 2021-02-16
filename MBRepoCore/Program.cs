@@ -47,7 +47,8 @@ namespace MBRepoCore
             /*--------*/
             /*Method 3*/
             /*--------*/
-            var repo = new Repo<SchoolContext>(_configuration.GetConnectionString("MBARKServer"), RdbmsProvider.SqlServer, false);
+            //var repo = new Repo<SchoolContext>(_configuration.GetConnectionString("MBARKServer"), RdbmsProvider.SqlServer, false);
+            var repo = new Repo<SchoolContext>(_configuration.GetConnectionString("MySQL"), RdbmsProvider.MySql, false);
 
             //------------------------------------------------------------------------------------------------
             //Create UOW<TContext> objet
