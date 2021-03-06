@@ -78,7 +78,7 @@ namespace MBRepoCore
 
 
             //--------------------------------------------------
-            // Insert a range of Branches into branche table
+            // AddOne a range of Branches into branche table
             //--------------------------------------------------
 
             //var branches = new List<Branche>()
@@ -95,7 +95,7 @@ namespace MBRepoCore
 
 
             //-------------------------------------------
-            // Insert one Student record into a student table
+            // AddOne one Student record into a student table
             //-------------------------------------------
             //var s = new Student()
             //{
@@ -108,7 +108,7 @@ namespace MBRepoCore
             //await repo.InsertAsync<Student>(s);
 
             // Or use
-            //repo.Insert(s);
+            //repo.AddOne(s);
 
             //repo.Save();
             //Console.WriteLine("Done !");
@@ -135,7 +135,7 @@ namespace MBRepoCore
 
 
             //--------------------------------------------------
-            // Insert a range of Students into student table
+            // AddOne a range of Students into student table
             //--------------------------------------------------
             //var students = new List<Student>()
             //               {

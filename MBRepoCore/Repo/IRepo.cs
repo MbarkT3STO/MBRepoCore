@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MBRepoCore.Repo
 {
-    interface IRepo<Tcontext> where  Tcontext : DbContext
+    interface IRepo<TContext> where  TContext : DbContext
     {
         // Properties
         DbContext Context    { get; }
@@ -19,9 +19,9 @@ namespace MBRepoCore.Repo
 
         TEntity GetOne<TEntity>(object pkValue) where TEntity : class;
 
-        void Insert<TEntity>(TEntity record) where TEntity : class;
+        void AddOne<TEntity>(TEntity record) where TEntity : class;
 
-        void InsertRange<TEntity>(List<TEntity> records) where TEntity : class;
+        void AddMany<TEntity>(List<TEntity> records) where TEntity : class;
 
         bool Contains<TEntity>(TEntity obj) where TEntity : class;
 
@@ -29,12 +29,12 @@ namespace MBRepoCore.Repo
             where TEntity : class
             where TEntityComparer : IEqualityComparer<TEntity>, new();
 
-        void Delete<TEntity>(TEntity           record) where TEntity : class;
-        void DeleteMany<TEntity>(List<TEntity> record) where TEntity : class;
+        void RemoveOne<TEntity>(TEntity           record) where TEntity : class;
+        void RemoveMany<TEntity>(List<TEntity> record) where TEntity : class;
 
         IEnumerable<TEntity> Filter<TEntity>(Expression<Func<TEntity, bool>>         filterExpression) where TEntity : class;
 
-        IEnumerable<TEntity> FilterWithOrder<TEntity>(Expression<Func<TEntity, bool>> filterExpression,
+        IEnumerable<TEntity> FilterAndOrder<TEntity>(Expression<Func<TEntity, bool>> filterExpression,
                                                       Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderingFunc) where TEntity : class;
         void                 Save();
 

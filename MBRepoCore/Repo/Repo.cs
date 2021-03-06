@@ -276,16 +276,16 @@ namespace MBRepoCore.Repo
 
 
 
-        #region Insert
-
+        #region Add
+         
 
 
             /// <summary>
-            /// Insert one <b><see cref="TEntity"/></b> record
+            /// Add one <b><see cref="TEntity"/></b> record
             /// </summary>
             /// <typeparam name="TEntity">Entity to add into</typeparam>
             /// <param name="record">The record to be added</param>
-            public void Insert<TEntity>(TEntity record) where TEntity : class
+            public void AddOne<TEntity>(TEntity record) where TEntity : class
             {
                 Context.Set<TEntity>().Add(record);
             }
@@ -293,23 +293,23 @@ namespace MBRepoCore.Repo
 
 
             /// <summary>
-            /// Asynchronously, Insert one <b><see cref="TEntity"/></b> record
+            /// Asynchronously, Add one <b><see cref="TEntity"/></b> record
             /// </summary>
             /// <typeparam name="TEntity">Entity to add into</typeparam>
             /// <param name="record">The record to be added</param>
             public Task InsertAsync<TEntity>(TEntity record) where TEntity : class
             {
-                return Task.Factory.StartNew(() => Insert(record));
+                return Task.Factory.StartNew(() => AddOne(record));
             }
 
 
 
             /// <summary>
-            /// Insert a range of <b><see cref="TEntity"/></b> reords
+            /// Add a range of <b><see cref="TEntity"/></b> reords
             /// </summary>
             /// <typeparam name="TEntity">Entity to insert into</typeparam>
             /// <param name="records">Records to be inserted</param>
-            public void InsertRange<TEntity>(List<TEntity> records) where TEntity : class
+            public void AddMany<TEntity>(List<TEntity> records) where TEntity : class
             {
                 Context.Set<TEntity>().AddRange(records);
             }
@@ -317,13 +317,13 @@ namespace MBRepoCore.Repo
 
 
             /// <summary>
-            /// Asynchronously, Insert a range of reords in a table
+            /// Asynchronously, Add a range of reords in a table
             /// </summary>
             /// <typeparam name="TEntity">Entity to insert into</typeparam>
             /// <param name="records">Records to be inserted</param>
             public Task InsertRangeAsync<TEntity>(List<TEntity> records) where TEntity : class
             {
-                return Task.Factory.StartNew(() => InsertRange(records));
+                return Task.Factory.StartNew(() => AddMany(records));
             }
 
 
@@ -333,14 +333,14 @@ namespace MBRepoCore.Repo
 
 
 
-        #region Delete
+        #region Remove
 
             /// <summary>
-            /// Delete One <b><see cref="TEntity"/></b> record
+            /// Remove One <b><see cref="TEntity"/></b> record
             /// </summary>
             /// <typeparam name="TEntity">Entity to remove from</typeparam>
             /// <param name="record">The record to be removed</param>
-            public void Delete<TEntity>(TEntity record) where TEntity : class
+            public void RemoveOne<TEntity>(TEntity record) where TEntity : class
             {
                 this.Context.Set<TEntity>().Remove(record);
             }
@@ -348,23 +348,23 @@ namespace MBRepoCore.Repo
 
 
             /// <summary>
-            /// Asynchronously, Delete One <b><see cref="TEntity"/></b> record
+            /// Asynchronously, Remove One <b><see cref="TEntity"/></b> record
             /// </summary>
             /// <typeparam name="TEntity">Entity to delete from</typeparam>
             /// <param name="record">The record to be removed</param>
             public Task DeleteAsync<TEntity>(TEntity record) where TEntity : class
             {
-                return Task.Factory.StartNew(() => Delete(record));
+                return Task.Factory.StartNew(() => RemoveOne(record));
             }
 
 
 
             /// <summary>
-            /// Delete a range of <b><see cref="TEntity"/></b> records
+            /// Remove a range of <b><see cref="TEntity"/></b> records
             /// </summary>
             /// <typeparam name="TEntity">Entity to delete from</typeparam>
             /// <param name="records">Records to be deleted</param>
-            public void DeleteMany<TEntity>(List<TEntity> records) where TEntity : class
+            public void RemoveMany<TEntity>(List<TEntity> records) where TEntity : class
             {
 
                 this.Context.Set<TEntity>().RemoveRange(records);
@@ -379,7 +379,7 @@ namespace MBRepoCore.Repo
             /// <returns></returns>
             public Task DeleteManyAsync<TEntity>(List<TEntity> records) where TEntity : class
             {
-                return Task.Factory.StartNew(() => DeleteMany(records));
+                return Task.Factory.StartNew(() => RemoveMany(records));
             }
 
 
@@ -423,7 +423,7 @@ namespace MBRepoCore.Repo
         /// <param name="filterExpression">The <b><see cref="Expression"/></b> filter</param>
         /// <param name="orderingFunc">The <b><see cref="IOrderedQueryable{T}"/></b> ordering expression</param>
         /// <returns></returns>
-        public IEnumerable<TEntity> FilterWithOrder<TEntity>(Expression<Func<TEntity, bool>> filterExpression, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>orderingFunc) where TEntity : class
+        public IEnumerable<TEntity> FilterAndOrder<TEntity>(Expression<Func<TEntity, bool>> filterExpression, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>orderingFunc) where TEntity : class
         {
             IQueryable<TEntity> entity = Context.Set<TEntity>();
             entity = entity.Where(filterExpression);
@@ -442,7 +442,7 @@ namespace MBRepoCore.Repo
         /// <returns></returns>
         public Task<IEnumerable<TEntity>> FilterWithOrderAsync<TEntity>(Expression<Func<TEntity,bool>> filterExpression, Func<IQueryable<TEntity>,IOrderedQueryable<TEntity>> orderingFunc ) where TEntity:class
         {
-            return Task<IEnumerable<TEntity>>.Factory.StartNew(() => FilterWithOrder(filterExpression, orderingFunc));
+            return Task<IEnumerable<TEntity>>.Factory.StartNew(() => FilterAndOrder(filterExpression, orderingFunc));
         }
 
         #endregion
