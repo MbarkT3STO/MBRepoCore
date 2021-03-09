@@ -154,10 +154,10 @@ namespace MBRepoCore.Repo
         /// </summary>
         /// <typeparam name="TEntity">The entity to select from</typeparam>
         /// <returns></returns>
-        public IEnumerable<TEntity> GetAll<TEntity>() where TEntity : class
-            {
-                return Context.Set<TEntity>().ToList();
-            }
+        public List<TEntity> GetAll<TEntity>() where TEntity : class
+        {
+            return Context.Set<TEntity>().ToList();
+        }
 
 
 
@@ -166,9 +166,9 @@ namespace MBRepoCore.Repo
             /// </summary>
             /// <typeparam name="TEntity">The entity to select from</typeparam>
             /// <returns></returns>
-            public Task<IEnumerable<TEntity>> GetAllAsync<TEntity>() where TEntity : class
+            public Task<List<TEntity>> GetAllAsync<TEntity>() where TEntity : class
             {
-                return Task.Factory.StartNew(() => GetAll<TEntity>());
+                return Task.Factory.StartNew(() => GetAll<TEntity>().ToList());
             }
 
 
@@ -396,11 +396,11 @@ namespace MBRepoCore.Repo
         /// <typeparam name="TEntity">The entity to be filtered</typeparam>
         /// <param name="filterExpression">The <b><see cref="Expression"/></b> filter</param>
         /// <returns></returns>
-        public IEnumerable<TEntity> Filter<TEntity>(Expression<Func<TEntity, bool>> filterExpression) where TEntity : class
+        public List<TEntity> Filter<TEntity>(Expression<Func<TEntity, bool>> filterExpression) where TEntity : class
         {
             IQueryable<TEntity> entity = Context.Set<TEntity>();
 
-            return entity.Where(filterExpression);
+            return entity.Where(filterExpression).ToList();
         }
 
 
@@ -423,13 +423,13 @@ namespace MBRepoCore.Repo
         /// <param name="filterExpression">The <b><see cref="Expression"/></b> filter</param>
         /// <param name="orderingFunc">The <b><see cref="IOrderedQueryable{T}"/></b> ordering expression</param>
         /// <returns></returns>
-        public IEnumerable<TEntity> FilterAndOrder<TEntity>(Expression<Func<TEntity, bool>> filterExpression, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>orderingFunc) where TEntity : class
+        public List<TEntity> FilterAndOrder<TEntity>(Expression<Func<TEntity, bool>> filterExpression, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>orderingFunc) where TEntity : class
         {
             IQueryable<TEntity> entity = Context.Set<TEntity>();
             entity = entity.Where(filterExpression);
             entity = orderingFunc(entity);
 
-            return entity;
+            return entity.ToList();
         }
 
 

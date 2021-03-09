@@ -15,7 +15,7 @@ namespace MBRepoCore.Repo
 
 
         // Routins
-        IEnumerable<TEntity> GetAll<TEntity>() where TEntity : class;
+        List<TEntity> GetAll<TEntity>() where TEntity : class;
 
         TEntity GetOne<TEntity>(object pkValue) where TEntity : class;
 
@@ -32,9 +32,9 @@ namespace MBRepoCore.Repo
         void RemoveOne<TEntity>(TEntity           record) where TEntity : class;
         void RemoveMany<TEntity>(List<TEntity> record) where TEntity : class;
 
-        IEnumerable<TEntity> Filter<TEntity>(Expression<Func<TEntity, bool>>         filterExpression) where TEntity : class;
+        List<TEntity> Filter<TEntity>(Expression<Func<TEntity, bool>>         filterExpression) where TEntity : class;
 
-        IEnumerable<TEntity> FilterAndOrder<TEntity>(Expression<Func<TEntity, bool>> filterExpression,
+        List<TEntity> FilterAndOrder<TEntity>(Expression<Func<TEntity, bool>> filterExpression,
                                                       Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderingFunc) where TEntity : class;
         void                 Save();
 
