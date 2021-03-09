@@ -297,7 +297,7 @@ namespace MBRepoCore.Repo
             /// </summary>
             /// <typeparam name="TEntity">Entity to add into</typeparam>
             /// <param name="record">The record to be added</param>
-            public Task InsertAsync<TEntity>(TEntity record) where TEntity : class
+            public Task AddOneAsync<TEntity>(TEntity record) where TEntity : class
             {
                 return Task.Factory.StartNew(() => AddOne(record));
             }
@@ -321,7 +321,7 @@ namespace MBRepoCore.Repo
             /// </summary>
             /// <typeparam name="TEntity">Entity to insert into</typeparam>
             /// <param name="records">Records to be inserted</param>
-            public Task InsertRangeAsync<TEntity>(List<TEntity> records) where TEntity : class
+            public Task AddManyAsync<TEntity>(List<TEntity> records) where TEntity : class
             {
                 return Task.Factory.StartNew(() => AddMany(records));
             }
