@@ -352,7 +352,7 @@ namespace MBRepoCore.Repo
             /// </summary>
             /// <typeparam name="TEntity">Entity to delete from</typeparam>
             /// <param name="record">The record to be removed</param>
-            public Task DeleteAsync<TEntity>(TEntity record) where TEntity : class
+            public Task RemoveOneAsync<TEntity>(TEntity record) where TEntity : class
             {
                 return Task.Factory.StartNew(() => RemoveOne(record));
             }
@@ -377,7 +377,7 @@ namespace MBRepoCore.Repo
             /// <typeparam name="TEntity"></typeparam>
             /// <param name="records"></param>
             /// <returns></returns>
-            public Task DeleteManyAsync<TEntity>(List<TEntity> records) where TEntity : class
+            public Task RemoveManyAsync<TEntity>(List<TEntity> records) where TEntity : class
             {
                 return Task.Factory.StartNew(() => RemoveMany(records));
             }
