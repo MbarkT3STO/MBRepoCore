@@ -1,38 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Threading.Tasks;
 using MBRepoCore.Enums;
 using MBRepoCore.Factories;
 using MBRepoCore.Models_Example;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Configuration;
 
 namespace MBRepoCore.Repo
 {
-
     /// <summary>
     ///Full generic repository
     /// </summary>
     /// <typeparam name="TContext">The <b><see cref="DbContext"/></b> type</typeparam>
-    public sealed class Repo<TContext> : IRepo<TContext>, IDisposable where TContext : DbContext
+    public sealed class Repo<TContext> : IRepo<TContext>, IRepoProperties, IDisposable where TContext : DbContext
     {
-
-
-
         #region properties
 
-        /// <summary>
-        /// A <b><see cref="TContext"/></b> object as property
-        /// </summary>
+        /// <inheritdoc />
         public DbContext Context { get; } = null;
 
 
-        /// <summary>
-        /// Determine if Lazy Loading either activate or not
-        /// </summary>
+        /// <inheritdoc />
         public bool LazyLoaded
         {
             get => Context.ChangeTracker.LazyLoadingEnabled;
@@ -42,11 +37,7 @@ namespace MBRepoCore.Repo
         #endregion
 
 
-
-
         #region Construcors
-
-
 
         /// <summary>
         /// Use this constructor if you can create a <b><see cref="TContext"/></b> object without any parameters
@@ -54,10 +45,9 @@ namespace MBRepoCore.Repo
         /// <param name="lazyLoaded">Determine if lazy loading whether active or not</param>
         public Repo(bool lazyLoaded)
         {
-            Context                                  = RepoDBContextFactory<TContext>.GetInstance();
+            Context = RepoDBContextFactory<TContext>.GetInstance();
             ConfigureLazyLoading(lazyLoaded);
         }
-
 
 
         /// <summary>
@@ -65,12 +55,11 @@ namespace MBRepoCore.Repo
         /// </summary>
         /// <param name="context">Object from <b><see cref="TContext"/></b> context</param>
         /// <param name="lazyLoaded">Determine if lazy loading whether active or not</param>
-        public Repo(TContext context,bool lazyLoaded)
+        public Repo(TContext context, bool lazyLoaded)
         {
             Context = context;
             ConfigureLazyLoading(lazyLoaded);
         }
-
 
 
         ///  <summary>
@@ -91,21 +80,16 @@ namespace MBRepoCore.Repo
         ///  </param>
         ///  <param name="rdbmsProvider">The <b>RDBMS/<see cref="RdbmsProvider"/></b> to be configured with</param>
         ///  <param name="lazyLoaded">Determine if lazy loading whether active or not</param>
-        public Repo(string connectionString,RdbmsProvider rdbmsProvider, bool lazyLoaded)
+        public Repo(string connectionString, RdbmsProvider rdbmsProvider, bool lazyLoaded)
         {
-            Context = ConfigureDbContextInstanceOptions(connectionString, rdbmsProvider);
+            Context = CreateAndConfigureDbContextInstanceOptions(connectionString, rdbmsProvider);
             ConfigureLazyLoading(lazyLoaded);
         }
-
-
 
         #endregion
 
 
-
-
         #region Repository private methods
-
 
         /// <summary>
         /// An intermediate that prepaire and configure <b><see cref="IDbContextInstanceOptions"/></b>
@@ -113,17 +97,18 @@ namespace MBRepoCore.Repo
         /// <param name="connectionString">The database connection string</param>
         /// <param name="rdbmsProvider">The <b>RDBMS/<see cref="RdbmsProvider"/></b> to be configured with</param>
         /// <returns></returns>
-        private TContext ConfigureDbContextInstanceOptions(string connectionString, RdbmsProvider rdbmsProvider)
+        private TContext CreateAndConfigureDbContextInstanceOptions(string        connectionString,
+                                                                    RdbmsProvider rdbmsProvider)
         {
             IDbContextInstanceOptions dbContextInstanceOptions = new DbContextInstanceOptions()
                                                                  {
-                                                                     OptionsBuilder = new DbContextOptionsBuilder<TContext>(),
+                                                                     OptionsBuilder =
+                                                                         new DbContextOptionsBuilder<TContext>(),
                                                                      connectionString = connectionString,
                                                                      RdbmsProvider    = rdbmsProvider
                                                                  };
             return RepoDBContextFactory<TContext>.GetInstance(dbContextInstanceOptions);
         }
-
 
 
         /// <summary>
@@ -136,91 +121,70 @@ namespace MBRepoCore.Repo
             Context.ChangeTracker.LazyLoadingEnabled = LazyLoaded;
         }
 
-
         #endregion
-
-
 
 
         #region Routines
 
-
-
-
         #region Select
 
-        /// <summary>
-        /// Get All <b><see cref="TEntity"/></b> records
-        /// </summary>
-        /// <typeparam name="TEntity">The entity to select from</typeparam>
-        /// <returns></returns>
+        /// <inheritdoc />
         public List<TEntity> GetAll<TEntity>() where TEntity : class
         {
             return Context.Set<TEntity>().ToList();
         }
 
+        /// <inheritdoc />
+        public List<TEntity> GetAll<TEntity>(params Expression<Func<TEntity, object>>[] expressions)
+            where TEntity : class
+        {
+            var result = new List<TEntity>();
 
-
-            /// <summary>
-            /// Asynchronously, Get All <b><see cref="TEntity"/></b> records
-            /// </summary>
-            /// <typeparam name="TEntity">The entity to select from</typeparam>
-            /// <returns></returns>
-            public Task<List<TEntity>> GetAllAsync<TEntity>() where TEntity : class
+            foreach (var expression in expressions)
             {
-                return Task.Factory.StartNew(() => GetAll<TEntity>().ToList());
+                result = Context.Set<TEntity>().Include(expression).ToList();
             }
 
 
+            return result;
+        }
 
 
-            /// <summary>
-            /// Get One <b><see cref="TEntity"/></b> record, based on the primary key value
-            /// </summary>
-            /// <typeparam name="TEntity">The entity to select from</typeparam>
-            /// <param name="pkValue">The primary key value</param>
-            /// <returns></returns>
-            public TEntity GetOne<TEntity>(object pkValue) where TEntity : class
-            {
-                return Context.Set<TEntity>().Find(pkValue);
-            }
+        /// <summary>
+        /// Asynchronously, Get All <b><see cref="TEntity"/></b> records
+        /// </summary>
+        /// <typeparam name="TEntity">The entity to select from</typeparam>
+        /// <returns></returns>
+        public Task<List<TEntity>> GetAllAsync<TEntity>() where TEntity : class
+        {
+            return Task.Factory.StartNew(() => GetAll<TEntity>().ToList());
+        }
 
 
-
-            /// <summary>
-            /// Asynchronously, Get One <b><see cref="TEntity"/></b> record, based on the primary key value
-            /// </summary>
-            /// <typeparam name="TEntity">The entity to select from</typeparam>
-            /// <param name="pkValue">The primary key value</param>
-            /// <returns></returns>
-            public Task<TEntity> GetOneAsync<TEntity>(object pkValue) where TEntity : class
-            {
-                return Task.Factory.StartNew(() => GetOne<TEntity>(pkValue));
-            }
+        /// <inheritdoc />
+        public TEntity GetOne<TEntity>(object pkValue) where TEntity : class
+        {
+            return Context.Set<TEntity>().Find(pkValue);
+        }
 
 
-
-
-
-
- 
-
-
-
+        /// <summary>
+        /// Asynchronously, Get One <b><see cref="TEntity"/></b> record, based on the primary key value
+        /// </summary>
+        /// <typeparam name="TEntity">The entity to select from</typeparam>
+        /// <param name="pkValue">The primary key value</param>
+        /// <returns></returns>
+        public Task<TEntity> GetOneAsync<TEntity>(object pkValue) where TEntity : class
+        {
+            return Task.Factory.StartNew(() => GetOne<TEntity>(pkValue));
+        }
 
         #endregion
 
 
-
-
         #region Contains
 
-        /// <summary>
-        /// Check if <b><see cref="TEntity"/></b> contains an object
-        /// </summary>
-        /// <typeparam name="TEntity">Entity to be look in</typeparam>
-        /// <param name="obj">The object to be looking for</param>
-        /// <returns></returns>
+        /// <inheritdoc />
         public bool Contains<TEntity>(TEntity obj) where TEntity : class
         {
             return Context.Set<TEntity>().AsEnumerable().Contains(obj);
@@ -239,22 +203,14 @@ namespace MBRepoCore.Repo
         }
 
 
-
-
-        /// <summary>
-        ///  Check if <b><see cref="TEntity"/></b> contains an object based on a custom <b><see cref="IEqualityComparer{T}"/></b>
-        /// </summary>
-        /// <typeparam name="TEntity">Entity to be look in</typeparam>
-        /// <typeparam name="TEntityComparer">The custom TEntity <b><see cref="IEqualityComparer{T}"/></b></typeparam>
-        /// <param name="obj">The object to be looking for</param>
-        /// <returns></returns>
+        /// <inheritdoc />
         public bool Contains<TEntity, TEntityComparer>(TEntity obj)
             where TEntity : class
             where TEntityComparer : IEqualityComparer<TEntity>, new()
         {
-            return Context.Set<TEntity>().AsEnumerable().Contains(obj,new TEntityComparer() as IEqualityComparer<TEntity>);
+            return Context.Set<TEntity>().AsEnumerable()
+                          .Contains(obj, new TEntityComparer() as IEqualityComparer<TEntity>);
         }
-
 
 
         /// <summary>
@@ -274,128 +230,89 @@ namespace MBRepoCore.Repo
         #endregion
 
 
-
-
         #region Add
-         
+
+        /// <inheritdoc />
+        public void AddOne<TEntity>(TEntity record) where TEntity : class
+        {
+            Context.Set<TEntity>().Add(record);
+        }
 
 
-            /// <summary>
-            /// Add one <b><see cref="TEntity"/></b> record
-            /// </summary>
-            /// <typeparam name="TEntity">Entity to add into</typeparam>
-            /// <param name="record">The record to be added</param>
-            public void AddOne<TEntity>(TEntity record) where TEntity : class
-            {
-                Context.Set<TEntity>().Add(record);
-            }
+        /// <summary>
+        /// Asynchronously, Add one <b><see cref="TEntity"/></b> record
+        /// </summary>
+        /// <typeparam name="TEntity">Entity to add into</typeparam>
+        /// <param name="record">The record to be added</param>
+        public Task AddOneAsync<TEntity>(TEntity record) where TEntity : class
+        {
+            return Task.Factory.StartNew(() => AddOne(record));
+        }
 
 
-
-            /// <summary>
-            /// Asynchronously, Add one <b><see cref="TEntity"/></b> record
-            /// </summary>
-            /// <typeparam name="TEntity">Entity to add into</typeparam>
-            /// <param name="record">The record to be added</param>
-            public Task AddOneAsync<TEntity>(TEntity record) where TEntity : class
-            {
-                return Task.Factory.StartNew(() => AddOne(record));
-            }
+        /// <inheritdoc />
+        public void AddMany<TEntity>(List<TEntity> records) where TEntity : class
+        {
+            Context.Set<TEntity>().AddRange(records);
+        }
 
 
-
-            /// <summary>
-            /// Add a range of <b><see cref="TEntity"/></b> reords
-            /// </summary>
-            /// <typeparam name="TEntity">Entity to insert into</typeparam>
-            /// <param name="records">Records to be inserted</param>
-            public void AddMany<TEntity>(List<TEntity> records) where TEntity : class
-            {
-                Context.Set<TEntity>().AddRange(records);
-            }
-
-
-
-            /// <summary>
-            /// Asynchronously, Add a range of reords in a table
-            /// </summary>
-            /// <typeparam name="TEntity">Entity to insert into</typeparam>
-            /// <param name="records">Records to be inserted</param>
-            public Task AddManyAsync<TEntity>(List<TEntity> records) where TEntity : class
-            {
-                return Task.Factory.StartNew(() => AddMany(records));
-            }
-
-
+        /// <summary>
+        /// Asynchronously, Add a range of reords in a table
+        /// </summary>
+        /// <typeparam name="TEntity">Entity to insert into</typeparam>
+        /// <param name="records">Records to be inserted</param>
+        public Task AddManyAsync<TEntity>(List<TEntity> records) where TEntity : class
+        {
+            return Task.Factory.StartNew(() => AddMany(records));
+        }
 
         #endregion
-
-
 
 
         #region Remove
 
-            /// <summary>
-            /// Remove One <b><see cref="TEntity"/></b> record
-            /// </summary>
-            /// <typeparam name="TEntity">Entity to remove from</typeparam>
-            /// <param name="record">The record to be removed</param>
-            public void RemoveOne<TEntity>(TEntity record) where TEntity : class
-            {
-                this.Context.Set<TEntity>().Remove(record);
-            }
+        /// <inheritdoc />
+        public void RemoveOne<TEntity>(TEntity record) where TEntity : class
+        {
+            this.Context.Set<TEntity>().Remove(record);
+        }
 
 
-
-            /// <summary>
-            /// Asynchronously, Remove One <b><see cref="TEntity"/></b> record
-            /// </summary>
-            /// <typeparam name="TEntity">Entity to delete from</typeparam>
-            /// <param name="record">The record to be removed</param>
-            public Task RemoveOneAsync<TEntity>(TEntity record) where TEntity : class
-            {
-                return Task.Factory.StartNew(() => RemoveOne(record));
-            }
-
+        /// <summary>
+        /// Asynchronously, Remove One <b><see cref="TEntity"/></b> record
+        /// </summary>
+        /// <typeparam name="TEntity">Entity to delete from</typeparam>
+        /// <param name="record">The record to be removed</param>
+        public Task RemoveOneAsync<TEntity>(TEntity record) where TEntity : class
+        {
+            return Task.Factory.StartNew(() => RemoveOne(record));
+        }
 
 
-            /// <summary>
-            /// Remove a range of <b><see cref="TEntity"/></b> records
-            /// </summary>
-            /// <typeparam name="TEntity">Entity to delete from</typeparam>
-            /// <param name="records">Records to be deleted</param>
-            public void RemoveMany<TEntity>(List<TEntity> records) where TEntity : class
-            {
+        /// <inheritdoc />
+        public void RemoveMany<TEntity>(List<TEntity> records) where TEntity : class
+        {
+            this.Context.Set<TEntity>().RemoveRange(records);
+        }
 
-                this.Context.Set<TEntity>().RemoveRange(records);
-
-            }
-
-            /// <summary>
-            /// Asynchronously, delete a range of <b><see cref="TEntity"/></b> records
-            /// </summary>
-            /// <typeparam name="TEntity"></typeparam>
-            /// <param name="records"></param>
-            /// <returns></returns>
-            public Task RemoveManyAsync<TEntity>(List<TEntity> records) where TEntity : class
-            {
-                return Task.Factory.StartNew(() => RemoveMany(records));
-            }
-
+        /// <summary>
+        /// Asynchronously, delete a range of <b><see cref="TEntity"/></b> records
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="records"></param>
+        /// <returns></returns>
+        public Task RemoveManyAsync<TEntity>(List<TEntity> records) where TEntity : class
+        {
+            return Task.Factory.StartNew(() => RemoveMany(records));
+        }
 
         #endregion
 
 
-
-
         #region Filter
 
-        /// <summary>
-        /// Filter <b><see cref="TEntity"/></b> objects by a custom expression
-        /// </summary>
-        /// <typeparam name="TEntity">The entity to be filtered</typeparam>
-        /// <param name="filterExpression">The <b><see cref="Expression"/></b> filter</param>
-        /// <returns></returns>
+        /// <inheritdoc />
         public List<TEntity> Filter<TEntity>(Expression<Func<TEntity, bool>> filterExpression) where TEntity : class
         {
             IQueryable<TEntity> entity = Context.Set<TEntity>();
@@ -405,25 +322,22 @@ namespace MBRepoCore.Repo
 
 
         /// <summary>
-        /// Asynchronously, Filter <b><see cref="TEntity"/></b> objects by a custom expression
+        /// Asynchronously, <inheritdoc cref="Filter{TEntity}"/>
         /// </summary>
         /// <typeparam name="TEntity">The entity to be filtered</typeparam>
         /// <param name="filterExpression">The <b><see cref="Expression"/></b> filter</param>
         /// <returns></returns>
-        public Task<IEnumerable<TEntity>> FilterAsync<TEntity>(Expression<Func<TEntity, bool>> filterExpression) where TEntity : class
+        public Task<IEnumerable<TEntity>> FilterAsync<TEntity>(Expression<Func<TEntity, bool>> filterExpression)
+            where TEntity : class
         {
             return Task<IEnumerable<TEntity>>.Factory.StartNew(() => Filter<TEntity>(filterExpression));
         }
 
 
-        /// <summary>
-        /// Filter and order <b><see cref="TEntity"/></b> objects by custom feltering and ordering expressions
-        /// </summary>
-        /// <typeparam name="TEntity">The entity to be filtered and ordered</typeparam>
-        /// <param name="filterExpression">The <b><see cref="Expression"/></b> filter</param>
-        /// <param name="orderingFunc">The <b><see cref="IOrderedQueryable{T}"/></b> ordering expression</param>
-        /// <returns></returns>
-        public List<TEntity> FilterAndOrder<TEntity>(Expression<Func<TEntity, bool>> filterExpression, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>orderingFunc) where TEntity : class
+        /// <inheritdoc />
+        public List<TEntity> FilterAndOrder<TEntity>(Expression<Func<TEntity, bool>> filterExpression,
+                                                     Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderingFunc)
+            where TEntity : class
         {
             IQueryable<TEntity> entity = Context.Set<TEntity>();
             entity = entity.Where(filterExpression);
@@ -434,13 +348,15 @@ namespace MBRepoCore.Repo
 
 
         /// <summary>
-        /// Asynchronously, Filter and order <b><see cref="TEntity"/></b> objects by custom feltering and ordering expressions
+        /// Asynchronously, <inheritdoc cref="FilterAndOrder{TEntity}"/>
         /// </summary>
         /// <typeparam name="TEntity">The entity to be filtered and ordered</typeparam>
         /// <param name="filterExpression">The <b><see cref="Expression"/></b> filter</param>
         /// <param name="orderingFunc">The <b><see cref="IOrderedQueryable{T}"/></b> ordering expression</param>
         /// <returns></returns>
-        public Task<IEnumerable<TEntity>> FilterWithOrderAsync<TEntity>(Expression<Func<TEntity,bool>> filterExpression, Func<IQueryable<TEntity>,IOrderedQueryable<TEntity>> orderingFunc ) where TEntity:class
+        public Task<IEnumerable<TEntity>> FilterWithOrderAsync<TEntity>(
+            Expression<Func<TEntity, bool>>                       filterExpression,
+            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderingFunc) where TEntity : class
         {
             return Task<IEnumerable<TEntity>>.Factory.StartNew(() => FilterAndOrder(filterExpression, orderingFunc));
         }
@@ -448,10 +364,7 @@ namespace MBRepoCore.Repo
         #endregion
 
 
-
-
-        #region Preview feature
-
+        #region Preview features
 
         /// <summary>
         /// Get Many records from <b><see cref="TEntity"/></b> based on a property value
@@ -469,57 +382,38 @@ namespace MBRepoCore.Repo
 
         #endregion
 
-
-
-
-        /// <summary>
-        /// Save the repository changes
-        /// </summary>
-        public void Save()
-            {
-                Context.SaveChanges();
-            }
-
-
         #endregion
-
-
 
 
         #region Disposing
 
+        #region Properties
 
-            #region Properties
-
-            private bool _disposed { get; set; } = false;
-
-            #endregion
-
-
-            private void Dispose(bool disposing)
-            {
-                if (!_disposed)
-                {
-                    if (disposing)
-                    {
-                        Context.Dispose();
-                    }
-                }
-
-                _disposed = true;
-            }
-
-
-
-            public void Dispose()
-            {
-                this.Dispose(true);
-                GC.SuppressFinalize(this);
-            }
-
+        private bool _disposed { get; set; } = false;
 
         #endregion
 
 
+        private void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    Context.Dispose();
+                }
+            }
+
+            _disposed = true;
+        }
+
+
+        public void Dispose()
+        {
+            this.Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        #endregion
     }
 }
