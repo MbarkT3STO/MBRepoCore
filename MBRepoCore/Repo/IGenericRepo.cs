@@ -2,12 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
 namespace MBRepoCore.Repo
 {
-    interface IRepo<TContext> where TContext : DbContext
+    interface IGenericRepo<TContext> where TContext : DbContext
     {
 
         // Routins
@@ -80,7 +79,6 @@ namespace MBRepoCore.Repo
         /// <typeparam name="TEntity">Entity to delete from</typeparam>
         /// <param name="records">Records to be deleted</param>
         void RemoveMany<TEntity>(List<TEntity> records) where TEntity : class;
-
 
         /// <summary>
         /// Filter <b><see cref="TEntity"/></b> objects by a custom expression

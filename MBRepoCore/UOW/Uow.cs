@@ -16,7 +16,7 @@ namespace MBRepoCore.UOW
 
         private readonly TContext _context;
 
-        public Uow(Repo<TContext> repo)
+        public Uow(GenericRepo<TContext> repo)
         {
 
             //Check if TContext type and RepoContext are differents

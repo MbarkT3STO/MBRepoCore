@@ -1,17 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 using System.Threading.Tasks;
 using MBRepoCore.Enums;
 using MBRepoCore.Factories;
-using MBRepoCore.Models_Example;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Internal;
-using Microsoft.Extensions.Configuration;
 
 namespace MBRepoCore.Repo
 {
@@ -19,7 +13,7 @@ namespace MBRepoCore.Repo
     ///Full generic repository
     /// </summary>
     /// <typeparam name="TContext">The <b><see cref="DbContext"/></b> type</typeparam>
-    public sealed class Repo<TContext> : IRepo<TContext>, IRepoProperties, IDisposable where TContext : DbContext
+    public sealed class GenericRepo<TContext> : IGenericRepo<TContext>, IRepoProperties, IDisposable where TContext : DbContext
     {
         #region properties
 
@@ -43,7 +37,7 @@ namespace MBRepoCore.Repo
         /// Use this constructor if you can create a <b><see cref="TContext"/></b> object without any parameters
         /// </summary>
         /// <param name="lazyLoaded">Determine if lazy loading whether active or not</param>
-        public Repo(bool lazyLoaded)
+        public GenericRepo(bool lazyLoaded)
         {
             Context = RepoDBContextFactory<TContext>.GetInstance();
             ConfigureLazyLoading(lazyLoaded);
@@ -55,7 +49,7 @@ namespace MBRepoCore.Repo
         /// </summary>
         /// <param name="context">Object from <b><see cref="TContext"/></b> context</param>
         /// <param name="lazyLoaded">Determine if lazy loading whether active or not</param>
-        public Repo(TContext context, bool lazyLoaded)
+        public GenericRepo(TContext context, bool lazyLoaded)
         {
             Context = context;
             ConfigureLazyLoading(lazyLoaded);
@@ -80,7 +74,7 @@ namespace MBRepoCore.Repo
         ///  </param>
         ///  <param name="rdbmsProvider">The <b>RDBMS/<see cref="RdbmsProvider"/></b> to be configured with</param>
         ///  <param name="lazyLoaded">Determine if lazy loading whether active or not</param>
-        public Repo(string connectionString, RdbmsProvider rdbmsProvider, bool lazyLoaded)
+        public GenericRepo(string connectionString, RdbmsProvider rdbmsProvider, bool lazyLoaded)
         {
             Context = CreateAndConfigureDbContextInstanceOptions(connectionString, rdbmsProvider);
             ConfigureLazyLoading(lazyLoaded);

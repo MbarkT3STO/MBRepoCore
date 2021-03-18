@@ -54,7 +54,7 @@ namespace MBRepoCore
             /*--------------------------------*/
 
             // Using SQL Server
-            var repo = new Repo<SchoolContext>(_configuration.GetConnectionString("MBARKServer"), RdbmsProvider.SqlServer, false);
+            var repo = new GenericRepo<SchoolContext>(_configuration.GetConnectionString("MBARKServer"), RdbmsProvider.SqlServer, false);
 
             // Using MySQL
             //var repo = new Repo<SchoolContext>(_configuration.GetConnectionString("MySQL"), RdbmsProvider.MySql, false);
