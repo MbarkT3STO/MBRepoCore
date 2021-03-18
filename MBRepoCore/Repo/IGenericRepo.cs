@@ -22,6 +22,7 @@ namespace MBRepoCore.Repo
         /// Get All <b><see cref="TEntity"/></b> records, and load related selected entities records
         /// </summary>
         /// <typeparam name="TEntity">The entity to select from</typeparam>
+        /// <param name="expressions">Entities to be load data from (Should be the <see cref="TEntity"/>'s navigation properties)</param>
         /// <returns></returns>
         List<TEntity> GetAll<TEntity>(params Expression<Func<TEntity, object>>[] expressions) where TEntity : class;
 

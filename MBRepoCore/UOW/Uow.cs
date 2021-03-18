@@ -29,18 +29,14 @@ namespace MBRepoCore.UOW
         }
 
 
-
-
-        /// <summary>
-        /// Accept and commit all database happened changes
-        /// </summary>
+        /// <inheritdoc />
         public void Commit()
         {
             _context.SaveChanges();
         }
 
         /// <summary>
-        /// Asynchrounously, accept and commit all database happened changes
+        /// Asynchrounously, <inheritdoc cref="Commit"/>
         /// </summary>
         /// <returns></returns>
         public Task CommitAsync()
@@ -48,9 +44,8 @@ namespace MBRepoCore.UOW
             return _context.SaveChangesAsync();
         }
 
-        /// <summary>
-        /// Decline all happened changes and rollback to the last saved point from database
-        /// </summary>
+
+        /// <inheritdoc />
         public void RollBack()
         {
             foreach (var entry in _context.ChangeTracker.Entries().Where(e => e.State != EntityState.Unchanged))
@@ -70,7 +65,7 @@ namespace MBRepoCore.UOW
         }
         
         /// <summary>
-        /// Asynchronously, decline all happened changes and rollback to the last saved point from database
+        /// Asynchronously, <inheritdoc cref="RollBack"/>
         /// </summary>
         public Task RollBackAsync()
         {

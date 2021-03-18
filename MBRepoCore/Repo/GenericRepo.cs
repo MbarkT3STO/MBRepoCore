@@ -120,7 +120,7 @@ namespace MBRepoCore.Repo
 
         #region Routines
 
-        #region Select
+        #region Get
 
         /// <inheritdoc />
         public List<TEntity> GetAll<TEntity>() where TEntity : class
@@ -128,31 +128,37 @@ namespace MBRepoCore.Repo
             return Context.Set<TEntity>().ToList();
         }
 
-        /// <inheritdoc />
-        public List<TEntity> GetAll<TEntity>(params Expression<Func<TEntity, object>>[] expressions)
-            where TEntity : class
-        {
-            var result = new List<TEntity>();
-
-            foreach (var expression in expressions)
-            {
-                result = Context.Set<TEntity>().Include(expression).ToList();
-            }
-
-
-            return result;
-        }
-
-
         /// <summary>
-        /// Asynchronously, Get All <b><see cref="TEntity"/></b> records
+        /// Asynchronously, <inheritdoc cref="GetAll{TEntity}()" />
         /// </summary>
-        /// <typeparam name="TEntity">The entity to select from</typeparam>
-        /// <returns></returns>
+        /// <typeparam name="TEntity"><inheritdoc cref="GetAll{TEntity}()"/></typeparam>
         public Task<List<TEntity>> GetAllAsync<TEntity>() where TEntity : class
         {
             return Task.Factory.StartNew(() => GetAll<TEntity>().ToList());
+        }  
+        
+        /// <inheritdoc />
+        public List<TEntity> GetAll<TEntity>(params Expression<Func<TEntity, object>>[] expressions) where TEntity : class
+        {
+            var result = Context.Set<TEntity>().AsQueryable();
+
+            result = expressions.Aggregate(result, (current, expression) => current.Include(expression));
+
+
+            return result.ToList();
         }
+
+        /// <summary>
+        /// Asynchronously, <inheritdoc cref="GetAll{TEntity}(System.Linq.Expressions.Expression{System.Func{TEntity,object}}[])"/>
+        /// </summary>
+        /// <typeparam name="TEntity"><inheritdoc cref="GetAll{TEntity}(System.Linq.Expressions.Expression{System.Func{TEntity,object}}[])"/></typeparam>
+        /// <param name="expressions"><inheritdoc cref="GetAll{TEntity}(System.Linq.Expressions.Expression{System.Func{TEntity,object}}[])"/></param>
+        public Task<List<TEntity>> GetAllAsync<TEntity>(params Expression<Func<TEntity, object>>[] expressions) where TEntity : class
+        {
+            return Task.Factory.StartNew(() => GetAll<TEntity>(expressions));
+        }
+
+
 
 
         /// <inheritdoc />
@@ -163,10 +169,10 @@ namespace MBRepoCore.Repo
 
 
         /// <summary>
-        /// Asynchronously, Get One <b><see cref="TEntity"/></b> record, based on the primary key value
+        /// Asynchronously, <inheritdoc cref="GetOne{TEntity}"/>
         /// </summary>
-        /// <typeparam name="TEntity">The entity to select from</typeparam>
-        /// <param name="pkValue">The primary key value</param>
+        /// <typeparam name="TEntity"><inheritdoc cref="GetOne{TEntity}"/></typeparam>
+        /// <param name="pkValue"><inheritdoc cref="GetOne{TEntity}"/></param>
         /// <returns></returns>
         public Task<TEntity> GetOneAsync<TEntity>(object pkValue) where TEntity : class
         {
@@ -186,11 +192,10 @@ namespace MBRepoCore.Repo
 
 
         /// <summary>
-        /// Asynchronously Check if <b><see cref="TEntity"/></b> contains an object
+        /// Asynchronously <inheritdoc cref="Contains{TEntity,TEntityComparer}"/>
         /// </summary>
-        /// <typeparam name="TEntity">Entity to be look in</typeparam>
-        /// <param name="obj">The object to be looking for</param>
-        /// <returns></returns>
+        /// <typeparam name="TEntity"><inheritdoc cref="Contains{TEntity,TEntityComparer}"/></typeparam>
+        /// <param name="obj"><inheritdoc cref="Contains{TEntity,TEntityComparer}"/></param>
         public Task<bool> ContainsAsync<TEntity>(TEntity obj) where TEntity : class
         {
             return Task.Factory.StartNew(() => Contains<TEntity>(obj));
@@ -208,11 +213,11 @@ namespace MBRepoCore.Repo
 
 
         /// <summary>
-        ///  Asynchronously Check if <b><see cref="TEntity"/></b> contains an object based on a custom <b><see cref="IEqualityComparer{T}"/></b>
+        ///  Asynchronously <inheritdoc cref="Contains{TEntity,TEntityComparer}"/>
         /// </summary>
-        /// <typeparam name="TEntity">Entity to be look in</typeparam>
-        /// <typeparam name="TEntityComparer">The custom TEntity <b><see cref="IEqualityComparer{T}"/></b></typeparam>
-        /// <param name="obj">The object to be looking for</param>
+        /// <typeparam name="TEntity"><inheritdoc cref="Contains{TEntity,TEntityComparer}"/></typeparam>
+        /// <typeparam name="TEntityComparer"><inheritdoc cref="Contains{TEntity,TEntityComparer}"/></typeparam>
+        /// <param name="obj"><inheritdoc cref="Contains{TEntity,TEntityComparer}"/></param>
         /// <returns></returns>
         public Task<bool> ContainsAsync<TEntity, TEntityComparer>(TEntity obj)
             where TEntity : class
@@ -234,10 +239,10 @@ namespace MBRepoCore.Repo
 
 
         /// <summary>
-        /// Asynchronously, Add one <b><see cref="TEntity"/></b> record
+        /// Asynchronously, <inheritdoc cref="AddOne{TEntity}"/>
         /// </summary>
-        /// <typeparam name="TEntity">Entity to add into</typeparam>
-        /// <param name="record">The record to be added</param>
+        /// <typeparam name="TEntity"><inheritdoc cref="AddOne{TEntity}"/></typeparam>
+        /// <param name="record"><inheritdoc cref="AddOne{TEntity}"/></param>
         public Task AddOneAsync<TEntity>(TEntity record) where TEntity : class
         {
             return Task.Factory.StartNew(() => AddOne(record));
@@ -252,10 +257,10 @@ namespace MBRepoCore.Repo
 
 
         /// <summary>
-        /// Asynchronously, Add a range of reords in a table
+        /// Asynchronously, <inheritdoc cref="AddMany{TEntity}"/>
         /// </summary>
-        /// <typeparam name="TEntity">Entity to insert into</typeparam>
-        /// <param name="records">Records to be inserted</param>
+        /// <typeparam name="TEntity"><inheritdoc cref="AddMany{TEntity}"/></typeparam>
+        /// <param name="records"><inheritdoc cref="AddMany{TEntity}"/></param>
         public Task AddManyAsync<TEntity>(List<TEntity> records) where TEntity : class
         {
             return Task.Factory.StartNew(() => AddMany(records));
@@ -274,10 +279,10 @@ namespace MBRepoCore.Repo
 
 
         /// <summary>
-        /// Asynchronously, Remove One <b><see cref="TEntity"/></b> record
+        /// Asynchronously, <inheritdoc cref="RemoveOne{TEntity}"/>
         /// </summary>
-        /// <typeparam name="TEntity">Entity to delete from</typeparam>
-        /// <param name="record">The record to be removed</param>
+        /// <typeparam name="TEntity"><inheritdoc cref="RemoveOne{TEntity}"/></typeparam>
+        /// <param name="record"><inheritdoc cref="RemoveOne{TEntity}"/></param>
         public Task RemoveOneAsync<TEntity>(TEntity record) where TEntity : class
         {
             return Task.Factory.StartNew(() => RemoveOne(record));
@@ -291,10 +296,10 @@ namespace MBRepoCore.Repo
         }
 
         /// <summary>
-        /// Asynchronously, delete a range of <b><see cref="TEntity"/></b> records
+        /// Asynchronously, <inheritdoc cref="RemoveMany{TEntity}"/>
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <param name="records"></param>
+        /// <typeparam name="TEntity"><inheritdoc cref="RemoveMany{TEntity}"/></typeparam>
+        /// <param name="records"><inheritdoc cref="RemoveMany{TEntity}"/></param>
         /// <returns></returns>
         public Task RemoveManyAsync<TEntity>(List<TEntity> records) where TEntity : class
         {
@@ -318,8 +323,8 @@ namespace MBRepoCore.Repo
         /// <summary>
         /// Asynchronously, <inheritdoc cref="Filter{TEntity}"/>
         /// </summary>
-        /// <typeparam name="TEntity">The entity to be filtered</typeparam>
-        /// <param name="filterExpression">The <b><see cref="Expression"/></b> filter</param>
+        /// <typeparam name="TEntity"><inheritdoc cref="Filter{TEntity}"/></typeparam>
+        /// <param name="filterExpression"><inheritdoc cref="Filter{TEntity}"/></param>
         /// <returns></returns>
         public Task<IEnumerable<TEntity>> FilterAsync<TEntity>(Expression<Func<TEntity, bool>> filterExpression)
             where TEntity : class
@@ -344,9 +349,9 @@ namespace MBRepoCore.Repo
         /// <summary>
         /// Asynchronously, <inheritdoc cref="FilterAndOrder{TEntity}"/>
         /// </summary>
-        /// <typeparam name="TEntity">The entity to be filtered and ordered</typeparam>
-        /// <param name="filterExpression">The <b><see cref="Expression"/></b> filter</param>
-        /// <param name="orderingFunc">The <b><see cref="IOrderedQueryable{T}"/></b> ordering expression</param>
+        /// <typeparam name="TEntity"><inheritdoc cref="FilterAndOrder{TEntity}"/></typeparam>
+        /// <param name="filterExpression"><inheritdoc cref="FilterAndOrder{TEntity}"/></param>
+        /// <param name="orderingFunc"><inheritdoc cref="FilterAndOrder{TEntity}"/></param>
         /// <returns></returns>
         public Task<IEnumerable<TEntity>> FilterWithOrderAsync<TEntity>(
             Expression<Func<TEntity, bool>>                       filterExpression,
