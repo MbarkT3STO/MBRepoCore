@@ -14,6 +14,13 @@ namespace MBRepoCore.Repo
         List<TEntity> GetAll();
 
         /// <summary>
+        /// Get All <b><see cref="TEntity"/></b> records, and load related selected entities records
+        /// </summary>
+        /// <param name="expressions">Entities to be load data from (Should be the <see cref="TEntity"/>'s navigation properties)</param>
+        /// <returns></returns>
+        List<TEntity> GetAll(params Expression<Func<TEntity, object>>[] expressions);
+
+        /// <summary>
         /// Get One <b><see cref="TEntity"/></b> record, based on the primary key value
         /// </summary>
         /// <param name="pkValue">The primary key value</param>
