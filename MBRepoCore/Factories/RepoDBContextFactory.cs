@@ -11,7 +11,7 @@ namespace MBRepoCore.Factories
     /// A factory that responsible about creating new instances from <b><see cref="DbContext"/></b> contexts
     /// </summary>
     /// <typeparam name="TContext">The dbcontext as type</typeparam>
-    public static class RepoDBContextFactory<TContext> where TContext:DbContext
+    public static class RepoDbContextFactory<TContext> where TContext:DbContext
 
     {
 
@@ -69,7 +69,7 @@ namespace MBRepoCore.Factories
             {
                 case RdbmsProvider.SqlServer: ConfigureRdbms.ConfigureSqlServer(ref dbContextInstanceOptions);
                     break;
-                case RdbmsProvider.MySql: ConfigureRdbms.ConfigureMySQL(ref dbContextInstanceOptions);
+                case RdbmsProvider.MySql: ConfigureRdbms.ConfigureMySql(ref dbContextInstanceOptions);
                     break;
                 case RdbmsProvider.Oracle: ConfigureRdbms.ConfigureOracle(ref dbContextInstanceOptions);
                     break;

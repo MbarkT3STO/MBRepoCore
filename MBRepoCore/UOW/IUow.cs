@@ -2,7 +2,7 @@
 
 namespace MBRepoCore.UOW
 { 
-    public interface IUow<TContext> where TContext : DbContext, new()
+    public interface IUow<TContext> where TContext : DbContext
     {
         /// <summary>
         /// Accept and commit all database happened changes

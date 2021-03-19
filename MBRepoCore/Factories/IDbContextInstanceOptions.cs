@@ -9,7 +9,7 @@ namespace MBRepoCore.Factories
     public interface IDbContextInstanceOptions
     { 
         DbContextOptionsBuilder OptionsBuilder { get; set; }
-        string connectionString { get; set; }
+        string ConnectionString { get; set; }
         RdbmsProvider RdbmsProvider { get; set; }
     }
 }

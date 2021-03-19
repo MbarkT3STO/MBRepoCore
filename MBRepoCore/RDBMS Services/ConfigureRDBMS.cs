@@ -14,7 +14,7 @@ namespace MBRepoCore.RDBMS_Services
         ///  <param name="dbContextInstanceOptions">A <b><see cref="IDbContextInstanceOptions"/></b> instance as reference</param>
         public static void ConfigureSqlServer(ref IDbContextInstanceOptions dbContextInstanceOptions)
         {
-            dbContextInstanceOptions.OptionsBuilder.UseSqlServer(dbContextInstanceOptions.connectionString);
+            dbContextInstanceOptions.OptionsBuilder.UseSqlServer(dbContextInstanceOptions.ConnectionString);
         }
 
 
@@ -22,9 +22,9 @@ namespace MBRepoCore.RDBMS_Services
         ///  Configure a <b><see cref="IDbContextInstanceOptions"/> <b><see cref="DbContextOptionsBuilder{TContext}"/></b> to use MySQL</b>
         ///  </summary>
         ///  <param name="dbContextInstanceOptions">A <b><see cref="IDbContextInstanceOptions"/></b> instance as reference</param>
-        public static void ConfigureMySQL(ref IDbContextInstanceOptions dbContextInstanceOptions)
+        public static void ConfigureMySql(ref IDbContextInstanceOptions dbContextInstanceOptions)
         {
-            dbContextInstanceOptions.OptionsBuilder.UseMySql(dbContextInstanceOptions.connectionString, ServerVersion.AutoDetect(dbContextInstanceOptions.connectionString));
+            dbContextInstanceOptions.OptionsBuilder.UseMySql(dbContextInstanceOptions.ConnectionString, ServerVersion.AutoDetect(dbContextInstanceOptions.ConnectionString));
         }
 
 
@@ -34,7 +34,7 @@ namespace MBRepoCore.RDBMS_Services
         ///  <param name="dbContextInstanceOptions">A <b><see cref="IDbContextInstanceOptions"/></b> instance as reference</param>
         public static void ConfigureOracle(ref IDbContextInstanceOptions dbContextInstanceOptions)
         {
-            dbContextInstanceOptions.OptionsBuilder.UseOracle(dbContextInstanceOptions.connectionString);
+            dbContextInstanceOptions.OptionsBuilder.UseOracle(dbContextInstanceOptions.ConnectionString);
         }
     }
 }

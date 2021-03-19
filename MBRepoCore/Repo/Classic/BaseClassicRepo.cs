@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
-namespace MBRepoCore.Repo
+namespace MBRepoCore.Repo.Classic
 {
     /// <summary>
     ///Classic repository, Can be the base class for your <b><see cref="TEntity"/></b> repository

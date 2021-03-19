@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
-namespace MBRepoCore.Repo
+namespace MBRepoCore.Repo.Classic
 {
     /// <inheritdoc />
     public class ClassicRepo<TEntity>:BaseClassicRepo<TEntity> where TEntity:class

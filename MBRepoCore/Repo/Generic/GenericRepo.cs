@@ -7,7 +7,7 @@ using MBRepoCore.Enums;
 using MBRepoCore.Factories;
 using Microsoft.EntityFrameworkCore;
 
-namespace MBRepoCore.Repo
+namespace MBRepoCore.Repo.Generic
 {
     /// <summary>
     ///Full generic repository
@@ -39,7 +39,7 @@ namespace MBRepoCore.Repo
         /// <param name="lazyLoaded">Determine if lazy loading whether active or not</param>
         public GenericRepo(bool lazyLoaded)
         {
-            Context = RepoDBContextFactory<TContext>.GetInstance();
+            Context = RepoDbContextFactory<TContext>.GetInstance();
             ConfigureLazyLoading(lazyLoaded);
         }
 
@@ -98,10 +98,10 @@ namespace MBRepoCore.Repo
                                                                  {
                                                                      OptionsBuilder =
                                                                          new DbContextOptionsBuilder<TContext>(),
-                                                                     connectionString = connectionString,
+                                                                     ConnectionString = connectionString,
                                                                      RdbmsProvider    = rdbmsProvider
                                                                  };
-            return RepoDBContextFactory<TContext>.GetInstance(dbContextInstanceOptions);
+            return RepoDbContextFactory<TContext>.GetInstance(dbContextInstanceOptions);
         }
 
 

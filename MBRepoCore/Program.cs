@@ -21,14 +21,14 @@ namespace MBRepoCore
         private static void ConfigureServices()
         {
             _configuration = new ConfigurationBuilder()
-                            .SetBasePath(Directory.GetParent(AppContext.BaseDirectory).FullName)
+                            .SetBasePath(Directory.GetParent(AppContext.BaseDirectory)?.FullName)
                             .AddJsonFile("appsettings.json", false).Build();
         }
 
         static async Task Main(string[] args)
         {
             //Configure the DI
-            ConfigureServices();
+            //ConfigureServices();
 
 
 
@@ -54,7 +54,7 @@ namespace MBRepoCore
             /*--------------------------------*/
 
             // Using SQL Server
-            var repo = new GenericRepo<SchoolContext>(_configuration.GetConnectionString("MBARKServer"), RdbmsProvider.SqlServer, false);
+            //var repo = new GenericRepo<SchoolContext>(_configuration.GetConnectionString("MBARKServer"), RdbmsProvider.SqlServer, false);
 
             // Using MySQL
             //var repo = new Repo<SchoolContext>(_configuration.GetConnectionString("MySQL"), RdbmsProvider.MySql, false);
@@ -66,7 +66,7 @@ namespace MBRepoCore
             //------------------------------------------------------------------------------------------------
             // Create UOW<TContext> objet
             //------------------------------------------------------------------------------------------------
-            var uow = new Uow<SchoolContext>(repo);
+            //var uow = new Uow<SchoolContext>(repo);
 
 
 
