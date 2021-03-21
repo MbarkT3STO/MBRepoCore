@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace MBRepoCore.Repo.Classic
+namespace MBRepoCore.Repo.Specific
 {
-    public interface IClassicRepo<TEntity> where TEntity:class
+    public interface ISpecificRepo<TEntity> where TEntity:class
     {
         /// <summary>
         /// Get All <b><see cref="TEntity"/></b> records

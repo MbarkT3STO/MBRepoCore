@@ -1,14 +1,14 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using MBRepoCore.Exceptions;
-using MBRepoCore.Repo.Classic;
+using MBRepoCore.Repo.Specific;
 using MBRepoCore.Repo.Generic;
 using Microsoft.EntityFrameworkCore;
 
 namespace MBRepoCore.UOW
 {
     /// <summary>
-    /// Abstract <b>Unit Of Work</b> class to accept or decline the happened changes in both <b><see cref="ClassicRepo{TEntity}"/></b> or <b><see cref="GenericRepo{TContext}"/></b> repositories
+    /// Abstract <b>Unit Of Work</b> class to accept or decline the happened changes in both <b><see cref="SpecificRepo{TEntity}"/></b> or <b><see cref="GenericRepo{TContext}"/></b> repositories
     /// </summary>
     public abstract class BaseUow<TContext> : IUow<TContext> where TContext : DbContext
     {
@@ -32,9 +32,9 @@ namespace MBRepoCore.UOW
         }
 
         /// <summary>
-        /// This constructor can be used with <see cref="ClassicRepo{TEntity}"/>
+        /// This constructor can be used with <see cref="SpecificRepo{TEntity}"/>
         /// </summary>
-        /// <param name="dbContext">The <see cref="TContext"/> object used by <see cref="ClassicRepo{TEntity}"/></param>
+        /// <param name="dbContext">The <see cref="TContext"/> object used by <see cref="SpecificRepo{TEntity}"/></param>
         protected BaseUow(TContext dbContext)
         {
             _context = dbContext;

@@ -2,15 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using MBRepoCore.Repo.Specific;
 using Microsoft.EntityFrameworkCore;
 
-namespace MBRepoCore.Repo.Classic
+namespace MBRepoCore.Repo.Specific
 {
     /// <summary>
     ///Classic repository, Can be the base class for your <b><see cref="TEntity"/></b> repository
     /// </summary>
     /// <typeparam name="TEntity">The entity to create repository for</typeparam>
-    public abstract class BaseClassicRepo<TEntity>:IClassicRepo<TEntity>,IRepoProperties where TEntity:class
+    public abstract class BaseSpecificRepo<TEntity>:ISpecificRepo<TEntity>,IRepoProperties where TEntity:class
     {
 
 
@@ -26,7 +27,7 @@ namespace MBRepoCore.Repo.Classic
 
         #region Contructor
 
-        protected BaseClassicRepo(DbContext context, bool lazyLoaded)
+        protected BaseSpecificRepo(DbContext context, bool lazyLoaded)
         {
             Context = context;
             ConfigureLazyLoading(lazyLoaded);
