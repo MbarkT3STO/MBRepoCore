@@ -183,7 +183,21 @@ namespace MBRepoCore.Repo.Generic
         #endregion
 
 
+        #region Update
+
+        /// <inheritdoc />
+        public void Update<TEntity>(TEntity record) where TEntity : class
+        {
+            var entity = Context.Set<TEntity>();
+            entity.Attach(record);
+            Context.Entry(record).State = EntityState.Modified;
+        }
+
+        #endregion
+
+
         #region Contains
+
 
         /// <inheritdoc />
         public bool Contains<TEntity>(TEntity obj) where TEntity : class
