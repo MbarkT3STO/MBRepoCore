@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace MBRepoCore.Repo
+namespace MBRepoCore.Repo.Abstractions
 {
     public interface IRepoProperties
     {

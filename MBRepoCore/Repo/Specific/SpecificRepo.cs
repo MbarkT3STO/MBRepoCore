@@ -3,17 +3,14 @@
 namespace MBRepoCore.Repo.Specific
 {
     /// <inheritdoc />
-    public class SpecificRepo<TEntity>:BaseSpecificRepo<TEntity> where TEntity:class
+    public class SpecificRepo<TEntity> : BaseSpecificRepo<TEntity> where TEntity : class
     {
-
         #region Constructors
 
-        public SpecificRepo(DbContext context, bool lazyLoaded) : base(context,lazyLoaded)
+        public SpecificRepo(DbContext context, bool lazyLoaded) : base(context, lazyLoaded)
         {
-
         }
 
         #endregion
-
     }
 }

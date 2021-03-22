@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using MBRepoCore.Enums;
 using MBRepoCore.Factories;
+using MBRepoCore.Repo.Abstractions;
 using Microsoft.EntityFrameworkCore;
 
 namespace MBRepoCore.Repo.Generic

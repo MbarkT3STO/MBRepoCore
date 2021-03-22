@@ -23,7 +23,7 @@ namespace MBRepoCore.Factories
         /// <returns></returns>
         public static TContext GetInstance()
         {
-            lock ("")
+            lock ("From MBRepoCore")
             {
                 TContext context = (TContext)Activator.CreateInstance(typeof(TContext));
 

@@ -2,19 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using MBRepoCore.Repo.Specific;
+using MBRepoCore.Repo.Abstractions;
 using Microsoft.EntityFrameworkCore;
 
 namespace MBRepoCore.Repo.Specific
 {
     /// <summary>
-    ///Classic repository, Can be the base class for your <b><see cref="TEntity"/></b> repository
+    ///Classic repository with <see cref="IBasicRepository"/> and <see cref="IAdvancedRepository"/> features, Can be the base class for your <b><see cref="TEntity"/></b> repository
     /// </summary>
     /// <typeparam name="TEntity">The entity to create repository for</typeparam>
-    public abstract class BaseSpecificRepo<TEntity>:ISpecificRepo<TEntity>,IRepoProperties where TEntity:class
+    public abstract class BaseSpecificRepo<TEntity> : ISpecificRepo<TEntity>, IRepoProperties where TEntity : class
     {
-
-
         #region Properties
 
         /// <inheritdoc />
@@ -37,7 +35,6 @@ namespace MBRepoCore.Repo.Specific
 
         #region private methods
 
-
         /// <summary>
         /// Set the <b><see cref="Context"/></b> lazy loading
         /// </summary>
@@ -59,6 +56,7 @@ namespace MBRepoCore.Repo.Specific
         {
             return Context.Set<TEntity>().ToList();
         }
+
 
         /// <inheritdoc />
         public virtual List<TEntity> GetAll(params Expression<Func<TEntity, object>>[] expressions)
@@ -104,7 +102,8 @@ namespace MBRepoCore.Repo.Specific
         }
 
         /// <inheritdoc />
-        public virtual bool          Contains<TEntityComparer>(TEntity              obj) where TEntityComparer : IEqualityComparer<TEntity>, new()
+        public virtual bool Contains<TEntityComparer>(TEntity obj)
+            where TEntityComparer : IEqualityComparer<TEntity>, new()
         {
             return Context.Set<TEntity>().AsEnumerable()
                           .Contains(obj, new TEntityComparer() as IEqualityComparer<TEntity>);
@@ -139,7 +138,8 @@ namespace MBRepoCore.Repo.Specific
         }
 
         /// <inheritdoc />
-        public virtual List<TEntity> FilterAndOrder(Expression<Func<TEntity, bool>> filterExpression, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderingFunc)
+        public virtual List<TEntity> FilterAndOrder(Expression<Func<TEntity, bool>> filterExpression,
+                                                    Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderingFunc)
         {
             IQueryable<TEntity> entity = Context.Set<TEntity>();
             entity = entity.Where(filterExpression);
@@ -151,7 +151,5 @@ namespace MBRepoCore.Repo.Specific
         #endregion
 
         #endregion
-
-
     }
 }
