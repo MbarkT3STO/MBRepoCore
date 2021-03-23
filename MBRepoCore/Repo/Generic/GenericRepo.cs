@@ -7,6 +7,7 @@ using MBRepoCore.Enums;
 using MBRepoCore.Factories;
 using MBRepoCore.Repo.Abstractions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace MBRepoCore.Repo.Generic
 {
@@ -149,6 +150,8 @@ namespace MBRepoCore.Repo.Generic
             return result.ToList();
         }
 
+
+
         /// <summary>
         /// Asynchronously, <inheritdoc cref="GetAll{TEntity}(System.Linq.Expressions.Expression{System.Func{TEntity,object}}[])"/>
         /// </summary>
@@ -191,6 +194,20 @@ namespace MBRepoCore.Repo.Generic
             var entity = Context.Set<TEntity>();
             entity.Attach(record);
             Context.Entry(record).State = EntityState.Modified;
+        }
+
+        /// <inheritdoc />
+        public void UpdateMany<TEntity>(Expression<Func<TEntity, bool>> filterExpression, Expression<Func<TEntity, object>> updateThe, object value) where TEntity : class
+        {
+            // Get the records to be updated depending on the filter expression
+            var recordsToBeUpdated = Context.Set<TEntity>().Where(filterExpression).ToList();
+
+            // Update the selected records
+            recordsToBeUpdated.ForEach(entity =>
+                                       {
+                                           entity.GetType().GetProperty(updateThe.Name ?? string.Empty)?.SetValue(this, value);
+                                       });
+
         }
 
         #endregion

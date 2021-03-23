@@ -53,7 +53,6 @@ namespace MBRepoCore.Repo.Abstractions
         /// <param name="record">The record to be updated</param>
         void Update<TEntity>(TEntity record) where TEntity : class;
 
-
         #endregion
 
         #region Contains
@@ -121,6 +120,16 @@ namespace MBRepoCore.Repo.Abstractions
         /// </summary>
         /// <param name="records">Records to be inserted</param>
         void AddMany(List<TEntity> records);
+
+        #endregion
+
+        #region Update
+
+        /// <summary>
+        /// update one <b><see cref="TEntity"/></b> record
+        /// </summary>
+        /// <param name="record">The record to be updated</param>
+        void Update(TEntity record);
 
         #endregion
 

@@ -22,6 +22,20 @@ namespace MBRepoCore.Repo.Abstractions
 
         #endregion
 
+        #region Update
+
+        /// <summary>
+        /// Update many records <b>in one</b> property
+        /// </summary>
+        /// <typeparam name="TEntity">Entity to update in</typeparam>
+        /// <param name="filterExpression">The filter expression</param>
+        /// <param name="updateThe">The property to be updated</param>
+        /// <param name="value">The new <b><see cref="updateThe"/></b> value</param>
+        void UpdateMany<TEntity>(Expression<Func<TEntity, bool>>   filterExpression,
+                                 Expression<Func<TEntity, object>> updateThe, object value) where TEntity : class;
+
+        #endregion
+
         #region Filter
 
         /// <summary>
@@ -80,5 +94,4 @@ namespace MBRepoCore.Repo.Abstractions
 
         #endregion
     }
-
 }

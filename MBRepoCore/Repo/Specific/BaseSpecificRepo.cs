@@ -111,6 +111,18 @@ namespace MBRepoCore.Repo.Specific
 
         #endregion
 
+        #region Update
+
+        /// <inheritdoc />
+        public virtual void Update(TEntity record)
+        {
+            var entity = Context.Set<TEntity>();
+            entity.Attach(record);
+            Context.Entry(record).State = EntityState.Modified;
+        }
+
+        #endregion
+
         #region Remove
 
         /// <inheritdoc />
