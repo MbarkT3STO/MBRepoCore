@@ -9,14 +9,17 @@ using MBRepoCore.Repo.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 
+
 namespace MBRepoCore.Repo.Generic
 {
     /// <summary>
     ///Full generic repository
     /// </summary>
     /// <typeparam name="TContext">The <b><see cref="DbContext"/></b> type</typeparam>
-    public sealed class GenericRepo<TContext> : IGenericRepo<TContext>, IRepoProperties, IDisposable where TContext : DbContext
+    public sealed class GenericRepo<TContext> : IGenericRepo<TContext>, IRepoProperties, IDisposable
+        where TContext : DbContext
     {
+
         #region properties
 
         /// <inheritdoc />
@@ -51,7 +54,8 @@ namespace MBRepoCore.Repo.Generic
         /// </summary>
         /// <param name="context">Object from <b><see cref="TContext"/></b> context</param>
         /// <param name="lazyLoaded">Determine if lazy loading whether active or not</param>
-        public GenericRepo(TContext context, bool lazyLoaded)
+        public GenericRepo(TContext context,
+                           bool     lazyLoaded)
         {
             Context = context;
             ConfigureLazyLoading(lazyLoaded);
@@ -76,7 +80,9 @@ namespace MBRepoCore.Repo.Generic
         ///  </param>
         ///  <param name="rdbmsProvider">The <b>RDBMS/<see cref="RdbmsProvider"/></b> to be configured with</param>
         ///  <param name="lazyLoaded">Determine if lazy loading whether active or not</param>
-        public GenericRepo(string connectionString, RdbmsProvider rdbmsProvider, bool lazyLoaded)
+        public GenericRepo(string        connectionString,
+                           RdbmsProvider rdbmsProvider,
+                           bool          lazyLoaded)
         {
             Context = CreateAndConfigureDbContextInstanceOptions(connectionString, rdbmsProvider);
             ConfigureLazyLoading(lazyLoaded);
@@ -103,6 +109,7 @@ namespace MBRepoCore.Repo.Generic
                                                                      ConnectionString = connectionString,
                                                                      RdbmsProvider    = rdbmsProvider
                                                                  };
+
             return RepoDbContextFactory<TContext>.GetInstance(dbContextInstanceOptions);
         }
 
@@ -137,40 +144,82 @@ namespace MBRepoCore.Repo.Generic
         public Task<List<TEntity>> GetAllAsync<TEntity>() where TEntity : class
         {
             return Task.Factory.StartNew(() => GetAll<TEntity>().ToList());
-        }  
-        
+        }
+
         /// <inheritdoc />
-        public List<TEntity> GetAll<TEntity>(params Expression<Func<TEntity, object>>[] expressions) where TEntity : class
+        public List<TEntity> GetAll<TEntity>(params Expression<Func<TEntity, object>>[] relatedEntitiesToBeLoaded)
+            where TEntity : class
         {
             var result = Context.Set<TEntity>().AsQueryable();
 
-            result = expressions.Aggregate(result, (current, expression) => current.Include(expression));
+            result = relatedEntitiesToBeLoaded.Aggregate(result, (current,
+                                                                  expression) => current.Include(expression));
 
 
             return result.ToList();
         }
-
-
 
         /// <summary>
         /// Asynchronously, <inheritdoc cref="GetAll{TEntity}(System.Linq.Expressions.Expression{System.Func{TEntity,object}}[])"/>
         /// </summary>
         /// <typeparam name="TEntity"><inheritdoc cref="GetAll{TEntity}(System.Linq.Expressions.Expression{System.Func{TEntity,object}}[])"/></typeparam>
         /// <param name="expressions"><inheritdoc cref="GetAll{TEntity}(System.Linq.Expressions.Expression{System.Func{TEntity,object}}[])"/></param>
-        public Task<List<TEntity>> GetAllAsync<TEntity>(params Expression<Func<TEntity, object>>[] expressions) where TEntity : class
+        public Task<List<TEntity>> GetAllAsync<TEntity>(params Expression<Func<TEntity, object>>[] expressions)
+            where TEntity : class
         {
             return Task.Factory.StartNew(() => GetAll<TEntity>(expressions));
         }
 
+        /// <inheritdoc />
+        public List<TEntity> GetMany<TEntity>(Expression<Func<TEntity, bool>> filterExpression) where TEntity : class
+        {
+            return Context.Set<TEntity>().Where(filterExpression).ToList();
+        }
 
+        /// <summary>
+        /// Asynchronously <inheritdoc cref="GetMany{TEntity}(System.Linq.Expressions.Expression{System.Func{TEntity,bool}})"/>
+        /// </summary>
+        /// <typeparam name="TEntity"><inheritdoc cref="GetMany{TEntity}(System.Linq.Expressions.Expression{System.Func{TEntity,bool}})"/></typeparam>
+        /// <param name="filterExpression"><inheritdoc cref="GetMany{TEntity}(System.Linq.Expressions.Expression{System.Func{TEntity,bool}})"/></param>
+        /// <returns></returns>
+        public Task<List<TEntity>> GetManyAsync<TEntity>(Expression<Func<TEntity, bool>> filterExpression)
+            where TEntity : class
+        {
+            return Task.Factory.StartNew(() => GetMany<TEntity>(filterExpression));
+        }
 
+        /// <inheritdoc />
+        public List<TEntity> GetMany<TEntity>(Expression<Func<TEntity, bool>>            filterExpression,
+                                              params Expression<Func<TEntity, object>>[] relatedEntitiesToBeLoaded)
+            where TEntity : class
+        {
+            var result = Context.Set<TEntity>().Where(filterExpression).AsQueryable();
+
+            result = relatedEntitiesToBeLoaded.Aggregate(result, (current,
+                                                                  expression) => current.Include(expression));
+
+            return result.ToList();
+        }
+
+        /// <summary>
+        /// Asynchronously <inheritdoc cref="GetMany{TEntity}(Expression{Func{TEntity,bool}},Expression{Func{TEntity, object}}[] )"/>
+        /// </summary>
+        /// <typeparam name="TEntity"><inheritdoc cref="GetMany{TEntity}(Expression{Func{TEntity,bool}},Expression{Func{TEntity, object}}[] )"/></typeparam>
+        /// <param name="filterExpression"><inheritdoc cref="GetMany{TEntity}(Expression{Func{TEntity,bool}},Expression{Func{TEntity, object}}[] )"/></param>
+        /// <param name="relatedEntitiesToBeLoaded"><inheritdoc cref="GetMany{TEntity}(Expression{Func{TEntity,bool}},Expression{Func{TEntity, object}}[] )"/></param>
+        /// <returns></returns>
+        public Task<List<TEntity>> GetManyAsync<TEntity>(Expression<Func<TEntity, bool>> filterExpression,
+                                                         params Expression<Func<TEntity, object>>[]
+                                                             relatedEntitiesToBeLoaded) where TEntity : class
+        {
+            return Task.Factory.StartNew(() => GetMany<TEntity>(filterExpression, relatedEntitiesToBeLoaded));
+        }
 
         /// <inheritdoc />
         public TEntity GetOne<TEntity>(object pkValue) where TEntity : class
         {
             return Context.Set<TEntity>().Find(pkValue);
         }
-
 
         /// <summary>
         /// Asynchronously, <inheritdoc cref="GetOne{TEntity}"/>
@@ -189,32 +238,51 @@ namespace MBRepoCore.Repo.Generic
         #region Update
 
         /// <inheritdoc />
-        public void Update<TEntity>(TEntity record) where TEntity : class
+        public void UpdateOne<TEntity>(TEntity record) where TEntity : class
         {
             var entity = Context.Set<TEntity>();
             entity.Attach(record);
             Context.Entry(record).State = EntityState.Modified;
         }
 
+        /// <summary>
+        /// Asynchronously <inheritdoc cref="UpdateOne{TEntity}"/>
+        /// </summary>
+        /// <typeparam name="TEntity"><inheritdoc cref="UpdateOne{TEntity}"/></typeparam>
+        /// <param name="record"><inheritdoc cref="UpdateOne{TEntity}"/></param>
+        public Task UpdateOneAsync<TEntity>(TEntity record) where TEntity : class
+        {
+            return Task.Factory.StartNew(() => UpdateOne(record));
+        }
+
         /// <inheritdoc />
-        public void UpdateMany<TEntity>(Expression<Func<TEntity, bool>> filterExpression, Expression<Func<TEntity, object>> updateThe, object value) where TEntity : class
+        public void UpdateMany<TEntity>(Expression<Func<TEntity, bool>> filterExpression,
+                                        Action<TEntity>                 updateAction)
+            where TEntity : class
         {
             // Get the records to be updated depending on the filter expression
             var recordsToBeUpdated = Context.Set<TEntity>().Where(filterExpression).ToList();
 
             // Update the selected records
-            recordsToBeUpdated.ForEach(entity =>
-                                       {
-                                           entity.GetType().GetProperty(updateThe.Name ?? string.Empty)?.SetValue(this, value);
-                                       });
+            recordsToBeUpdated.ForEach(updateAction);
+        }
 
+        /// <summary>
+        /// Asynchronously <inheritdoc cref="UpdateMany{TEntity}"/>
+        /// </summary>
+        /// <typeparam name="TEntity"><inheritdoc cref="UpdateMany{TEntity}"/></typeparam>
+        /// <param name="filterExpression"><inheritdoc cref="UpdateMany{TEntity}"/></param>
+        /// <param name="updateAction"><inheritdoc cref="UpdateMany{TEntity}"/></param>
+        public Task UpdateManyAsync<TEntity>(Expression<Func<TEntity, bool>> filterExpression,
+                                             Action<TEntity>                 updateAction) where TEntity : class
+        {
+            return Task.Factory.StartNew(() => UpdateMany(filterExpression, updateAction));
         }
 
         #endregion
 
 
         #region Contains
-
 
         /// <inheritdoc />
         public bool Contains<TEntity>(TEntity obj) where TEntity : class
@@ -404,7 +472,8 @@ namespace MBRepoCore.Repo.Generic
         /// <param name="prop">The property to be used in the condition</param>
         /// <param name="val">The value to be used in the search</param>
         /// <returns></returns>
-        public IEnumerable<TEntity> GetMany<TEntity>(string prop, object val) where TEntity : class
+        public IEnumerable<TEntity> GetMany<TEntity>(string prop,
+                                                     object val) where TEntity : class
         {
             return Context.Set<TEntity>().AsEnumerable()
                           .Where(x => typeof(TEntity).GetProperty(prop).GetValue(x, null).ToString()
@@ -446,5 +515,6 @@ namespace MBRepoCore.Repo.Generic
         }
 
         #endregion
+
     }
 }

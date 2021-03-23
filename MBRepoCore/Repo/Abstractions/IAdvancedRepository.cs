@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
+
 namespace MBRepoCore.Repo.Abstractions
 {
     /// <summary>
@@ -10,29 +11,47 @@ namespace MBRepoCore.Repo.Abstractions
     /// </summary>
     public interface IAdvancedRepository
     {
+
         #region Get
+
+        /// <summary>
+        /// Get All <b><see cref="TEntity"/></b> records that respects a set of conditions provided in the filter expression
+        /// </summary>
+        /// <typeparam name="TEntity">The entity to select from</typeparam>
+        /// <param name="filterExpression">One or set of conditions to be respected</param>
+        List<TEntity> GetMany<TEntity>(Expression<Func<TEntity, bool>> filterExpression) where TEntity : class;
+
+        /// <summary>
+        /// Get All <b><see cref="TEntity"/></b> records that respects a set of conditions provided in the filter expression and load related selected entities records
+        /// </summary>
+        /// <typeparam name="TEntity">The entity to select from</typeparam>
+        /// <param name="filterExpression">One or set of conditions to be respected</param>
+        /// <param name="relatedEntitiesToBeLoaded">Entities to be load data from (Should be the <see cref="TEntity"/>'s navigation properties)</param>
+        List<TEntity> GetMany<TEntity>(Expression<Func<TEntity, bool>>            filterExpression,
+                                       params Expression<Func<TEntity, object>>[] relatedEntitiesToBeLoaded)
+            where TEntity : class;
 
         /// <summary>
         /// Get All <b><see cref="TEntity"/></b> records, and load related selected entities records
         /// </summary>
         /// <typeparam name="TEntity">The entity to select from</typeparam>
-        /// <param name="expressions">Entities to be load data from (Should be the <see cref="TEntity"/>'s navigation properties)</param>
-        /// <returns></returns>
-        List<TEntity> GetAll<TEntity>(params Expression<Func<TEntity, object>>[] expressions) where TEntity : class;
+        /// <param name="relatedEntitiesToBeLoaded">Entities to be load data from (Should be the <see cref="TEntity"/>'s navigation properties)</param>
+        List<TEntity> GetAll<TEntity>(params Expression<Func<TEntity, object>>[] relatedEntitiesToBeLoaded)
+            where TEntity : class;
 
         #endregion
 
         #region Update
 
         /// <summary>
-        /// Update many records <b>in one</b> property
+        /// Update many <b><see cref="TEntity"/></b> records
         /// </summary>
         /// <typeparam name="TEntity">Entity to update in</typeparam>
         /// <param name="filterExpression">The filter expression</param>
-        /// <param name="updateThe">The property to be updated</param>
-        /// <param name="value">The new <b><see cref="updateThe"/></b> value</param>
-        void UpdateMany<TEntity>(Expression<Func<TEntity, bool>>   filterExpression,
-                                 Expression<Func<TEntity, object>> updateThe, object value) where TEntity : class;
+        /// <param name="updateAction">The update action</param>
+        void UpdateMany<TEntity>(Expression<Func<TEntity, bool>> filterExpression,
+                                 Action<TEntity>                 updateAction)
+            where TEntity : class;
 
         #endregion
 
@@ -58,6 +77,7 @@ namespace MBRepoCore.Repo.Abstractions
             where TEntity : class;
 
         #endregion
+
     }
 
     /// <summary>
@@ -66,13 +86,41 @@ namespace MBRepoCore.Repo.Abstractions
     /// <typeparam name="TEntity">Entity to create repository for</typeparam>
     public interface IAdvancedRepository<TEntity>
     {
+
         #region Get
+
+        /// <summary>
+        /// Get All <b><see cref="TEntity"/></b> records that respects a set of conditions provided in the filter expression
+        /// </summary>
+        /// <typeparam name="TEntity">The entity to select from</typeparam>
+        /// <param name="filterExpression">One or set of conditions to be respected</param>
+        List<TEntity> GetMany(Expression<Func<TEntity, bool>> filterExpression);
+
+        /// <summary>
+        /// Get All <b><see cref="TEntity"/></b> records that respects a set of conditions provided in the filter expression and load related selected entities records
+        /// </summary>
+        /// <param name="filterExpression">One or set of conditions to be respected</param>
+        /// <param name="relatedEntitiesToBeLoaded">Entities to be load data from (Should be the <see cref="TEntity"/>'s navigation properties)</param>
+        List<TEntity> GetMany(Expression<Func<TEntity, bool>>            filterExpression,
+                              params Expression<Func<TEntity, object>>[] relatedEntitiesToBeLoaded);
 
         /// <summary>
         /// Get All <b><see cref="TEntity"/></b> records, and load related selected entities records
         /// </summary>
-        /// <param name="expressions">Entities to be load data from (Should be the <see cref="TEntity"/>'s navigation properties)</param>
-        List<TEntity> GetAll(params Expression<Func<TEntity, object>>[] expressions);
+        /// <param name="relatedEntitiesToBeLoaded">Entities to be load data from (Should be the <see cref="TEntity"/>'s navigation properties)</param>
+        List<TEntity> GetAll(params Expression<Func<TEntity, object>>[] relatedEntitiesToBeLoaded);
+
+        #endregion
+
+        #region Update
+
+        /// <summary>
+        /// Update many <b><see cref="TEntity"/></b> records
+        /// </summary>
+        /// <param name="filterExpression">The filter expression</param>
+        /// <param name="updateAction">The update action</param>
+        void UpdateMany(Expression<Func<TEntity, bool>> filterExpression,
+                        Action<TEntity>                 updateAction);
 
         #endregion
 
@@ -93,5 +141,6 @@ namespace MBRepoCore.Repo.Abstractions
                                      Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderingFunc);
 
         #endregion
+
     }
 }

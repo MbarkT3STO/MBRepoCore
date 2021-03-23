@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using MBRepoCore.Repo.Abstractions;
 using Microsoft.EntityFrameworkCore;
 
+
 namespace MBRepoCore.Repo.Specific
 {
     /// <summary>
@@ -13,6 +14,7 @@ namespace MBRepoCore.Repo.Specific
     /// <typeparam name="TEntity">The entity to create repository for</typeparam>
     public abstract class BaseSpecificRepo<TEntity> : ISpecificRepo<TEntity>, IRepoProperties where TEntity : class
     {
+
         #region Properties
 
         /// <inheritdoc />
@@ -25,7 +27,8 @@ namespace MBRepoCore.Repo.Specific
 
         #region Contructor
 
-        protected BaseSpecificRepo(DbContext context, bool lazyLoaded)
+        protected BaseSpecificRepo(DbContext context,
+                                   bool      lazyLoaded)
         {
             Context = context;
             ConfigureLazyLoading(lazyLoaded);
@@ -57,14 +60,31 @@ namespace MBRepoCore.Repo.Specific
             return Context.Set<TEntity>().ToList();
         }
 
+        /// <inheritdoc />
+        public virtual List<TEntity> GetMany(Expression<Func<TEntity, bool>> filterExpression)
+        {
+            return Context.Set<TEntity>().Where(filterExpression).ToList();
+        }
 
         /// <inheritdoc />
-        public virtual List<TEntity> GetAll(params Expression<Func<TEntity, object>>[] expressions)
+        public virtual List<TEntity> GetMany(Expression<Func<TEntity, bool>>            filterExpression,
+                                             params Expression<Func<TEntity, object>>[] relatedEntitiesToBeLoaded)
+        {
+            var result = Context.Set<TEntity>().Where(filterExpression).AsQueryable();
+
+            result = relatedEntitiesToBeLoaded.Aggregate(result, (current,
+                                                                  expression) => current.Include(expression));
+
+            return result.ToList();
+        }
+
+        /// <inheritdoc />
+        public virtual List<TEntity> GetAll(params Expression<Func<TEntity, object>>[] relatedEntitiesToBeLoaded)
         {
             var result = Context.Set<TEntity>().AsQueryable();
 
-            result = expressions.Aggregate(result, (current, expression) => current.Include(expression));
-
+            result = relatedEntitiesToBeLoaded.Aggregate(result, (current,
+                                                                  expression) => current.Include(expression));
 
             return result.ToList();
         }
@@ -93,6 +113,29 @@ namespace MBRepoCore.Repo.Specific
 
         #endregion
 
+        #region Update
+
+        /// <inheritdoc />
+        public virtual void UpdateOne(TEntity record)
+        {
+            var entity = Context.Set<TEntity>();
+            entity.Attach(record);
+            Context.Entry(record).State = EntityState.Modified;
+        }
+
+        /// <inheritdoc />
+        public virtual void UpdateMany(Expression<Func<TEntity, bool>> filterExpression,
+                                       Action<TEntity>                 updateAction)
+        {
+            // Get the records to be updated depending on the filter expression
+            var recordsToBeUpdated = Context.Set<TEntity>().Where(filterExpression).ToList();
+
+            // Update the selected records
+            recordsToBeUpdated.ForEach(updateAction);
+        }
+
+        #endregion
+
         #region Contains
 
         /// <inheritdoc />
@@ -105,20 +148,9 @@ namespace MBRepoCore.Repo.Specific
         public virtual bool Contains<TEntityComparer>(TEntity obj)
             where TEntityComparer : IEqualityComparer<TEntity>, new()
         {
-            return Context.Set<TEntity>().AsEnumerable()
+            return Context.Set<TEntity>()
+                          .AsEnumerable()
                           .Contains(obj, new TEntityComparer() as IEqualityComparer<TEntity>);
-        }
-
-        #endregion
-
-        #region Update
-
-        /// <inheritdoc />
-        public virtual void Update(TEntity record)
-        {
-            var entity = Context.Set<TEntity>();
-            entity.Attach(record);
-            Context.Entry(record).State = EntityState.Modified;
         }
 
         #endregion
@@ -163,5 +195,6 @@ namespace MBRepoCore.Repo.Specific
         #endregion
 
         #endregion
+
     }
 }

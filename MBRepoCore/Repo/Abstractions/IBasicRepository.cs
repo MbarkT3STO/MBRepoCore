@@ -51,7 +51,7 @@ namespace MBRepoCore.Repo.Abstractions
         /// </summary>
         /// <typeparam name="TEntity">Entity to add into</typeparam>
         /// <param name="record">The record to be updated</param>
-        void Update<TEntity>(TEntity record) where TEntity : class;
+        void UpdateOne<TEntity>(TEntity record) where TEntity : class;
 
         #endregion
 
@@ -129,7 +129,7 @@ namespace MBRepoCore.Repo.Abstractions
         /// update one <b><see cref="TEntity"/></b> record
         /// </summary>
         /// <param name="record">The record to be updated</param>
-        void Update(TEntity record);
+        void UpdateOne(TEntity record);
 
         #endregion
 
