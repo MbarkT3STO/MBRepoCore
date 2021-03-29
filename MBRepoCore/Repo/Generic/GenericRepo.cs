@@ -16,7 +16,7 @@ namespace MBRepoCore.Repo.Generic
     ///Full generic repository
     /// </summary>
     /// <typeparam name="TContext">The <b><see cref="DbContext"/></b> type</typeparam>
-    public sealed class GenericRepo<TContext> : IGenericRepo<TContext>, IRepoProperties, IDisposable
+    public class GenericRepo<TContext> : IGenericRepo<TContext>, IRepoProperties, IDisposable
         where TContext : DbContext
     {
 
