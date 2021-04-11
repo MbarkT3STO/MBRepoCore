@@ -15,6 +15,14 @@ namespace MBRepoCore.Repo.Abstractions
         #region Get
 
         /// <summary>
+        /// Get All <b><see cref="TEntity"/></b> records, and load related selected entities records
+        /// </summary>
+        /// <typeparam name="TEntity">The entity to select from</typeparam>
+        /// <param name="relatedEntitiesToBeLoaded">Entities to be load data from (Should be the <see cref="TEntity"/>'s navigation properties)</param>
+        List<TEntity> GetAll<TEntity>(params Expression<Func<TEntity, object>>[] relatedEntitiesToBeLoaded)
+            where TEntity : class;
+
+        /// <summary>
         /// Get All <b><see cref="TEntity"/></b> records that respects a set of conditions provided in the filter expression
         /// </summary>
         /// <typeparam name="TEntity">The entity to select from</typeparam>
@@ -32,12 +40,12 @@ namespace MBRepoCore.Repo.Abstractions
             where TEntity : class;
 
         /// <summary>
-        /// Get All <b><see cref="TEntity"/></b> records, and load related selected entities records
+        /// Get one <b><see cref="TEntity"/></b> record and load related selected entities
         /// </summary>
         /// <typeparam name="TEntity">The entity to select from</typeparam>
-        /// <param name="relatedEntitiesToBeLoaded">Entities to be load data from (Should be the <see cref="TEntity"/>'s navigation properties)</param>
-        List<TEntity> GetAll<TEntity>(params Expression<Func<TEntity, object>>[] relatedEntitiesToBeLoaded)
-            where TEntity : class;
+        /// <param name="pkValue">Primary key value</param>
+        /// <param name="relatedEntitiesToBeLoaded">Entities to be loaded (Should be the <see cref="TEntity"/>'s navigation properties)</param>
+        TEntity GetOne<TEntity>(object pkValue, params Expression<Func<TEntity, object>>[] relatedEntitiesToBeLoaded) where TEntity : class;
 
         #endregion
 
@@ -90,6 +98,12 @@ namespace MBRepoCore.Repo.Abstractions
         #region Get
 
         /// <summary>
+        /// Get All <b><see cref="TEntity"/></b> records, and load related selected entities records
+        /// </summary>
+        /// <param name="relatedEntitiesToBeLoaded">Entities to be load data from (Should be the <see cref="TEntity"/>'s navigation properties)</param>
+        List<TEntity> GetAll(params Expression<Func<TEntity, object>>[] relatedEntitiesToBeLoaded);
+
+        /// <summary>
         /// Get All <b><see cref="TEntity"/></b> records that respects a set of conditions provided in the filter expression
         /// </summary>
         /// <typeparam name="TEntity">The entity to select from</typeparam>
@@ -100,15 +114,16 @@ namespace MBRepoCore.Repo.Abstractions
         /// Get All <b><see cref="TEntity"/></b> records that respects a set of conditions provided in the filter expression and load related selected entities records
         /// </summary>
         /// <param name="filterExpression">One or set of conditions to be respected</param>
-        /// <param name="relatedEntitiesToBeLoaded">Entities to be load data from (Should be the <see cref="TEntity"/>'s navigation properties)</param>
+        /// <param name="relatedEntitiesToBeLoaded">Entities to be loaded (Should be the <see cref="TEntity"/>'s navigation properties)</param>
         List<TEntity> GetMany(Expression<Func<TEntity, bool>>            filterExpression,
                               params Expression<Func<TEntity, object>>[] relatedEntitiesToBeLoaded);
 
         /// <summary>
-        /// Get All <b><see cref="TEntity"/></b> records, and load related selected entities records
+        /// Get one <b><see cref="TEntity"/></b> record and load related selected entities
         /// </summary>
-        /// <param name="relatedEntitiesToBeLoaded">Entities to be load data from (Should be the <see cref="TEntity"/>'s navigation properties)</param>
-        List<TEntity> GetAll(params Expression<Func<TEntity, object>>[] relatedEntitiesToBeLoaded);
+        /// <param name="pkValue">Primary key value</param>
+        /// <param name="relatedEntitiesToBeLoaded">Entities to be loaded (Should be the <see cref="TEntity"/>'s navigation properties)</param>
+        TEntity GetOne(object pkValue,params Expression<Func<TEntity, object>>[] relatedEntitiesToBeLoaded);
 
         #endregion
 

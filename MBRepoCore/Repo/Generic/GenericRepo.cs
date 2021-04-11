@@ -189,8 +189,7 @@ namespace MBRepoCore.Repo.Generic
         }
 
         /// <inheritdoc />
-        public List<TEntity> GetMany<TEntity>(Expression<Func<TEntity, bool>>            filterExpression,
-                                              params Expression<Func<TEntity, object>>[] relatedEntitiesToBeLoaded)
+        public List<TEntity> GetMany<TEntity>(Expression<Func<TEntity, bool>> filterExpression, params Expression<Func<TEntity, object>>[] relatedEntitiesToBeLoaded)
             where TEntity : class
         {
             var result = Context.Set<TEntity>().Where(filterExpression).AsQueryable();
@@ -208,9 +207,7 @@ namespace MBRepoCore.Repo.Generic
         /// <param name="filterExpression"><inheritdoc cref="GetMany{TEntity}(Expression{Func{TEntity,bool}},Expression{Func{TEntity, object}}[] )"/></param>
         /// <param name="relatedEntitiesToBeLoaded"><inheritdoc cref="GetMany{TEntity}(Expression{Func{TEntity,bool}},Expression{Func{TEntity, object}}[] )"/></param>
         /// <returns></returns>
-        public Task<List<TEntity>> GetManyAsync<TEntity>(Expression<Func<TEntity, bool>> filterExpression,
-                                                         params Expression<Func<TEntity, object>>[]
-                                                             relatedEntitiesToBeLoaded) where TEntity : class
+        public Task<List<TEntity>> GetManyAsync<TEntity>(Expression<Func<TEntity, bool>> filterExpression, params Expression<Func<TEntity, object>>[] relatedEntitiesToBeLoaded) where TEntity : class
         {
             return Task.Factory.StartNew(() => GetMany<TEntity>(filterExpression, relatedEntitiesToBeLoaded));
         }
@@ -222,14 +219,39 @@ namespace MBRepoCore.Repo.Generic
         }
 
         /// <summary>
-        /// Asynchronously, <inheritdoc cref="GetOne{TEntity}"/>
+        /// Asynchronously, <inheritdoc cref="GetOne{TEntity}(object)"/>
         /// </summary>
-        /// <typeparam name="TEntity"><inheritdoc cref="GetOne{TEntity}"/></typeparam>
-        /// <param name="pkValue"><inheritdoc cref="GetOne{TEntity}"/></param>
+        /// <typeparam name="TEntity"><inheritdoc cref="GetOne{TEntity}(object)"/></typeparam>
+        /// <param name="pkValue"><inheritdoc cref="GetOne{TEntity}(object)"/></param>
         /// <returns></returns>
         public Task<TEntity> GetOneAsync<TEntity>(object pkValue) where TEntity : class
         {
             return Task.Factory.StartNew(() => GetOne<TEntity>(pkValue));
+        }
+
+        /// <inheritdoc />
+        public TEntity GetOne<TEntity>(object pkValue, params Expression<Func<TEntity, object>>[] relatedEntitiesToBeLoaded) where TEntity : class
+        {
+            // Get one object using primary key
+            var resultObject = Context.Set<TEntity>().Find(pkValue);
+
+            // Load all selected objects from selected entities
+            foreach (var entityToLoad in relatedEntitiesToBeLoaded)
+            {
+                Context.Entry(resultObject).Reference(entityToLoad.GetPropertyAccess().Name).Load();
+            }
+
+            return resultObject;
+        }
+
+        /// <summary>
+        /// Asynchronously, <inheritdoc cref="GetOne{TEntity}(object,System.Linq.Expressions.Expression{System.Func{TEntity,object}}[])"/>
+        /// </summary>
+        /// <inheritdoc cref="GetOne{TEntity}(object,System.Linq.Expressions.Expression{System.Func{TEntity,object}}[])" />
+        /// <returns></returns>
+        public Task<TEntity> GetOneAsync<TEntity>(object pkValue, params Expression<Func<TEntity, object>>[] relatedEntitiesToBeLoaded) where TEntity : class
+        {
+            return Task.Factory.StartNew(() => GetOne<TEntity>(pkValue, relatedEntitiesToBeLoaded));
         }
 
         #endregion
@@ -237,7 +259,7 @@ namespace MBRepoCore.Repo.Generic
 
         #region Update
 
-        /// <inheritdoc />
+            /// <inheritdoc />
         public void UpdateOne<TEntity>(TEntity record) where TEntity : class
         {
             var entity = Context.Set<TEntity>();

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using MBRepoCore.Repo.Abstractions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 
 
 namespace MBRepoCore.Repo.Specific
@@ -61,6 +62,17 @@ namespace MBRepoCore.Repo.Specific
         }
 
         /// <inheritdoc />
+        public virtual List<TEntity> GetAll(params Expression<Func<TEntity, object>>[] relatedEntitiesToBeLoaded)
+        {
+            var result = Context.Set<TEntity>().AsQueryable();
+
+            result = relatedEntitiesToBeLoaded.Aggregate(result, (current,
+                                                                  expression) => current.Include(expression));
+
+            return result.ToList();
+        }
+
+        /// <inheritdoc />
         public virtual List<TEntity> GetMany(Expression<Func<TEntity, bool>> filterExpression)
         {
             return Context.Set<TEntity>().Where(filterExpression).ToList();
@@ -79,20 +91,24 @@ namespace MBRepoCore.Repo.Specific
         }
 
         /// <inheritdoc />
-        public virtual List<TEntity> GetAll(params Expression<Func<TEntity, object>>[] relatedEntitiesToBeLoaded)
-        {
-            var result = Context.Set<TEntity>().AsQueryable();
-
-            result = relatedEntitiesToBeLoaded.Aggregate(result, (current,
-                                                                  expression) => current.Include(expression));
-
-            return result.ToList();
-        }
-
-        /// <inheritdoc />
         public virtual TEntity GetOne(object pkValue)
         {
             return Context.Set<TEntity>().Find(pkValue);
+        }
+
+        /// <inheritdoc />
+        public TEntity GetOne(object pkValue,params Expression<Func<TEntity, object>>[] relatedEntitiesToBeLoaded)
+        {
+            // Get one object using primary key
+            var resultObject = Context.Set<TEntity>().Find(pkValue);
+
+            // Load all selected objects from selected entities
+            foreach (var entityToLoad in relatedEntitiesToBeLoaded)
+            {
+                Context.Entry(resultObject).Reference(entityToLoad.GetPropertyAccess().Name).Load();
+            }
+
+            return resultObject;
         }
 
         #endregion
