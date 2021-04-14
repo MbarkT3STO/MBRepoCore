@@ -16,7 +16,7 @@ namespace MBRepoCore.Repo.Generic
     ///Full generic repository
     /// </summary>
     /// <typeparam name="TContext">The <b><see cref="DbContext"/></b> type</typeparam>
-    public class GenericRepo<TContext> : IGenericRepo<TContext>, IRepoProperties, IDisposable
+    public class GenericRepo<TContext> : IGenericRepo<TContext> , IRepoProperties , IDisposable
         where TContext : DbContext
     {
 
@@ -42,10 +42,10 @@ namespace MBRepoCore.Repo.Generic
         /// Use this constructor if you can create a <b><see cref="TContext"/></b> object without any parameters
         /// </summary>
         /// <param name="lazyLoaded">Determine if lazy loading whether active or not</param>
-        public GenericRepo(bool lazyLoaded)
+        public GenericRepo( bool lazyLoaded = false )
         {
             Context = RepoDbContextFactory<TContext>.GetInstance();
-            ConfigureLazyLoading(lazyLoaded);
+            ConfigureLazyLoading( lazyLoaded );
         }
 
 
@@ -54,11 +54,10 @@ namespace MBRepoCore.Repo.Generic
         /// </summary>
         /// <param name="context">Object from <b><see cref="TContext"/></b> context</param>
         /// <param name="lazyLoaded">Determine if lazy loading whether active or not</param>
-        public GenericRepo(TContext context,
-                           bool     lazyLoaded)
+        public GenericRepo( TContext context , bool lazyLoaded = false )
         {
             Context = context;
-            ConfigureLazyLoading(lazyLoaded);
+            ConfigureLazyLoading( lazyLoaded );
         }
 
 
@@ -80,12 +79,10 @@ namespace MBRepoCore.Repo.Generic
         ///  </param>
         ///  <param name="rdbmsProvider">The <b>RDBMS/<see cref="RdbmsProvider"/></b> to be configured with</param>
         ///  <param name="lazyLoaded">Determine if lazy loading whether active or not</param>
-        public GenericRepo(string        connectionString,
-                           RdbmsProvider rdbmsProvider,
-                           bool          lazyLoaded)
+        public GenericRepo( string connectionString , RdbmsProvider rdbmsProvider , bool lazyLoaded = false )
         {
-            Context = CreateAndConfigureDbContextInstanceOptions(connectionString, rdbmsProvider);
-            ConfigureLazyLoading(lazyLoaded);
+            Context = CreateAndConfigureDbContextInstanceOptions( connectionString , rdbmsProvider );
+            ConfigureLazyLoading( lazyLoaded );
         }
 
         #endregion
@@ -99,18 +96,17 @@ namespace MBRepoCore.Repo.Generic
         /// <param name="connectionString">The database connection string</param>
         /// <param name="rdbmsProvider">The <b>RDBMS/<see cref="RdbmsProvider"/></b> to be configured with</param>
         /// <returns></returns>
-        private TContext CreateAndConfigureDbContextInstanceOptions(string        connectionString,
-                                                                    RdbmsProvider rdbmsProvider)
+        private TContext CreateAndConfigureDbContextInstanceOptions( string  connectionString , RdbmsProvider rdbmsProvider )
         {
             IDbContextInstanceOptions dbContextInstanceOptions = new DbContextInstanceOptions()
                                                                  {
                                                                      OptionsBuilder =
-                                                                         new DbContextOptionsBuilder<TContext>(),
-                                                                     ConnectionString = connectionString,
+                                                                         new DbContextOptionsBuilder<TContext>() ,
+                                                                     ConnectionString = connectionString ,
                                                                      RdbmsProvider    = rdbmsProvider
                                                                  };
 
-            return RepoDbContextFactory<TContext>.GetInstance(dbContextInstanceOptions);
+            return RepoDbContextFactory<TContext>.GetInstance( dbContextInstanceOptions );
         }
 
 
@@ -118,7 +114,7 @@ namespace MBRepoCore.Repo.Generic
         /// Set the <b><see cref="TContext"/></b> lazy loading
         /// </summary>
         /// <param name="lazyLoaded">Determine if lazy loading whether active or not</param>
-        private void ConfigureLazyLoading(bool lazyLoaded)
+        private void ConfigureLazyLoading( bool lazyLoaded )
         {
             LazyLoaded                               = lazyLoaded;
             Context.ChangeTracker.LazyLoadingEnabled = LazyLoaded;
@@ -143,17 +139,18 @@ namespace MBRepoCore.Repo.Generic
         /// <typeparam name="TEntity"><inheritdoc cref="GetAll{TEntity}()"/></typeparam>
         public Task<List<TEntity>> GetAllAsync<TEntity>() where TEntity : class
         {
-            return Task.Factory.StartNew(() => GetAll<TEntity>().ToList());
+            return Task.Factory.StartNew( () => GetAll<TEntity>().ToList() );
         }
 
         /// <inheritdoc />
-        public List<TEntity> GetAll<TEntity>(params Expression<Func<TEntity, object>>[] relatedEntitiesToBeLoaded)
+        public List<TEntity> GetAll<TEntity>( params Expression<Func<TEntity , object>>[] relatedEntitiesToBeLoaded )
             where TEntity : class
         {
             var result = Context.Set<TEntity>().AsQueryable();
 
-            result = relatedEntitiesToBeLoaded.Aggregate(result, (current,
-                                                                  expression) => current.Include(expression));
+            result = relatedEntitiesToBeLoaded.Aggregate( result ,
+                                                          ( current ,
+                                                            expression ) => current.Include( expression ) );
 
 
             return result.ToList();
@@ -164,16 +161,16 @@ namespace MBRepoCore.Repo.Generic
         /// </summary>
         /// <typeparam name="TEntity"><inheritdoc cref="GetAll{TEntity}(System.Linq.Expressions.Expression{System.Func{TEntity,object}}[])"/></typeparam>
         /// <param name="expressions"><inheritdoc cref="GetAll{TEntity}(System.Linq.Expressions.Expression{System.Func{TEntity,object}}[])"/></param>
-        public Task<List<TEntity>> GetAllAsync<TEntity>(params Expression<Func<TEntity, object>>[] expressions)
+        public Task<List<TEntity>> GetAllAsync<TEntity>( params Expression<Func<TEntity , object>>[] expressions )
             where TEntity : class
         {
-            return Task.Factory.StartNew(() => GetAll<TEntity>(expressions));
+            return Task.Factory.StartNew( () => GetAll<TEntity>( expressions ) );
         }
 
         /// <inheritdoc />
-        public List<TEntity> GetMany<TEntity>(Expression<Func<TEntity, bool>> filterExpression) where TEntity : class
+        public List<TEntity> GetMany<TEntity>( Expression<Func<TEntity , bool>> filterExpression ) where TEntity : class
         {
-            return Context.Set<TEntity>().Where(filterExpression).ToList();
+            return Context.Set<TEntity>().Where( filterExpression ).ToList();
         }
 
         /// <summary>
@@ -182,20 +179,22 @@ namespace MBRepoCore.Repo.Generic
         /// <typeparam name="TEntity"><inheritdoc cref="GetMany{TEntity}(System.Linq.Expressions.Expression{System.Func{TEntity,bool}})"/></typeparam>
         /// <param name="filterExpression"><inheritdoc cref="GetMany{TEntity}(System.Linq.Expressions.Expression{System.Func{TEntity,bool}})"/></param>
         /// <returns></returns>
-        public Task<List<TEntity>> GetManyAsync<TEntity>(Expression<Func<TEntity, bool>> filterExpression)
+        public Task<List<TEntity>> GetManyAsync<TEntity>( Expression<Func<TEntity , bool>> filterExpression )
             where TEntity : class
         {
-            return Task.Factory.StartNew(() => GetMany<TEntity>(filterExpression));
+            return Task.Factory.StartNew( () => GetMany<TEntity>( filterExpression ) );
         }
 
         /// <inheritdoc />
-        public List<TEntity> GetMany<TEntity>(Expression<Func<TEntity, bool>> filterExpression, params Expression<Func<TEntity, object>>[] relatedEntitiesToBeLoaded)
+        public List<TEntity> GetMany<TEntity>( Expression<Func<TEntity , bool>>            filterExpression ,
+                                               params Expression<Func<TEntity , object>>[] relatedEntitiesToBeLoaded )
             where TEntity : class
         {
-            var result = Context.Set<TEntity>().Where(filterExpression).AsQueryable();
+            var result = Context.Set<TEntity>().Where( filterExpression ).AsQueryable();
 
-            result = relatedEntitiesToBeLoaded.Aggregate(result, (current,
-                                                                  expression) => current.Include(expression));
+            result = relatedEntitiesToBeLoaded.Aggregate( result ,
+                                                          ( current ,
+                                                            expression ) => current.Include( expression ) );
 
             return result.ToList();
         }
@@ -207,15 +206,17 @@ namespace MBRepoCore.Repo.Generic
         /// <param name="filterExpression"><inheritdoc cref="GetMany{TEntity}(Expression{Func{TEntity,bool}},Expression{Func{TEntity, object}}[] )"/></param>
         /// <param name="relatedEntitiesToBeLoaded"><inheritdoc cref="GetMany{TEntity}(Expression{Func{TEntity,bool}},Expression{Func{TEntity, object}}[] )"/></param>
         /// <returns></returns>
-        public Task<List<TEntity>> GetManyAsync<TEntity>(Expression<Func<TEntity, bool>> filterExpression, params Expression<Func<TEntity, object>>[] relatedEntitiesToBeLoaded) where TEntity : class
+        public Task<List<TEntity>> GetManyAsync<TEntity>( Expression<Func<TEntity , bool>> filterExpression ,
+                                                          params Expression<Func<TEntity , object>>[]
+                                                              relatedEntitiesToBeLoaded ) where TEntity : class
         {
-            return Task.Factory.StartNew(() => GetMany<TEntity>(filterExpression, relatedEntitiesToBeLoaded));
+            return Task.Factory.StartNew( () => GetMany<TEntity>( filterExpression , relatedEntitiesToBeLoaded ) );
         }
 
         /// <inheritdoc />
-        public TEntity GetOne<TEntity>(object pkValue) where TEntity : class
+        public TEntity GetOne<TEntity>( object pkValue ) where TEntity : class
         {
-            return Context.Set<TEntity>().Find(pkValue);
+            return Context.Set<TEntity>().Find( pkValue );
         }
 
         /// <summary>
@@ -224,21 +225,23 @@ namespace MBRepoCore.Repo.Generic
         /// <typeparam name="TEntity"><inheritdoc cref="GetOne{TEntity}(object)"/></typeparam>
         /// <param name="pkValue"><inheritdoc cref="GetOne{TEntity}(object)"/></param>
         /// <returns></returns>
-        public Task<TEntity> GetOneAsync<TEntity>(object pkValue) where TEntity : class
+        public Task<TEntity> GetOneAsync<TEntity>( object pkValue ) where TEntity : class
         {
-            return Task.Factory.StartNew(() => GetOne<TEntity>(pkValue));
+            return Task.Factory.StartNew( () => GetOne<TEntity>( pkValue ) );
         }
 
         /// <inheritdoc />
-        public TEntity GetOne<TEntity>(object pkValue, params Expression<Func<TEntity, object>>[] relatedEntitiesToBeLoaded) where TEntity : class
+        public TEntity GetOne<TEntity>( object                                      pkValue ,
+                                        params Expression<Func<TEntity , object>>[] relatedEntitiesToBeLoaded )
+            where TEntity : class
         {
             // Get one object using primary key
-            var resultObject = Context.Set<TEntity>().Find(pkValue);
+            var resultObject = Context.Set<TEntity>().Find( pkValue );
 
             // Load all selected objects from selected entities
-            foreach (var entityToLoad in relatedEntitiesToBeLoaded)
+            foreach ( var entityToLoad in relatedEntitiesToBeLoaded )
             {
-                Context.Entry(resultObject).Reference(entityToLoad.GetPropertyAccess().Name).Load();
+                Context.Entry( resultObject ).Reference( entityToLoad.GetPropertyAccess().Name ).Load();
             }
 
             return resultObject;
@@ -249,9 +252,11 @@ namespace MBRepoCore.Repo.Generic
         /// </summary>
         /// <inheritdoc cref="GetOne{TEntity}(object,System.Linq.Expressions.Expression{System.Func{TEntity,object}}[])" />
         /// <returns></returns>
-        public Task<TEntity> GetOneAsync<TEntity>(object pkValue, params Expression<Func<TEntity, object>>[] relatedEntitiesToBeLoaded) where TEntity : class
+        public Task<TEntity> GetOneAsync<TEntity>( object pkValue ,
+                                                   params Expression<Func<TEntity , object>>[]
+                                                       relatedEntitiesToBeLoaded ) where TEntity : class
         {
-            return Task.Factory.StartNew(() => GetOne<TEntity>(pkValue, relatedEntitiesToBeLoaded));
+            return Task.Factory.StartNew( () => GetOne<TEntity>( pkValue , relatedEntitiesToBeLoaded ) );
         }
 
         #endregion
@@ -259,12 +264,12 @@ namespace MBRepoCore.Repo.Generic
 
         #region Update
 
-            /// <inheritdoc />
-        public void UpdateOne<TEntity>(TEntity record) where TEntity : class
+        /// <inheritdoc />
+        public void UpdateOne<TEntity>( TEntity record ) where TEntity : class
         {
             var entity = Context.Set<TEntity>();
-            entity.Attach(record);
-            Context.Entry(record).State = EntityState.Modified;
+            entity.Attach( record );
+            Context.Entry( record ).State = EntityState.Modified;
         }
 
         /// <summary>
@@ -272,21 +277,21 @@ namespace MBRepoCore.Repo.Generic
         /// </summary>
         /// <typeparam name="TEntity"><inheritdoc cref="UpdateOne{TEntity}"/></typeparam>
         /// <param name="record"><inheritdoc cref="UpdateOne{TEntity}"/></param>
-        public Task UpdateOneAsync<TEntity>(TEntity record) where TEntity : class
+        public Task UpdateOneAsync<TEntity>( TEntity record ) where TEntity : class
         {
-            return Task.Factory.StartNew(() => UpdateOne(record));
+            return Task.Factory.StartNew( () => UpdateOne( record ) );
         }
 
         /// <inheritdoc />
-        public void UpdateMany<TEntity>(Expression<Func<TEntity, bool>> filterExpression,
-                                        Action<TEntity>                 updateAction)
+        public void UpdateMany<TEntity>( Expression<Func<TEntity , bool>> filterExpression ,
+                                         Action<TEntity>                  updateAction )
             where TEntity : class
         {
             // Get the records to be updated depending on the filter expression
-            var recordsToBeUpdated = Context.Set<TEntity>().Where(filterExpression).ToList();
+            var recordsToBeUpdated = Context.Set<TEntity>().Where( filterExpression ).ToList();
 
             // Update the selected records
-            recordsToBeUpdated.ForEach(updateAction);
+            recordsToBeUpdated.ForEach( updateAction );
         }
 
         /// <summary>
@@ -295,10 +300,10 @@ namespace MBRepoCore.Repo.Generic
         /// <typeparam name="TEntity"><inheritdoc cref="UpdateMany{TEntity}"/></typeparam>
         /// <param name="filterExpression"><inheritdoc cref="UpdateMany{TEntity}"/></param>
         /// <param name="updateAction"><inheritdoc cref="UpdateMany{TEntity}"/></param>
-        public Task UpdateManyAsync<TEntity>(Expression<Func<TEntity, bool>> filterExpression,
-                                             Action<TEntity>                 updateAction) where TEntity : class
+        public Task UpdateManyAsync<TEntity>( Expression<Func<TEntity , bool>> filterExpression ,
+                                              Action<TEntity>                  updateAction ) where TEntity : class
         {
-            return Task.Factory.StartNew(() => UpdateMany(filterExpression, updateAction));
+            return Task.Factory.StartNew( () => UpdateMany( filterExpression , updateAction ) );
         }
 
         #endregion
@@ -307,9 +312,9 @@ namespace MBRepoCore.Repo.Generic
         #region Contains
 
         /// <inheritdoc />
-        public bool Contains<TEntity>(TEntity obj) where TEntity : class
+        public bool Contains<TEntity>( TEntity obj ) where TEntity : class
         {
-            return Context.Set<TEntity>().AsEnumerable().Contains(obj);
+            return Context.Set<TEntity>().AsEnumerable().Contains( obj );
         }
 
 
@@ -318,19 +323,20 @@ namespace MBRepoCore.Repo.Generic
         /// </summary>
         /// <typeparam name="TEntity"><inheritdoc cref="Contains{TEntity,TEntityComparer}"/></typeparam>
         /// <param name="obj"><inheritdoc cref="Contains{TEntity,TEntityComparer}"/></param>
-        public Task<bool> ContainsAsync<TEntity>(TEntity obj) where TEntity : class
+        public Task<bool> ContainsAsync<TEntity>( TEntity obj ) where TEntity : class
         {
-            return Task.Factory.StartNew(() => Contains<TEntity>(obj));
+            return Task.Factory.StartNew( () => Contains<TEntity>( obj ) );
         }
 
 
         /// <inheritdoc />
-        public bool Contains<TEntity, TEntityComparer>(TEntity obj)
+        public bool Contains<TEntity , TEntityComparer>( TEntity obj )
             where TEntity : class
-            where TEntityComparer : IEqualityComparer<TEntity>, new()
+            where TEntityComparer : IEqualityComparer<TEntity> , new()
         {
-            return Context.Set<TEntity>().AsEnumerable()
-                          .Contains(obj, new TEntityComparer() as IEqualityComparer<TEntity>);
+            return Context.Set<TEntity>()
+                          .AsEnumerable()
+                          .Contains( obj , new TEntityComparer() as IEqualityComparer<TEntity> );
         }
 
 
@@ -341,11 +347,11 @@ namespace MBRepoCore.Repo.Generic
         /// <typeparam name="TEntityComparer"><inheritdoc cref="Contains{TEntity,TEntityComparer}"/></typeparam>
         /// <param name="obj"><inheritdoc cref="Contains{TEntity,TEntityComparer}"/></param>
         /// <returns></returns>
-        public Task<bool> ContainsAsync<TEntity, TEntityComparer>(TEntity obj)
+        public Task<bool> ContainsAsync<TEntity , TEntityComparer>( TEntity obj )
             where TEntity : class
-            where TEntityComparer : IEqualityComparer<TEntity>, new()
+            where TEntityComparer : IEqualityComparer<TEntity> , new()
         {
-            return Task.Factory.StartNew(() => Contains<TEntity, TEntityComparer>(obj));
+            return Task.Factory.StartNew( () => Contains<TEntity , TEntityComparer>( obj ) );
         }
 
         #endregion
@@ -354,9 +360,9 @@ namespace MBRepoCore.Repo.Generic
         #region Add
 
         /// <inheritdoc />
-        public void AddOne<TEntity>(TEntity record) where TEntity : class
+        public void AddOne<TEntity>( TEntity record ) where TEntity : class
         {
-            Context.Set<TEntity>().Add(record);
+            Context.Set<TEntity>().Add( record );
         }
 
 
@@ -365,16 +371,16 @@ namespace MBRepoCore.Repo.Generic
         /// </summary>
         /// <typeparam name="TEntity"><inheritdoc cref="AddOne{TEntity}"/></typeparam>
         /// <param name="record"><inheritdoc cref="AddOne{TEntity}"/></param>
-        public Task AddOneAsync<TEntity>(TEntity record) where TEntity : class
+        public Task AddOneAsync<TEntity>( TEntity record ) where TEntity : class
         {
-            return Task.Factory.StartNew(() => AddOne(record));
+            return Task.Factory.StartNew( () => AddOne( record ) );
         }
 
 
         /// <inheritdoc />
-        public void AddMany<TEntity>(List<TEntity> records) where TEntity : class
+        public void AddMany<TEntity>( List<TEntity> records ) where TEntity : class
         {
-            Context.Set<TEntity>().AddRange(records);
+            Context.Set<TEntity>().AddRange( records );
         }
 
 
@@ -383,9 +389,9 @@ namespace MBRepoCore.Repo.Generic
         /// </summary>
         /// <typeparam name="TEntity"><inheritdoc cref="AddMany{TEntity}"/></typeparam>
         /// <param name="records"><inheritdoc cref="AddMany{TEntity}"/></param>
-        public Task AddManyAsync<TEntity>(List<TEntity> records) where TEntity : class
+        public Task AddManyAsync<TEntity>( List<TEntity> records ) where TEntity : class
         {
-            return Task.Factory.StartNew(() => AddMany(records));
+            return Task.Factory.StartNew( () => AddMany( records ) );
         }
 
         #endregion
@@ -394,9 +400,9 @@ namespace MBRepoCore.Repo.Generic
         #region Remove
 
         /// <inheritdoc />
-        public void RemoveOne<TEntity>(TEntity record) where TEntity : class
+        public void RemoveOne<TEntity>( TEntity record ) where TEntity : class
         {
-            this.Context.Set<TEntity>().Remove(record);
+            this.Context.Set<TEntity>().Remove( record );
         }
 
 
@@ -405,16 +411,16 @@ namespace MBRepoCore.Repo.Generic
         /// </summary>
         /// <typeparam name="TEntity"><inheritdoc cref="RemoveOne{TEntity}"/></typeparam>
         /// <param name="record"><inheritdoc cref="RemoveOne{TEntity}"/></param>
-        public Task RemoveOneAsync<TEntity>(TEntity record) where TEntity : class
+        public Task RemoveOneAsync<TEntity>( TEntity record ) where TEntity : class
         {
-            return Task.Factory.StartNew(() => RemoveOne(record));
+            return Task.Factory.StartNew( () => RemoveOne( record ) );
         }
 
 
         /// <inheritdoc />
-        public void RemoveMany<TEntity>(List<TEntity> records) where TEntity : class
+        public void RemoveMany<TEntity>( List<TEntity> records ) where TEntity : class
         {
-            this.Context.Set<TEntity>().RemoveRange(records);
+            this.Context.Set<TEntity>().RemoveRange( records );
         }
 
         /// <summary>
@@ -423,9 +429,9 @@ namespace MBRepoCore.Repo.Generic
         /// <typeparam name="TEntity"><inheritdoc cref="RemoveMany{TEntity}"/></typeparam>
         /// <param name="records"><inheritdoc cref="RemoveMany{TEntity}"/></param>
         /// <returns></returns>
-        public Task RemoveManyAsync<TEntity>(List<TEntity> records) where TEntity : class
+        public Task RemoveManyAsync<TEntity>( List<TEntity> records ) where TEntity : class
         {
-            return Task.Factory.StartNew(() => RemoveMany(records));
+            return Task.Factory.StartNew( () => RemoveMany( records ) );
         }
 
         #endregion
@@ -434,11 +440,11 @@ namespace MBRepoCore.Repo.Generic
         #region Filter
 
         /// <inheritdoc />
-        public List<TEntity> Filter<TEntity>(Expression<Func<TEntity, bool>> filterExpression) where TEntity : class
+        public List<TEntity> Filter<TEntity>( Expression<Func<TEntity , bool>> filterExpression ) where TEntity : class
         {
             IQueryable<TEntity> entity = Context.Set<TEntity>();
 
-            return entity.Where(filterExpression).ToList();
+            return entity.Where( filterExpression ).ToList();
         }
 
 
@@ -448,21 +454,22 @@ namespace MBRepoCore.Repo.Generic
         /// <typeparam name="TEntity"><inheritdoc cref="Filter{TEntity}"/></typeparam>
         /// <param name="filterExpression"><inheritdoc cref="Filter{TEntity}"/></param>
         /// <returns></returns>
-        public Task<IEnumerable<TEntity>> FilterAsync<TEntity>(Expression<Func<TEntity, bool>> filterExpression)
+        public Task<IEnumerable<TEntity>> FilterAsync<TEntity>( Expression<Func<TEntity , bool>> filterExpression )
             where TEntity : class
         {
-            return Task<IEnumerable<TEntity>>.Factory.StartNew(() => Filter<TEntity>(filterExpression));
+            return Task<IEnumerable<TEntity>>.Factory.StartNew( () => Filter<TEntity>( filterExpression ) );
         }
 
 
         /// <inheritdoc />
-        public List<TEntity> FilterAndOrder<TEntity>(Expression<Func<TEntity, bool>> filterExpression,
-                                                     Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderingFunc)
+        public List<TEntity> FilterAndOrder<TEntity>( Expression<Func<TEntity , bool>> filterExpression ,
+                                                      Func<IQueryable<TEntity> , IOrderedQueryable<TEntity>>
+                                                          orderingFunc )
             where TEntity : class
         {
             IQueryable<TEntity> entity = Context.Set<TEntity>();
-            entity = entity.Where(filterExpression);
-            entity = orderingFunc(entity);
+            entity = entity.Where( filterExpression );
+            entity = orderingFunc( entity );
 
             return entity.ToList();
         }
@@ -476,10 +483,11 @@ namespace MBRepoCore.Repo.Generic
         /// <param name="orderingFunc"><inheritdoc cref="FilterAndOrder{TEntity}"/></param>
         /// <returns></returns>
         public Task<IEnumerable<TEntity>> FilterWithOrderAsync<TEntity>(
-            Expression<Func<TEntity, bool>>                       filterExpression,
-            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderingFunc) where TEntity : class
+            Expression<Func<TEntity , bool>>                       filterExpression ,
+            Func<IQueryable<TEntity> , IOrderedQueryable<TEntity>> orderingFunc ) where TEntity : class
         {
-            return Task<IEnumerable<TEntity>>.Factory.StartNew(() => FilterAndOrder(filterExpression, orderingFunc));
+            return Task<IEnumerable<TEntity>>.Factory.StartNew( () =>
+                                                                    FilterAndOrder( filterExpression , orderingFunc ) );
         }
 
         #endregion
@@ -494,12 +502,16 @@ namespace MBRepoCore.Repo.Generic
         /// <param name="prop">The property to be used in the condition</param>
         /// <param name="val">The value to be used in the search</param>
         /// <returns></returns>
-        public IEnumerable<TEntity> GetMany<TEntity>(string prop,
-                                                     object val) where TEntity : class
+        public IEnumerable<TEntity> GetMany<TEntity>( string prop ,
+                                                      object val ) where TEntity : class
         {
-            return Context.Set<TEntity>().AsEnumerable()
-                          .Where(x => typeof(TEntity).GetProperty(prop).GetValue(x, null).ToString()
-                                                     .Contains(val.ToString())).ToList();
+            return Context.Set<TEntity>()
+                          .AsEnumerable()
+                          .Where( x => typeof(TEntity).GetProperty( prop )
+                                                      .GetValue( x , null )
+                                                      .ToString()
+                                                      .Contains( val.ToString() ) )
+                          .ToList();
         }
 
         #endregion
@@ -516,11 +528,11 @@ namespace MBRepoCore.Repo.Generic
         #endregion
 
 
-        private void Dispose(bool disposing)
+        private void Dispose( bool disposing )
         {
-            if (!_disposed)
+            if ( !_disposed )
             {
-                if (disposing)
+                if ( disposing )
                 {
                     Context.Dispose();
                 }
@@ -532,8 +544,8 @@ namespace MBRepoCore.Repo.Generic
 
         public void Dispose()
         {
-            this.Dispose(true);
-            GC.SuppressFinalize(this);
+            this.Dispose( true );
+            GC.SuppressFinalize( this );
         }
 
         #endregion

@@ -13,7 +13,7 @@ namespace MBRepoCore.Repo.Specific
     ///Classic repository with <see cref="IBasicRepository"/> and <see cref="IAdvancedRepository"/> features, Can be the base class for your <b><see cref="TEntity"/></b> repository
     /// </summary>
     /// <typeparam name="TEntity">The entity to create repository for</typeparam>
-    public abstract class BaseSpecificRepo<TEntity> : ISpecificRepo<TEntity>, IRepoProperties where TEntity : class
+    public abstract class BaseSpecificRepo<TEntity> : ISpecificRepo<TEntity> , IRepoProperties where TEntity : class
     {
 
         #region Properties
@@ -28,11 +28,10 @@ namespace MBRepoCore.Repo.Specific
 
         #region Contructor
 
-        protected BaseSpecificRepo(DbContext context,
-                                   bool      lazyLoaded)
+        protected BaseSpecificRepo( DbContext context , bool lazyLoaded = false )
         {
             Context = context;
-            ConfigureLazyLoading(lazyLoaded);
+            ConfigureLazyLoading( lazyLoaded );
         }
 
         #endregion
@@ -43,7 +42,7 @@ namespace MBRepoCore.Repo.Specific
         /// Set the <b><see cref="Context"/></b> lazy loading
         /// </summary>
         /// <param name="lazyLoaded">Determine if lazy loading whether active or not</param>
-        protected virtual void ConfigureLazyLoading(bool lazyLoaded)
+        protected virtual void ConfigureLazyLoading( bool lazyLoaded )
         {
             Context.ChangeTracker.LazyLoadingEnabled = LazyLoaded;
             LazyLoaded                               = lazyLoaded;
@@ -62,50 +61,51 @@ namespace MBRepoCore.Repo.Specific
         }
 
         /// <inheritdoc />
-        public virtual List<TEntity> GetAll(params Expression<Func<TEntity, object>>[] relatedEntitiesToBeLoaded)
+        public virtual List<TEntity> GetAll( params Expression<Func<TEntity , object>>[] relatedEntitiesToBeLoaded )
         {
             var result = Context.Set<TEntity>().AsQueryable();
 
-            result = relatedEntitiesToBeLoaded.Aggregate(result, (current,
-                                                                  expression) => current.Include(expression));
+            result = relatedEntitiesToBeLoaded.Aggregate( result ,
+                                                          ( current ,
+                                                            expression ) => current.Include( expression ) );
 
             return result.ToList();
         }
 
         /// <inheritdoc />
-        public virtual List<TEntity> GetMany(Expression<Func<TEntity, bool>> filterExpression)
+        public virtual List<TEntity> GetMany( Expression<Func<TEntity , bool>> filterExpression )
         {
-            return Context.Set<TEntity>().Where(filterExpression).ToList();
+            return Context.Set<TEntity>().Where( filterExpression ).ToList();
         }
 
         /// <inheritdoc />
-        public virtual List<TEntity> GetMany(Expression<Func<TEntity, bool>>            filterExpression,
-                                             params Expression<Func<TEntity, object>>[] relatedEntitiesToBeLoaded)
+        public virtual List<TEntity> GetMany( Expression<Func<TEntity , bool>> filterExpression , params Expression<Func<TEntity , object>>[] relatedEntitiesToBeLoaded )
         {
-            var result = Context.Set<TEntity>().Where(filterExpression).AsQueryable();
+            var result = Context.Set<TEntity>().Where( filterExpression ).AsQueryable();
 
-            result = relatedEntitiesToBeLoaded.Aggregate(result, (current,
-                                                                  expression) => current.Include(expression));
+            result = relatedEntitiesToBeLoaded.Aggregate( result ,
+                                                          ( current ,
+                                                            expression ) => current.Include( expression ) );
 
             return result.ToList();
         }
 
         /// <inheritdoc />
-        public virtual TEntity GetOne(object pkValue)
+        public virtual TEntity GetOne( object pkValue )
         {
-            return Context.Set<TEntity>().Find(pkValue);
+            return Context.Set<TEntity>().Find( pkValue );
         }
 
         /// <inheritdoc />
-        public TEntity GetOne(object pkValue,params Expression<Func<TEntity, object>>[] relatedEntitiesToBeLoaded)
+        public TEntity GetOne( object pkValue , params Expression<Func<TEntity , object>>[] relatedEntitiesToBeLoaded )
         {
             // Get one object using primary key
-            var resultObject = Context.Set<TEntity>().Find(pkValue);
+            var resultObject = Context.Set<TEntity>().Find( pkValue );
 
             // Load all selected objects from selected entities
-            foreach (var entityToLoad in relatedEntitiesToBeLoaded)
+            foreach ( var entityToLoad in relatedEntitiesToBeLoaded )
             {
-                Context.Entry(resultObject).Reference(entityToLoad.GetPropertyAccess().Name).Load();
+                Context.Entry( resultObject ).Reference( entityToLoad.GetPropertyAccess().Name ).Load();
             }
 
             return resultObject;
@@ -116,15 +116,15 @@ namespace MBRepoCore.Repo.Specific
         #region Add
 
         /// <inheritdoc />
-        public virtual void AddOne(TEntity record)
+        public virtual void AddOne( TEntity record )
         {
-            Context.Set<TEntity>().Add(record);
+            Context.Set<TEntity>().Add( record );
         }
 
         /// <inheritdoc />
-        public virtual void AddMany(List<TEntity> records)
+        public virtual void AddMany( List<TEntity> records )
         {
-            Context.Set<TEntity>().AddRange(records);
+            Context.Set<TEntity>().AddRange( records );
         }
 
         #endregion
@@ -132,22 +132,22 @@ namespace MBRepoCore.Repo.Specific
         #region Update
 
         /// <inheritdoc />
-        public virtual void UpdateOne(TEntity record)
+        public virtual void UpdateOne( TEntity record )
         {
             var entity = Context.Set<TEntity>();
-            entity.Attach(record);
-            Context.Entry(record).State = EntityState.Modified;
+            entity.Attach( record );
+            Context.Entry( record ).State = EntityState.Modified;
         }
 
         /// <inheritdoc />
-        public virtual void UpdateMany(Expression<Func<TEntity, bool>> filterExpression,
-                                       Action<TEntity>                 updateAction)
+        public virtual void UpdateMany( Expression<Func<TEntity , bool>> filterExpression ,
+                                        Action<TEntity>                  updateAction )
         {
             // Get the records to be updated depending on the filter expression
-            var recordsToBeUpdated = Context.Set<TEntity>().Where(filterExpression).ToList();
+            var recordsToBeUpdated = Context.Set<TEntity>().Where( filterExpression ).ToList();
 
             // Update the selected records
-            recordsToBeUpdated.ForEach(updateAction);
+            recordsToBeUpdated.ForEach( updateAction );
         }
 
         #endregion
@@ -155,18 +155,18 @@ namespace MBRepoCore.Repo.Specific
         #region Contains
 
         /// <inheritdoc />
-        public virtual bool Contains(TEntity obj)
+        public virtual bool Contains( TEntity obj )
         {
-            return Context.Set<TEntity>().AsEnumerable().Contains(obj);
+            return Context.Set<TEntity>().AsEnumerable().Contains( obj );
         }
 
         /// <inheritdoc />
-        public virtual bool Contains<TEntityComparer>(TEntity obj)
-            where TEntityComparer : IEqualityComparer<TEntity>, new()
+        public virtual bool Contains<TEntityComparer>( TEntity obj )
+            where TEntityComparer : IEqualityComparer<TEntity> , new()
         {
             return Context.Set<TEntity>()
                           .AsEnumerable()
-                          .Contains(obj, new TEntityComparer() as IEqualityComparer<TEntity>);
+                          .Contains( obj , new TEntityComparer() as IEqualityComparer<TEntity> );
         }
 
         #endregion
@@ -174,15 +174,15 @@ namespace MBRepoCore.Repo.Specific
         #region Remove
 
         /// <inheritdoc />
-        public virtual void RemoveOne(TEntity record)
+        public virtual void RemoveOne( TEntity record )
         {
-            this.Context.Set<TEntity>().Remove(record);
+            this.Context.Set<TEntity>().Remove( record );
         }
 
         /// <inheritdoc />
-        public virtual void RemoveMany(List<TEntity> records)
+        public virtual void RemoveMany( List<TEntity> records )
         {
-            this.Context.Set<TEntity>().RemoveRange(records);
+            this.Context.Set<TEntity>().RemoveRange( records );
         }
 
         #endregion
@@ -190,20 +190,19 @@ namespace MBRepoCore.Repo.Specific
         #region Filter
 
         /// <inheritdoc />
-        public virtual List<TEntity> Filter(Expression<Func<TEntity, bool>> filterExpression)
+        public virtual List<TEntity> Filter( Expression<Func<TEntity , bool>> filterExpression )
         {
             IQueryable<TEntity> entity = Context.Set<TEntity>();
 
-            return entity.Where(filterExpression).ToList();
+            return entity.Where( filterExpression ).ToList();
         }
 
         /// <inheritdoc />
-        public virtual List<TEntity> FilterAndOrder(Expression<Func<TEntity, bool>> filterExpression,
-                                                    Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderingFunc)
+        public virtual List<TEntity> FilterAndOrder( Expression<Func<TEntity , bool>> filterExpression , Func<IQueryable<TEntity> , IOrderedQueryable<TEntity>> orderingFunc )
         {
             IQueryable<TEntity> entity = Context.Set<TEntity>();
-            entity = entity.Where(filterExpression);
-            entity = orderingFunc(entity);
+            entity = entity.Where( filterExpression );
+            entity = orderingFunc( entity );
 
             return entity.ToList();
         }
