@@ -86,6 +86,26 @@ namespace MBRepoCore.Repo.Abstractions
 
         #endregion
 
+        #region Exist
+
+        /// <summary>
+        /// Check if a <b><see cref="TEntity"/></b> object with the <b><see cref="pkValue"/></b> is exist
+        /// </summary>
+        /// <typeparam name="TEntity">The entity to be checked</typeparam>
+        /// <param name="pkValue">The primary key value</param>
+        /// <returns><see cref="bool"/></returns>
+        bool IsExist<TEntity>( object pkValue ) where TEntity : class;
+
+        /// <summary>
+        /// Check if a <b><see cref="TEntity"/></b> object matched with the <see cref="Expression{TDelegate}"/> expression is exist
+        /// </summary>
+        /// <typeparam name="TEntity">The entity to be checked</typeparam>
+        /// <param name="selectExpression">Selection expression</param>
+        /// <returns><see cref="bool"/></returns>
+        bool IsExist<TEntity>( Expression<Func<TEntity , bool>> selectExpression ) where TEntity : class;
+
+        #endregion
+
     }
 
     /// <summary>
@@ -154,6 +174,24 @@ namespace MBRepoCore.Repo.Abstractions
         /// <param name="orderingFunc">The <b><see cref="IOrderedQueryable"/></b> ordering expression</param>
         List<TEntity> FilterAndOrder(Expression<Func<TEntity, bool>>                       filterExpression,
                                      Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderingFunc);
+
+        #endregion
+
+        #region Exist
+
+        /// <summary>
+        /// Check if a <see cref="TEntity"/> object with the <see cref="pkValue"/> is exist
+        /// </summary>
+        /// <param name="pkValue">The primary key value</param>
+        /// <returns><see cref="bool"/></returns>
+        bool IsExist( object pkValue );
+
+        /// <summary>
+        /// Check if a <b><see cref="TEntity"/></b> object matched with the <see cref="Expression{TDelegate}"/> expression is exist
+        /// </summary>
+        /// <param name="selectExpression">Selection expression</param>
+        /// <returns><see cref="bool"/></returns>
+        bool IsExist( Expression<Func<TEntity , bool>> selectExpression );
 
         #endregion
 

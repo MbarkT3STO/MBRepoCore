@@ -209,6 +209,26 @@ namespace MBRepoCore.Repo.Specific
 
         #endregion
 
+        #region Is Exist
+
+        /// <inheritdoc />
+        public virtual bool IsExist(object pkValue)
+        {
+            var result = Context.Set<TEntity>().Find( pkValue );
+
+            return result != null;
+        }
+
+        /// <inheritdoc />
+        public virtual bool IsExist( Expression<Func<TEntity , bool>> selectExpression )
+        {
+            var result = Context.Set<TEntity>().FirstOrDefault( selectExpression );
+
+            return result != null;
+        }
+
+        #endregion
+
         #endregion
 
     }

@@ -493,6 +493,50 @@ namespace MBRepoCore.Repo.Generic
         #endregion
 
 
+        #region Is Exist
+
+        /// <inheritdoc />
+        public bool IsExist<TEntity>( object pkValue ) where TEntity : class
+        {
+            var result = Context.Set<TEntity>().Find( pkValue );
+
+            return result != null;
+        }
+
+        /// <summary>
+        /// Asynchronously, <inheritdoc cref="IsExist{TEntity}(object)"/>
+        /// </summary>
+        /// <typeparam name="TEntity"><inheritdoc cref="IsExist{TEntity}(object)"/></typeparam>
+        /// <param name="pkValue"><inheritdoc cref="IsExist{TEntity}(object)"/></param>
+        /// <returns><see cref="Task"/></returns>
+        public Task<bool> IsExistAsync<TEntity>(object pkValue) where TEntity : class
+        {
+            return Task.Factory.StartNew(() => IsExist<TEntity>(pkValue));
+        }
+
+
+        /// <inheritdoc />
+        public bool IsExist<TEntity>( Expression<Func<TEntity , bool>> selectExpression ) where TEntity : class
+        {
+            var result = Context.Set<TEntity>().FirstOrDefault( selectExpression );
+
+            return result != null;
+        }
+
+        /// <summary>
+        /// Asynchronously, <inheritdoc cref="IsExist{TEntity}(System.Linq.Expressions.Expression{System.Func{TEntity,bool}})"/>
+        /// </summary>
+        /// <typeparam name="TEntity"><inheritdoc cref="IsExist{TEntity}(System.Linq.Expressions.Expression{System.Func{TEntity,bool}})"/></typeparam>
+        /// <param name="selectExpression"><inheritdoc cref="IsExist{TEntity}(System.Linq.Expressions.Expression{System.Func{TEntity,bool}})"/></param>
+        /// <returns><see cref="Task"/></returns>
+        public Task<bool> IsExistAsync<TEntity>(Expression<Func<TEntity, bool>> selectExpression) where TEntity : class
+        {
+            return Task.Factory.StartNew( () => IsExist( selectExpression ) );
+        }
+
+        #endregion
+
+
         #region Preview features
 
         /// <summary>
