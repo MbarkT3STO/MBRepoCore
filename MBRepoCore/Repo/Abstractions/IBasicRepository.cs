@@ -14,7 +14,7 @@ namespace MBRepoCore.Repo.Abstractions
         /// </summary>
         /// <typeparam name="TEntity">The entity to select from</typeparam>
         /// <returns></returns>
-        List<TEntity> GetAll<TEntity>() where TEntity : class;
+        List<TEntity> Get<TEntity>() where TEntity : class;
 
         /// <summary>
         /// Get One <b><see cref="TEntity"/></b> record, based on the primary key value
@@ -22,7 +22,7 @@ namespace MBRepoCore.Repo.Abstractions
         /// <typeparam name="TEntity">The entity to select from</typeparam>
         /// <param name="pkValue">The primary key value</param>
         /// <returns></returns>
-        TEntity GetOne<TEntity>(object pkValue) where TEntity : class;
+        TEntity GetById<TEntity>(object pkValue) where TEntity : class;
 
         #endregion
 
@@ -33,14 +33,14 @@ namespace MBRepoCore.Repo.Abstractions
         /// </summary>
         /// <typeparam name="TEntity">Entity to add into</typeparam>
         /// <param name="record">The record to be added</param>
-        void AddOne<TEntity>(TEntity record) where TEntity : class;
+        void Add<TEntity>(TEntity record) where TEntity : class;
 
         /// <summary>
         /// Add a range of <b><see cref="TEntity"/></b> records
         /// </summary>
         /// <typeparam name="TEntity">Entity to insert into</typeparam>
         /// <param name="records">Records to be inserted</param>
-        void AddMany<TEntity>(List<TEntity> records) where TEntity : class;
+        void Add<TEntity>(List<TEntity> records) where TEntity : class;
 
         #endregion
 
@@ -51,7 +51,7 @@ namespace MBRepoCore.Repo.Abstractions
         /// </summary>
         /// <typeparam name="TEntity">Entity to add into</typeparam>
         /// <param name="record">The record to be updated</param>
-        void UpdateOne<TEntity>(TEntity record) where TEntity : class;
+        void Update<TEntity>(TEntity record) where TEntity : class;
 
         #endregion
 
@@ -74,14 +74,14 @@ namespace MBRepoCore.Repo.Abstractions
         /// </summary>
         /// <typeparam name="TEntity">Entity to remove from</typeparam>
         /// <param name="record">The record to be removed</param>
-        void RemoveOne<TEntity>(TEntity record) where TEntity : class;
+        void Remove<TEntity>(TEntity record) where TEntity : class;
 
         /// <summary>
         /// Remove a range of <b><see cref="TEntity"/></b> records
         /// </summary>
         /// <typeparam name="TEntity">Entity to delete from</typeparam>
         /// <param name="records">Records to be deleted</param>
-        void RemoveMany<TEntity>(List<TEntity> records) where TEntity : class;
+        void Remove<TEntity>(List<TEntity> records) where TEntity : class;
 
         #endregion
     }

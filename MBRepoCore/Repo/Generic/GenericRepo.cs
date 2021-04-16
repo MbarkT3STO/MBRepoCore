@@ -16,8 +16,7 @@ namespace MBRepoCore.Repo.Generic
     ///Full generic repository
     /// </summary>
     /// <typeparam name="TContext">The <b><see cref="DbContext"/></b> type</typeparam>
-    public class GenericRepo<TContext> : IGenericRepo<TContext> , IRepoProperties , IDisposable
-        where TContext : DbContext
+    public class GenericRepo<TContext> : IGenericRepo<TContext> , IRepoProperties , IDisposable where TContext : DbContext
     {
 
         #region properties
@@ -128,22 +127,20 @@ namespace MBRepoCore.Repo.Generic
         #region Get
 
         /// <inheritdoc />
-        public List<TEntity> GetAll<TEntity>() where TEntity : class
+        public List<TEntity> Get<TEntity>() where TEntity : class
         {
             return Context.Set<TEntity>().ToList();
         }
 
-        /// <summary>
-        /// Asynchronously, <inheritdoc cref="GetAll{TEntity}()" />
-        /// </summary>
-        /// <typeparam name="TEntity"><inheritdoc cref="GetAll{TEntity}()"/></typeparam>
-        public Task<List<TEntity>> GetAllAsync<TEntity>() where TEntity : class
+        /// <inheritdoc />
+        public Task<List<TEntity>> GetAsync<TEntity>() where TEntity : class
         {
-            return Task.Factory.StartNew( () => GetAll<TEntity>().ToList() );
+            return Task.Factory.StartNew( () => Get<TEntity>() );
         }
 
+
         /// <inheritdoc />
-        public List<TEntity> GetAll<TEntity>( params Expression<Func<TEntity , object>>[] relatedEntitiesToBeLoaded )
+        public List<TEntity> Get<TEntity>( params Expression<Func<TEntity , object>>[] relatedEntitiesToBeLoaded )
             where TEntity : class
         {
             var result = Context.Set<TEntity>().AsQueryable();
@@ -156,38 +153,28 @@ namespace MBRepoCore.Repo.Generic
             return result.ToList();
         }
 
-        /// <summary>
-        /// Asynchronously, <inheritdoc cref="GetAll{TEntity}(System.Linq.Expressions.Expression{System.Func{TEntity,object}}[])"/>
-        /// </summary>
-        /// <typeparam name="TEntity"><inheritdoc cref="GetAll{TEntity}(System.Linq.Expressions.Expression{System.Func{TEntity,object}}[])"/></typeparam>
-        /// <param name="expressions"><inheritdoc cref="GetAll{TEntity}(System.Linq.Expressions.Expression{System.Func{TEntity,object}}[])"/></param>
-        public Task<List<TEntity>> GetAllAsync<TEntity>( params Expression<Func<TEntity , object>>[] expressions )
-            where TEntity : class
+        /// <inheritdoc />
+        public Task<List<TEntity>> GetAsyc<TEntity>(params Expression<Func<TEntity, object>>[] relatedEntitiesToBeLoaded) where TEntity : class
         {
-            return Task.Factory.StartNew( () => GetAll<TEntity>( expressions ) );
+            return Task.Factory.StartNew(() => Get<TEntity>(relatedEntitiesToBeLoaded));
         }
 
+
         /// <inheritdoc />
-        public List<TEntity> GetMany<TEntity>( Expression<Func<TEntity , bool>> filterExpression ) where TEntity : class
+        public List<TEntity> Get<TEntity>( Expression<Func<TEntity , bool>> filterExpression ) where TEntity : class
         {
             return Context.Set<TEntity>().Where( filterExpression ).ToList();
         }
 
-        /// <summary>
-        /// Asynchronously <inheritdoc cref="GetMany{TEntity}(System.Linq.Expressions.Expression{System.Func{TEntity,bool}})"/>
-        /// </summary>
-        /// <typeparam name="TEntity"><inheritdoc cref="GetMany{TEntity}(System.Linq.Expressions.Expression{System.Func{TEntity,bool}})"/></typeparam>
-        /// <param name="filterExpression"><inheritdoc cref="GetMany{TEntity}(System.Linq.Expressions.Expression{System.Func{TEntity,bool}})"/></param>
-        /// <returns></returns>
-        public Task<List<TEntity>> GetManyAsync<TEntity>( Expression<Func<TEntity , bool>> filterExpression )
-            where TEntity : class
+        /// <inheritdoc />
+        public Task<List<TEntity>> GetAsync<TEntity>(Expression<Func<TEntity, bool>> filterExpression) where TEntity : class
         {
-            return Task.Factory.StartNew( () => GetMany<TEntity>( filterExpression ) );
+            return Task.Factory.StartNew(() => Get<TEntity>(filterExpression));
         }
 
+
         /// <inheritdoc />
-        public List<TEntity> GetMany<TEntity>( Expression<Func<TEntity , bool>>            filterExpression ,
-                                               params Expression<Func<TEntity , object>>[] relatedEntitiesToBeLoaded )
+        public List<TEntity> Get<TEntity>( Expression<Func<TEntity , bool>> filterExpression , params Expression<Func<TEntity , object>>[] relatedEntitiesToBeLoaded )
             where TEntity : class
         {
             var result = Context.Set<TEntity>().Where( filterExpression ).AsQueryable();
@@ -199,40 +186,28 @@ namespace MBRepoCore.Repo.Generic
             return result.ToList();
         }
 
-        /// <summary>
-        /// Asynchronously <inheritdoc cref="GetMany{TEntity}(Expression{Func{TEntity,bool}},Expression{Func{TEntity, object}}[] )"/>
-        /// </summary>
-        /// <typeparam name="TEntity"><inheritdoc cref="GetMany{TEntity}(Expression{Func{TEntity,bool}},Expression{Func{TEntity, object}}[] )"/></typeparam>
-        /// <param name="filterExpression"><inheritdoc cref="GetMany{TEntity}(Expression{Func{TEntity,bool}},Expression{Func{TEntity, object}}[] )"/></param>
-        /// <param name="relatedEntitiesToBeLoaded"><inheritdoc cref="GetMany{TEntity}(Expression{Func{TEntity,bool}},Expression{Func{TEntity, object}}[] )"/></param>
-        /// <returns></returns>
-        public Task<List<TEntity>> GetManyAsync<TEntity>( Expression<Func<TEntity , bool>> filterExpression ,
-                                                          params Expression<Func<TEntity , object>>[]
-                                                              relatedEntitiesToBeLoaded ) where TEntity : class
+        /// <inheritdoc />
+        public Task<List<TEntity>> GetAsync<TEntity>(Expression<Func<TEntity, bool>> filterExpression, params Expression<Func<TEntity, object>>[] relatedEntitiesToBeLoaded) where TEntity : class
         {
-            return Task.Factory.StartNew( () => GetMany<TEntity>( filterExpression , relatedEntitiesToBeLoaded ) );
+            return Task.Factory.StartNew(() => Get<TEntity>(filterExpression, relatedEntitiesToBeLoaded));
         }
 
+
         /// <inheritdoc />
-        public TEntity GetOne<TEntity>( object pkValue ) where TEntity : class
+        public TEntity GetById<TEntity>( object pkValue ) where TEntity : class
         {
             return Context.Set<TEntity>().Find( pkValue );
         }
 
-        /// <summary>
-        /// Asynchronously, <inheritdoc cref="GetOne{TEntity}(object)"/>
-        /// </summary>
-        /// <typeparam name="TEntity"><inheritdoc cref="GetOne{TEntity}(object)"/></typeparam>
-        /// <param name="pkValue"><inheritdoc cref="GetOne{TEntity}(object)"/></param>
-        /// <returns></returns>
-        public Task<TEntity> GetOneAsync<TEntity>( object pkValue ) where TEntity : class
+        /// <inheritdoc />
+        public Task<TEntity> GetByIdAsync<TEntity>(object pkValue) where TEntity : class
         {
-            return Task.Factory.StartNew( () => GetOne<TEntity>( pkValue ) );
+            return Task.Factory.StartNew( () => GetById<TEntity>( pkValue ) );
         }
 
+
         /// <inheritdoc />
-        public TEntity GetOne<TEntity>( object                                      pkValue ,
-                                        params Expression<Func<TEntity , object>>[] relatedEntitiesToBeLoaded )
+        public TEntity GetById<TEntity>( object pkValue , params Expression<Func<TEntity , object>>[] relatedEntitiesToBeLoaded )
             where TEntity : class
         {
             // Get one object using primary key
@@ -247,16 +222,42 @@ namespace MBRepoCore.Repo.Generic
             return resultObject;
         }
 
-        /// <summary>
-        /// Asynchronously, <inheritdoc cref="GetOne{TEntity}(object,System.Linq.Expressions.Expression{System.Func{TEntity,object}}[])"/>
-        /// </summary>
-        /// <inheritdoc cref="GetOne{TEntity}(object,System.Linq.Expressions.Expression{System.Func{TEntity,object}}[])" />
-        /// <returns></returns>
-        public Task<TEntity> GetOneAsync<TEntity>( object pkValue ,
-                                                   params Expression<Func<TEntity , object>>[]
-                                                       relatedEntitiesToBeLoaded ) where TEntity : class
+        /// <inheritdoc />
+        public Task<TEntity> GetByIdAsync<TEntity>(object pkValue, params Expression<Func<TEntity, object>>[] relatedEntitiesToBeLoaded) where TEntity : class
         {
-            return Task.Factory.StartNew( () => GetOne<TEntity>( pkValue , relatedEntitiesToBeLoaded ) );
+            return Task.Factory.StartNew(() => GetById<TEntity>(pkValue, relatedEntitiesToBeLoaded));
+        }
+
+
+
+        #endregion
+
+
+        #region Add
+
+        /// <inheritdoc />
+        public void Add<TEntity>( TEntity record ) where TEntity : class
+        {
+            Context.Set<TEntity>().Add( record );
+        }
+
+        /// <inheritdoc />
+        public Task AddAsync<TEntity>(TEntity record) where TEntity : class
+        {
+            return Task.Factory.StartNew( () => Add<TEntity>( record ) );
+        }
+
+
+        /// <inheritdoc />
+        public void Add<TEntity>( List<TEntity> records ) where TEntity : class
+        {
+            Context.Set<TEntity>().AddRange( records );
+        }
+
+        /// <inheritdoc />
+        public Task AddAsync<TEntity>( List<TEntity> records ) where TEntity : class
+        {
+            return Task.Factory.StartNew( () => Add( records ) );
         }
 
         #endregion
@@ -265,27 +266,22 @@ namespace MBRepoCore.Repo.Generic
         #region Update
 
         /// <inheritdoc />
-        public void UpdateOne<TEntity>( TEntity record ) where TEntity : class
+        public void Update<TEntity>( TEntity record ) where TEntity : class
         {
             var entity = Context.Set<TEntity>();
             entity.Attach( record );
             Context.Entry( record ).State = EntityState.Modified;
         }
 
-        /// <summary>
-        /// Asynchronously <inheritdoc cref="UpdateOne{TEntity}"/>
-        /// </summary>
-        /// <typeparam name="TEntity"><inheritdoc cref="UpdateOne{TEntity}"/></typeparam>
-        /// <param name="record"><inheritdoc cref="UpdateOne{TEntity}"/></param>
-        public Task UpdateOneAsync<TEntity>( TEntity record ) where TEntity : class
+        /// <inheritdoc />
+        public Task UpdateAsync<TEntity>(TEntity record) where TEntity : class
         {
-            return Task.Factory.StartNew( () => UpdateOne( record ) );
+            return Task.Factory.StartNew( () => Update<TEntity>( record ) );
         }
 
+
         /// <inheritdoc />
-        public void UpdateMany<TEntity>( Expression<Func<TEntity , bool>> filterExpression ,
-                                         Action<TEntity>                  updateAction )
-            where TEntity : class
+        public void Update<TEntity>( Expression<Func<TEntity , bool>> filterExpression , Action<TEntity> updateAction ) where TEntity : class
         {
             // Get the records to be updated depending on the filter expression
             var recordsToBeUpdated = Context.Set<TEntity>().Where( filterExpression ).ToList();
@@ -294,21 +290,80 @@ namespace MBRepoCore.Repo.Generic
             recordsToBeUpdated.ForEach( updateAction );
         }
 
-        /// <summary>
-        /// Asynchronously <inheritdoc cref="UpdateMany{TEntity}"/>
-        /// </summary>
-        /// <typeparam name="TEntity"><inheritdoc cref="UpdateMany{TEntity}"/></typeparam>
-        /// <param name="filterExpression"><inheritdoc cref="UpdateMany{TEntity}"/></param>
-        /// <param name="updateAction"><inheritdoc cref="UpdateMany{TEntity}"/></param>
-        public Task UpdateManyAsync<TEntity>( Expression<Func<TEntity , bool>> filterExpression ,
-                                              Action<TEntity>                  updateAction ) where TEntity : class
+        /// <inheritdoc />
+        public Task UpdateAsync<TEntity>(Expression<Func<TEntity, bool>> filterExpression, Action<TEntity> updateAction) where TEntity : class
         {
-            return Task.Factory.StartNew( () => UpdateMany( filterExpression , updateAction ) );
+            return Task.Factory.StartNew(() => Update<TEntity>(filterExpression, updateAction));
+
+        }
+
+
+        #endregion
+
+
+        #region Remove
+
+        /// <inheritdoc />
+        public void Remove<TEntity>( TEntity record ) where TEntity : class
+        {
+            this.Context.Set<TEntity>().Remove( record );
+        }
+
+        /// <inheritdoc />
+        public Task RemoveAsync<TEntity>( TEntity record ) where TEntity : class
+        {
+            return Task.Factory.StartNew( () => Remove( record ) );
+        }
+
+
+        /// <inheritdoc />
+        public void Remove<TEntity>( List<TEntity> records ) where TEntity : class
+        {
+            this.Context.Set<TEntity>().RemoveRange( records );
+        }
+
+        /// <inheritdoc />
+        public Task RemoveAsync<TEntity>( List<TEntity> records ) where TEntity : class
+        {
+            return Task.Factory.StartNew( () => Remove( records ) );
         }
 
         #endregion
 
 
+        #region Is Exist
+
+        /// <inheritdoc />
+        public bool IsExist<TEntity>( object pkValue ) where TEntity : class
+        {
+            var result = Context.Set<TEntity>().Find( pkValue );
+
+            return result != null;
+        }
+
+        /// <inheritdoc />
+        public Task<bool> IsExistAsync<TEntity>(object pkValue) where TEntity : class
+        {
+            return Task.Factory.StartNew( () => IsExist<TEntity>( pkValue ) );
+        }
+
+        /// <inheritdoc />
+        public bool IsExist<TEntity>( Expression<Func<TEntity , bool>> selectExpression ) where TEntity : class
+        {
+            var result = Context.Set<TEntity>().FirstOrDefault( selectExpression );
+
+            return result != null;
+        }
+
+        /// <inheritdoc />
+        public Task<bool> IsExistAsync<TEntity>(Expression<Func<TEntity, bool>> selectExpression) where TEntity : class
+        {
+            return Task.Factory.StartNew( () => IsExist( selectExpression ) );
+        }
+
+        #endregion
+        
+        
         #region Contains
 
         /// <inheritdoc />
@@ -317,12 +372,7 @@ namespace MBRepoCore.Repo.Generic
             return Context.Set<TEntity>().AsEnumerable().Contains( obj );
         }
 
-
-        /// <summary>
-        /// Asynchronously <inheritdoc cref="Contains{TEntity,TEntityComparer}"/>
-        /// </summary>
-        /// <typeparam name="TEntity"><inheritdoc cref="Contains{TEntity,TEntityComparer}"/></typeparam>
-        /// <param name="obj"><inheritdoc cref="Contains{TEntity,TEntityComparer}"/></param>
+        /// <inheritdoc />
         public Task<bool> ContainsAsync<TEntity>( TEntity obj ) where TEntity : class
         {
             return Task.Factory.StartNew( () => Contains<TEntity>( obj ) );
@@ -330,108 +380,17 @@ namespace MBRepoCore.Repo.Generic
 
 
         /// <inheritdoc />
-        public bool Contains<TEntity , TEntityComparer>( TEntity obj )
-            where TEntity : class
-            where TEntityComparer : IEqualityComparer<TEntity> , new()
+        public bool Contains<TEntity , TEntityComparer>( TEntity obj ) where TEntity : class where TEntityComparer : IEqualityComparer<TEntity> , new()
         {
             return Context.Set<TEntity>()
                           .AsEnumerable()
                           .Contains( obj , new TEntityComparer() as IEqualityComparer<TEntity> );
         }
 
-
-        /// <summary>
-        ///  Asynchronously <inheritdoc cref="Contains{TEntity,TEntityComparer}"/>
-        /// </summary>
-        /// <typeparam name="TEntity"><inheritdoc cref="Contains{TEntity,TEntityComparer}"/></typeparam>
-        /// <typeparam name="TEntityComparer"><inheritdoc cref="Contains{TEntity,TEntityComparer}"/></typeparam>
-        /// <param name="obj"><inheritdoc cref="Contains{TEntity,TEntityComparer}"/></param>
-        /// <returns></returns>
-        public Task<bool> ContainsAsync<TEntity , TEntityComparer>( TEntity obj )
-            where TEntity : class
-            where TEntityComparer : IEqualityComparer<TEntity> , new()
+        /// <inheritdoc />
+        public Task<bool> ContainsAsync<TEntity , TEntityComparer>( TEntity obj ) where TEntity : class where TEntityComparer : IEqualityComparer<TEntity> , new()
         {
             return Task.Factory.StartNew( () => Contains<TEntity , TEntityComparer>( obj ) );
-        }
-
-        #endregion
-
-
-        #region Add
-
-        /// <inheritdoc />
-        public void AddOne<TEntity>( TEntity record ) where TEntity : class
-        {
-            Context.Set<TEntity>().Add( record );
-        }
-
-
-        /// <summary>
-        /// Asynchronously, <inheritdoc cref="AddOne{TEntity}"/>
-        /// </summary>
-        /// <typeparam name="TEntity"><inheritdoc cref="AddOne{TEntity}"/></typeparam>
-        /// <param name="record"><inheritdoc cref="AddOne{TEntity}"/></param>
-        public Task AddOneAsync<TEntity>( TEntity record ) where TEntity : class
-        {
-            return Task.Factory.StartNew( () => AddOne( record ) );
-        }
-
-
-        /// <inheritdoc />
-        public void AddMany<TEntity>( List<TEntity> records ) where TEntity : class
-        {
-            Context.Set<TEntity>().AddRange( records );
-        }
-
-
-        /// <summary>
-        /// Asynchronously, <inheritdoc cref="AddMany{TEntity}"/>
-        /// </summary>
-        /// <typeparam name="TEntity"><inheritdoc cref="AddMany{TEntity}"/></typeparam>
-        /// <param name="records"><inheritdoc cref="AddMany{TEntity}"/></param>
-        public Task AddManyAsync<TEntity>( List<TEntity> records ) where TEntity : class
-        {
-            return Task.Factory.StartNew( () => AddMany( records ) );
-        }
-
-        #endregion
-
-
-        #region Remove
-
-        /// <inheritdoc />
-        public void RemoveOne<TEntity>( TEntity record ) where TEntity : class
-        {
-            this.Context.Set<TEntity>().Remove( record );
-        }
-
-
-        /// <summary>
-        /// Asynchronously, <inheritdoc cref="RemoveOne{TEntity}"/>
-        /// </summary>
-        /// <typeparam name="TEntity"><inheritdoc cref="RemoveOne{TEntity}"/></typeparam>
-        /// <param name="record"><inheritdoc cref="RemoveOne{TEntity}"/></param>
-        public Task RemoveOneAsync<TEntity>( TEntity record ) where TEntity : class
-        {
-            return Task.Factory.StartNew( () => RemoveOne( record ) );
-        }
-
-
-        /// <inheritdoc />
-        public void RemoveMany<TEntity>( List<TEntity> records ) where TEntity : class
-        {
-            this.Context.Set<TEntity>().RemoveRange( records );
-        }
-
-        /// <summary>
-        /// Asynchronously, <inheritdoc cref="RemoveMany{TEntity}"/>
-        /// </summary>
-        /// <typeparam name="TEntity"><inheritdoc cref="RemoveMany{TEntity}"/></typeparam>
-        /// <param name="records"><inheritdoc cref="RemoveMany{TEntity}"/></param>
-        /// <returns></returns>
-        public Task RemoveManyAsync<TEntity>( List<TEntity> records ) where TEntity : class
-        {
-            return Task.Factory.StartNew( () => RemoveMany( records ) );
         }
 
         #endregion
@@ -492,73 +451,6 @@ namespace MBRepoCore.Repo.Generic
 
         #endregion
 
-
-        #region Is Exist
-
-        /// <inheritdoc />
-        public bool IsExist<TEntity>( object pkValue ) where TEntity : class
-        {
-            var result = Context.Set<TEntity>().Find( pkValue );
-
-            return result != null;
-        }
-
-        /// <summary>
-        /// Asynchronously, <inheritdoc cref="IsExist{TEntity}(object)"/>
-        /// </summary>
-        /// <typeparam name="TEntity"><inheritdoc cref="IsExist{TEntity}(object)"/></typeparam>
-        /// <param name="pkValue"><inheritdoc cref="IsExist{TEntity}(object)"/></param>
-        /// <returns><see cref="Task"/></returns>
-        public Task<bool> IsExistAsync<TEntity>(object pkValue) where TEntity : class
-        {
-            return Task.Factory.StartNew(() => IsExist<TEntity>(pkValue));
-        }
-
-
-        /// <inheritdoc />
-        public bool IsExist<TEntity>( Expression<Func<TEntity , bool>> selectExpression ) where TEntity : class
-        {
-            var result = Context.Set<TEntity>().FirstOrDefault( selectExpression );
-
-            return result != null;
-        }
-
-        /// <summary>
-        /// Asynchronously, <inheritdoc cref="IsExist{TEntity}(System.Linq.Expressions.Expression{System.Func{TEntity,bool}})"/>
-        /// </summary>
-        /// <typeparam name="TEntity"><inheritdoc cref="IsExist{TEntity}(System.Linq.Expressions.Expression{System.Func{TEntity,bool}})"/></typeparam>
-        /// <param name="selectExpression"><inheritdoc cref="IsExist{TEntity}(System.Linq.Expressions.Expression{System.Func{TEntity,bool}})"/></param>
-        /// <returns><see cref="Task"/></returns>
-        public Task<bool> IsExistAsync<TEntity>(Expression<Func<TEntity, bool>> selectExpression) where TEntity : class
-        {
-            return Task.Factory.StartNew( () => IsExist( selectExpression ) );
-        }
-
-        #endregion
-
-
-        #region Preview features
-
-        /// <summary>
-        /// Get Many records from <b><see cref="TEntity"/></b> based on a property value
-        /// </summary>
-        /// <typeparam name="TEntity">The entity to select from</typeparam>
-        /// <param name="prop">The property to be used in the condition</param>
-        /// <param name="val">The value to be used in the search</param>
-        /// <returns></returns>
-        public IEnumerable<TEntity> GetMany<TEntity>( string prop ,
-                                                      object val ) where TEntity : class
-        {
-            return Context.Set<TEntity>()
-                          .AsEnumerable()
-                          .Where( x => typeof(TEntity).GetProperty( prop )
-                                                      .GetValue( x , null )
-                                                      .ToString()
-                                                      .Contains( val.ToString() ) )
-                          .ToList();
-        }
-
-        #endregion
 
         #endregion
 

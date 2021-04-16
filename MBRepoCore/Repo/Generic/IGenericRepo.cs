@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MBRepoCore.Repo.Generic
 {
-    public interface IGenericRepo<TContext>:IBasicRepository,IAdvancedRepository where TContext : DbContext
+    public interface IGenericRepo<TContext>:IBasicRepository,IAdvancedRepository,IBasicRepositoryAsync,IAdvancedRepositoryAsync where TContext : DbContext
     {
 
         
