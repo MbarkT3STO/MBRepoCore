@@ -154,7 +154,7 @@ namespace MBRepoCore.Repo.Generic
         }
 
         /// <inheritdoc />
-        public Task<List<TEntity>> GetAsyc<TEntity>(params Expression<Func<TEntity, object>>[] relatedEntitiesToBeLoaded) where TEntity : class
+        public Task<List<TEntity>> GetAsync<TEntity>(params Expression<Func<TEntity, object>>[] relatedEntitiesToBeLoaded) where TEntity : class
         {
             return Task.Factory.StartNew(() => Get<TEntity>(relatedEntitiesToBeLoaded));
         }
@@ -207,8 +207,7 @@ namespace MBRepoCore.Repo.Generic
 
 
         /// <inheritdoc />
-        public TEntity GetById<TEntity>( object pkValue , params Expression<Func<TEntity , object>>[] relatedEntitiesToBeLoaded )
-            where TEntity : class
+        public TEntity GetById<TEntity>( object pkValue , params Expression<Func<TEntity , object>>[] relatedEntitiesToBeLoaded ) where TEntity : class
         {
             // Get one object using primary key
             var resultObject = Context.Set<TEntity>().Find( pkValue );
@@ -406,25 +405,15 @@ namespace MBRepoCore.Repo.Generic
             return entity.Where( filterExpression ).ToList();
         }
 
-
-        /// <summary>
-        /// Asynchronously, <inheritdoc cref="Filter{TEntity}"/>
-        /// </summary>
-        /// <typeparam name="TEntity"><inheritdoc cref="Filter{TEntity}"/></typeparam>
-        /// <param name="filterExpression"><inheritdoc cref="Filter{TEntity}"/></param>
-        /// <returns></returns>
-        public Task<IEnumerable<TEntity>> FilterAsync<TEntity>( Expression<Func<TEntity , bool>> filterExpression )
-            where TEntity : class
+        /// <inheritdoc />
+        public Task<List<TEntity>> FilterAsync<TEntity>( Expression<Func<TEntity , bool>> filterExpression ) where TEntity : class
         {
-            return Task<IEnumerable<TEntity>>.Factory.StartNew( () => Filter<TEntity>( filterExpression ) );
+            return Task<List<TEntity>>.Factory.StartNew( () => Filter<TEntity>( filterExpression ) );
         }
 
 
         /// <inheritdoc />
-        public List<TEntity> FilterAndOrder<TEntity>( Expression<Func<TEntity , bool>> filterExpression ,
-                                                      Func<IQueryable<TEntity> , IOrderedQueryable<TEntity>>
-                                                          orderingFunc )
-            where TEntity : class
+        public List<TEntity> FilterAndOrder<TEntity>( Expression<Func<TEntity , bool>> filterExpression , Func<IQueryable<TEntity> , IOrderedQueryable<TEntity>> orderingFunc ) where TEntity : class
         {
             IQueryable<TEntity> entity = Context.Set<TEntity>();
             entity = entity.Where( filterExpression );
@@ -433,20 +422,10 @@ namespace MBRepoCore.Repo.Generic
             return entity.ToList();
         }
 
-
-        /// <summary>
-        /// Asynchronously, <inheritdoc cref="FilterAndOrder{TEntity}"/>
-        /// </summary>
-        /// <typeparam name="TEntity"><inheritdoc cref="FilterAndOrder{TEntity}"/></typeparam>
-        /// <param name="filterExpression"><inheritdoc cref="FilterAndOrder{TEntity}"/></param>
-        /// <param name="orderingFunc"><inheritdoc cref="FilterAndOrder{TEntity}"/></param>
-        /// <returns></returns>
-        public Task<IEnumerable<TEntity>> FilterWithOrderAsync<TEntity>(
-            Expression<Func<TEntity , bool>>                       filterExpression ,
-            Func<IQueryable<TEntity> , IOrderedQueryable<TEntity>> orderingFunc ) where TEntity : class
+        /// <inheritdoc />
+        public Task<List<TEntity>> FilterAndOrderAsync<TEntity>( Expression<Func<TEntity , bool>> filterExpression , Func<IQueryable<TEntity> , IOrderedQueryable<TEntity>> orderingFunc ) where TEntity : class
         {
-            return Task<IEnumerable<TEntity>>.Factory.StartNew( () =>
-                                                                    FilterAndOrder( filterExpression , orderingFunc ) );
+            return Task<List<TEntity>>.Factory.StartNew( () => FilterAndOrder( filterExpression , orderingFunc ) );
         }
 
         #endregion

@@ -129,21 +129,21 @@ namespace MBRepoCore.Repo.Abstractions
         /// Get All <b><see cref="TEntity"/></b> records, and load related selected entities records
         /// </summary>
         /// <param name="relatedEntitiesToBeLoaded">Entities to be load data from (Should be the <see cref="TEntity"/>'s navigation properties)</param>
-        List<TEntity> GetAll(params Expression<Func<TEntity, object>>[] relatedEntitiesToBeLoaded);
+        List<TEntity> Get(params Expression<Func<TEntity, object>>[] relatedEntitiesToBeLoaded);
 
         /// <summary>
         /// Get All <b><see cref="TEntity"/></b> records that respects a set of conditions provided in the filter expression
         /// </summary>
         /// <typeparam name="TEntity">The entity to select from</typeparam>
         /// <param name="filterExpression">One or set of conditions to be respected</param>
-        List<TEntity> GetMany(Expression<Func<TEntity, bool>> filterExpression);
+        List<TEntity> Get(Expression<Func<TEntity, bool>> filterExpression);
 
         /// <summary>
         /// Get All <b><see cref="TEntity"/></b> records that respects a set of conditions provided in the filter expression and load related selected entities records
         /// </summary>
         /// <param name="filterExpression">One or set of conditions to be respected</param>
         /// <param name="relatedEntitiesToBeLoaded">Entities to be loaded (Should be the <see cref="TEntity"/>'s navigation properties)</param>
-        List<TEntity> GetMany(Expression<Func<TEntity, bool>>            filterExpression,
+        List<TEntity> Get(Expression<Func<TEntity, bool>>            filterExpression,
                               params Expression<Func<TEntity, object>>[] relatedEntitiesToBeLoaded);
 
         /// <summary>
@@ -151,7 +151,7 @@ namespace MBRepoCore.Repo.Abstractions
         /// </summary>
         /// <param name="pkValue">Primary key value</param>
         /// <param name="relatedEntitiesToBeLoaded">Entities to be loaded (Should be the <see cref="TEntity"/>'s navigation properties)</param>
-        TEntity GetOne(object pkValue,params Expression<Func<TEntity, object>>[] relatedEntitiesToBeLoaded);
+        TEntity GetById(object pkValue,params Expression<Func<TEntity, object>>[] relatedEntitiesToBeLoaded);
 
         #endregion
 
@@ -162,7 +162,7 @@ namespace MBRepoCore.Repo.Abstractions
         /// </summary>
         /// <param name="filterExpression">The filter expression</param>
         /// <param name="updateAction">The update action</param>
-        void UpdateMany(Expression<Func<TEntity, bool>> filterExpression,
+        void Update(Expression<Func<TEntity, bool>> filterExpression,
                         Action<TEntity>                 updateAction);
 
         #endregion
@@ -200,6 +200,18 @@ namespace MBRepoCore.Repo.Abstractions
         /// <param name="selectExpression">Selection expression</param>
         /// <returns><see cref="bool"/></returns>
         bool IsExist( Expression<Func<TEntity , bool>> selectExpression );
+
+        #endregion
+
+        #region Contains
+
+        /// <summary>
+        /// Check if <b><see cref="TEntity"/></b> contains an object using a custom <b><see cref="IEqualityComparer{TEntity}"/></b>
+        /// </summary>
+        /// <typeparam name="TEntityComparer">Custom <see cref="IEqualityComparer{TEntity}"/> comparer</typeparam>
+        /// <param name="obj">The object to be looking for</param>
+        /// <returns><see cref="bool"/></returns>
+        bool Contains<TEntityComparer>( TEntity obj ) where TEntityComparer : IEqualityComparer<TEntity> , new();
 
         #endregion
 

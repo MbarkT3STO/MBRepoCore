@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using MBRepoCore.Repo.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
@@ -55,13 +56,20 @@ namespace MBRepoCore.Repo.Specific
         #region Get
 
         /// <inheritdoc />
-        public virtual List<TEntity> GetAll()
+        public virtual List<TEntity> Get()
         {
             return Context.Set<TEntity>().ToList();
         }
 
         /// <inheritdoc />
-        public virtual List<TEntity> GetAll( params Expression<Func<TEntity , object>>[] relatedEntitiesToBeLoaded )
+        public virtual Task<List<TEntity>> GetAsync()
+        {
+            return Task.Factory.StartNew(() => Get());
+        }
+
+
+        /// <inheritdoc />
+        public virtual List<TEntity> Get( params Expression<Func<TEntity , object>>[] relatedEntitiesToBeLoaded )
         {
             var result = Context.Set<TEntity>().AsQueryable();
 
@@ -73,13 +81,27 @@ namespace MBRepoCore.Repo.Specific
         }
 
         /// <inheritdoc />
-        public virtual List<TEntity> GetMany( Expression<Func<TEntity , bool>> filterExpression )
+        public virtual Task<List<TEntity>> GetAsync(params Expression<Func<TEntity, object>>[] relatedEntitiesToBeLoaded)
+        {
+            return Task.Factory.StartNew( () => Get( relatedEntitiesToBeLoaded ) );
+        }
+
+
+        /// <inheritdoc />
+        public virtual List<TEntity> Get( Expression<Func<TEntity , bool>> filterExpression )
         {
             return Context.Set<TEntity>().Where( filterExpression ).ToList();
         }
 
         /// <inheritdoc />
-        public virtual List<TEntity> GetMany( Expression<Func<TEntity , bool>> filterExpression , params Expression<Func<TEntity , object>>[] relatedEntitiesToBeLoaded )
+        public virtual Task<List<TEntity>> GetAsync(Expression<Func<TEntity, bool>> filterExpression)
+        {
+            return Task.Factory.StartNew( () => Get( filterExpression ) );
+        }
+
+
+        /// <inheritdoc />
+        public virtual List<TEntity> Get( Expression<Func<TEntity , bool>> filterExpression , params Expression<Func<TEntity , object>>[] relatedEntitiesToBeLoaded )
         {
             var result = Context.Set<TEntity>().Where( filterExpression ).AsQueryable();
 
@@ -89,15 +111,29 @@ namespace MBRepoCore.Repo.Specific
 
             return result.ToList();
         }
+        
+        /// <inheritdoc />
+        public virtual Task<List<TEntity>> GetAsync(Expression<Func<TEntity, bool>> filterExpression, params Expression<Func<TEntity, object>>[] relatedEntitiesToBeLoaded)
+        {
+            return Task.Factory.StartNew( () => Get( filterExpression , relatedEntitiesToBeLoaded ) );
+        }
+
 
         /// <inheritdoc />
-        public virtual TEntity GetOne( object pkValue )
+        public virtual TEntity GetById( object pkValue )
         {
             return Context.Set<TEntity>().Find( pkValue );
         }
 
         /// <inheritdoc />
-        public TEntity GetOne( object pkValue , params Expression<Func<TEntity , object>>[] relatedEntitiesToBeLoaded )
+        public virtual Task<TEntity> GetByIdAsync(object pkValue)
+        {
+            return Task.Factory.StartNew( () => GetById( pkValue ) );
+        }
+
+
+        /// <inheritdoc />
+        public virtual TEntity GetById( object pkValue , params Expression<Func<TEntity , object>>[] relatedEntitiesToBeLoaded )
         {
             // Get one object using primary key
             var resultObject = Context.Set<TEntity>().Find( pkValue );
@@ -111,20 +147,40 @@ namespace MBRepoCore.Repo.Specific
             return resultObject;
         }
 
+        /// <inheritdoc />
+        public virtual Task<TEntity> GetByIdAsync(object pkValue, params Expression<Func<TEntity, object>>[] relatedEntitiesToBeLoaded)
+        {
+            return Task.Factory.StartNew(() => GetById(pkValue, relatedEntitiesToBeLoaded));
+        }
+
+
         #endregion
 
         #region Add
 
         /// <inheritdoc />
-        public virtual void AddOne( TEntity record )
+        public virtual void Add( TEntity record )
         {
             Context.Set<TEntity>().Add( record );
         }
 
         /// <inheritdoc />
-        public virtual void AddMany( List<TEntity> records )
+        public virtual Task AddAsync(TEntity record)
+        {
+            return Task.Factory.StartNew( () => Add( record ) );
+        }
+
+
+        /// <inheritdoc />
+        public virtual void Add( List<TEntity> records )
         {
             Context.Set<TEntity>().AddRange( records );
+        }
+
+        /// <inheritdoc />
+        public virtual Task AddAsync(List<TEntity> records)
+        {
+            return Task.Factory.StartNew( () => Add( records ) );
         }
 
         #endregion
@@ -132,7 +188,7 @@ namespace MBRepoCore.Repo.Specific
         #region Update
 
         /// <inheritdoc />
-        public virtual void UpdateOne( TEntity record )
+        public virtual void Update( TEntity record )
         {
             var entity = Context.Set<TEntity>();
             entity.Attach( record );
@@ -140,14 +196,27 @@ namespace MBRepoCore.Repo.Specific
         }
 
         /// <inheritdoc />
-        public virtual void UpdateMany( Expression<Func<TEntity , bool>> filterExpression ,
-                                        Action<TEntity>                  updateAction )
+        public virtual Task UpdateAsync(TEntity record)
+        {
+            return Task.Factory.StartNew( () => Update( record ) );
+        }
+
+
+        /// <inheritdoc />
+        public virtual void Update( Expression<Func<TEntity , bool>> filterExpression , Action<TEntity> updateAction )
         {
             // Get the records to be updated depending on the filter expression
             var recordsToBeUpdated = Context.Set<TEntity>().Where( filterExpression ).ToList();
 
             // Update the selected records
             recordsToBeUpdated.ForEach( updateAction );
+        }
+
+        /// <inheritdoc />
+        public virtual Task UpdateAsync(Expression<Func<TEntity, bool>> filterExpression, Action<TEntity> updateAction)
+        {
+            return Task.Factory.StartNew( () => Update( filterExpression , updateAction ) );
+
         }
 
         #endregion
@@ -161,12 +230,24 @@ namespace MBRepoCore.Repo.Specific
         }
 
         /// <inheritdoc />
-        public virtual bool Contains<TEntityComparer>( TEntity obj )
-            where TEntityComparer : IEqualityComparer<TEntity> , new()
+        public virtual Task<bool> ContainsAsync(TEntity obj)
+        {
+            return Task.Factory.StartNew( () => Contains( obj ) );
+        }
+
+
+        /// <inheritdoc />
+        public virtual bool Contains<TEntityComparer>( TEntity obj ) where TEntityComparer : IEqualityComparer<TEntity> , new()
         {
             return Context.Set<TEntity>()
                           .AsEnumerable()
                           .Contains( obj , new TEntityComparer() as IEqualityComparer<TEntity> );
+        }
+
+        /// <inheritdoc />
+        public virtual Task<bool> ContainsAsync<TEntityComparer>(TEntity obj) where TEntityComparer : IEqualityComparer<TEntity>, new()
+        {
+            return Task.Factory.StartNew( () => Contains<TEntityComparer>( obj ) );
         }
 
         #endregion
@@ -174,15 +255,28 @@ namespace MBRepoCore.Repo.Specific
         #region Remove
 
         /// <inheritdoc />
-        public virtual void RemoveOne( TEntity record )
+        public virtual void Remove( TEntity record )
         {
             this.Context.Set<TEntity>().Remove( record );
         }
 
         /// <inheritdoc />
-        public virtual void RemoveMany( List<TEntity> records )
+        public virtual Task RemoveAsync(TEntity record)
+        {
+            return Task.Factory.StartNew( () => Remove( record ) );
+        }
+
+
+        /// <inheritdoc />
+        public virtual void Remove( List<TEntity> records )
         {
             this.Context.Set<TEntity>().RemoveRange( records );
+        }
+
+        /// <inheritdoc />
+        public virtual Task RemoveAsync(List<TEntity> records)
+        {
+            return Task.Factory.StartNew( () => Remove( records ) );
         }
 
         #endregion
@@ -198,6 +292,13 @@ namespace MBRepoCore.Repo.Specific
         }
 
         /// <inheritdoc />
+        public virtual Task<List<TEntity>> FilterAsync(Expression<Func<TEntity, bool>> filterExpression)
+        {
+            return Task<List<TEntity>>.Factory.StartNew( () => Filter( filterExpression ) );
+        }
+
+
+        /// <inheritdoc />
         public virtual List<TEntity> FilterAndOrder( Expression<Func<TEntity , bool>> filterExpression , Func<IQueryable<TEntity> , IOrderedQueryable<TEntity>> orderingFunc )
         {
             IQueryable<TEntity> entity = Context.Set<TEntity>();
@@ -205,6 +306,12 @@ namespace MBRepoCore.Repo.Specific
             entity = orderingFunc( entity );
 
             return entity.ToList();
+        }
+
+        /// <inheritdoc />
+        public virtual Task<List<TEntity>> FilterAndOrderAsync(Expression<Func<TEntity, bool>> filterExpression, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderingFunc)
+        {
+            return Task<List<TEntity>>.Factory.StartNew( () => FilterAndOrder( filterExpression , orderingFunc ) );
         }
 
         #endregion
@@ -220,11 +327,24 @@ namespace MBRepoCore.Repo.Specific
         }
 
         /// <inheritdoc />
+        public virtual Task<bool> IsExistAsync(object pkValue)
+        {
+            return Task.Factory.StartNew( () => IsExist( pkValue ) );
+        }
+
+
+        /// <inheritdoc />
         public virtual bool IsExist( Expression<Func<TEntity , bool>> selectExpression )
         {
             var result = Context.Set<TEntity>().FirstOrDefault( selectExpression );
 
             return result != null;
+        }
+
+        /// <inheritdoc />
+        public virtual Task<bool> IsExistAsync(Expression<Func<TEntity, bool>> selectExpression)
+        {
+            return Task.Factory.StartNew( () => IsExist( selectExpression ) );
         }
 
         #endregion

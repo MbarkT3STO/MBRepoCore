@@ -97,13 +97,13 @@ namespace MBRepoCore.Repo.Abstractions
         /// <summary>
         /// Get All <b><see cref="TEntity"/></b> records
         /// </summary>
-        List<TEntity> GetAll();
+        List<TEntity> Get();
 
         /// <summary>
         /// Get One <b><see cref="TEntity"/></b> record, based on the primary key value
         /// </summary>
         /// <param name="pkValue">The primary key value</param>
-        TEntity GetOne(object pkValue);
+        TEntity GetById(object pkValue);
 
         #endregion
 
@@ -113,13 +113,13 @@ namespace MBRepoCore.Repo.Abstractions
         /// Add one <b><see cref="TEntity"/></b> record
         /// </summary>
         /// <param name="record">The record to be added</param>
-        void AddOne(TEntity record);
+        void Add(TEntity record);
 
         /// <summary>
         /// Add a range of <b><see cref="TEntity"/></b> records
         /// </summary>
         /// <param name="records">Records to be inserted</param>
-        void AddMany(List<TEntity> records);
+        void Add(List<TEntity> records);
 
         #endregion
 
@@ -129,7 +129,7 @@ namespace MBRepoCore.Repo.Abstractions
         /// update one <b><see cref="TEntity"/></b> record
         /// </summary>
         /// <param name="record">The record to be updated</param>
-        void UpdateOne(TEntity record);
+        void Update(TEntity record);
 
         #endregion
 
@@ -149,13 +149,13 @@ namespace MBRepoCore.Repo.Abstractions
         /// Remove One <b><see cref="TEntity"/></b> record
         /// </summary>
         /// <param name="record">The record to be removed</param>
-        void RemoveOne(TEntity record);
+        void Remove(TEntity record);
 
         /// <summary>
         /// Remove a range of <b><see cref="TEntity"/></b> records
         /// </summary>
         /// <param name="records">Records to be deleted</param>
-        void RemoveMany(List<TEntity> records);
+        void Remove(List<TEntity> records);
 
         #endregion
     }
