@@ -13,6 +13,5 @@ namespace MBRepoCore.UOW
         /// Decline all happened changes and rollback to the last saved point from database
         /// </summary>
         void RollBack();
-
     }
 }

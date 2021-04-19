@@ -1,11 +1,13 @@
-﻿using System;
+﻿using MBRepoCore.Repo.Abstractions;
+
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using MBRepoCore.Repo.Abstractions;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 
 
 namespace MBRepoCore.Repo.Specific

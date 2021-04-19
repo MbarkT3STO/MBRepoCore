@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using MBRepoCore.Factories;
+﻿using MBRepoCore.Factories;
 using Microsoft.EntityFrameworkCore;
 
 namespace MBRepoCore.RDBMS_Services

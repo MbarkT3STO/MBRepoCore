@@ -1,9 +1,5 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using MBRepoCore.Repo;
+﻿using MBRepoCore.Repo.Generic;
 using Microsoft.EntityFrameworkCore;
-using MBRepoCore.Exceptions;
-using MBRepoCore.Repo.Generic;
 
 namespace MBRepoCore.UOW
 {

@@ -1,16 +1,18 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using MBRepoCore.Exceptions;
-using MBRepoCore.Repo.Specific;
+﻿using MBRepoCore.Exceptions;
 using MBRepoCore.Repo.Generic;
+using MBRepoCore.Repo.Specific;
+
 using Microsoft.EntityFrameworkCore;
+
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace MBRepoCore.UOW
 {
     /// <summary>
     /// Abstract <b>Unit Of Work</b> class to accept or decline the happened changes in both <b><see cref="SpecificRepo{TEntity}"/></b> or <b><see cref="GenericRepo{TContext}"/></b> repositories
     /// </summary>
-    public abstract class BaseUow<TContext> : IUow<TContext> where TContext : DbContext
+    public abstract class BaseUow<TContext> : IUow<TContext>,IUowAsync<TContext> where TContext : DbContext
     {
         private readonly TContext _context;
 
@@ -50,10 +52,7 @@ namespace MBRepoCore.UOW
             _context.SaveChanges();
         }
 
-        /// <summary>
-        /// Asynchrounously, <inheritdoc cref="Commit"/>
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc />
         public Task CommitAsync()
         {
             return _context.SaveChangesAsync();
@@ -81,9 +80,7 @@ namespace MBRepoCore.UOW
             }
         }
 
-        /// <summary>
-        /// Asynchronously, <inheritdoc cref="RollBack"/>
-        /// </summary>
+        /// <inheritdoc />
         public Task RollBackAsync()
         {
             return Task.Factory.StartNew(() => RollBack());
