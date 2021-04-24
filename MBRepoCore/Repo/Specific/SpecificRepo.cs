@@ -7,7 +7,7 @@ namespace MBRepoCore.Repo.Specific
     {
         #region Constructors
 
-        public SpecificRepo(DbContext context, bool lazyLoaded) : base(context, lazyLoaded)
+        public SpecificRepo(DbContext context, bool lazyLoaded = false) : base(context, lazyLoaded)
         {
         }
 
