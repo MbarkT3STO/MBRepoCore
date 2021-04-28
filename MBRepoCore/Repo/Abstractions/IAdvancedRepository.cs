@@ -56,6 +56,14 @@ namespace MBRepoCore.Repo.Abstractions
         /// <param name="updateAction">The update action</param>
         void Update<TEntity>(Expression<Func<TEntity, bool>> filterExpression, Action<TEntity> updateAction) where TEntity : class;
 
+        /// <summary>
+        /// Update one <b><see cref="TEntity"/></b> record, except one property
+        /// </summary>
+        /// <typeparam name="TEntity">Entity to update in</typeparam>
+        /// <param name="record"><b><see cref="TEntity"/></b> record to be updated</param>
+        /// <param name="propertyToBeExcluded"><b><see cref="record"/></b>'s property to be excluded from update</param>
+        void UpdateExcept<TEntity>( TEntity record , Expression<Func<TEntity , object>> propertyToBeExcluded) where TEntity : class;
+
         #endregion
 
         #region Filter
@@ -162,8 +170,14 @@ namespace MBRepoCore.Repo.Abstractions
         /// </summary>
         /// <param name="filterExpression">The filter expression</param>
         /// <param name="updateAction">The update action</param>
-        void Update(Expression<Func<TEntity, bool>> filterExpression,
-                        Action<TEntity>                 updateAction);
+        void Update( Expression<Func<TEntity , bool>> filterExpression , Action<TEntity> updateAction );
+
+        /// <summary>
+        /// Update one <b><see cref="TEntity"/></b> record, except one property
+        /// </summary>
+        /// <param name="record"><b><see cref="TEntity"/></b> record to be updated</param>
+        /// <param name="propertyToBeExcluded"><b><see cref="record"/></b>'s property to be excluded from update</param>
+        void UpdateExcept( TEntity record , Expression<Func<TEntity , object>> propertyToBeExcluded );
 
         #endregion
 

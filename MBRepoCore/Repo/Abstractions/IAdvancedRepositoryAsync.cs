@@ -53,6 +53,12 @@ namespace MBRepoCore.Repo.Abstractions
         /// <inheritdoc cref="IAdvancedRepository.Update{TEntity}"/>
         Task UpdateAsync<TEntity>( Expression<Func<TEntity , bool>> filterExpression , Action<TEntity> updateAction ) where TEntity : class;
 
+        /// <summary>
+        /// Asynchronously, <inheritdoc cref="IAdvancedRepository.UpdateExcept{TEntity}"/>
+        /// </summary>
+        /// <returns><see cref="Task"/></returns>
+        ///  <inheritdoc cref="IAdvancedRepository.UpdateExcept{TEntity}"/>
+        Task UpdateExceptAsync<TEntity>(TEntity record, Expression<Func<TEntity, object>> propertyToBeExcluded) where TEntity : class;
         #endregion
 
         #region Filter
@@ -149,6 +155,13 @@ namespace MBRepoCore.Repo.Abstractions
         /// <returns><see cref="Task"/></returns>
         /// <inheritdoc cref="IAdvancedRepository{TEntity}.Update"/>
         Task UpdateAsync(Expression<Func<TEntity, bool>> filterExpression, Action<TEntity> updateAction);
+
+        /// <summary>
+        /// Asynchronously, <inheritdoc cref="IAdvancedRepository{TEntity}.UpdateExcept"/>
+        /// </summary>
+        /// <returns><see cref="Task"/></returns>
+        ///  <inheritdoc cref="IAdvancedRepository{TEntity}.UpdateExcept"/>
+        Task UpdateExceptAsync( TEntity record , Expression<Func<TEntity , object>> propertyToBeExcluded);
 
         #endregion
 

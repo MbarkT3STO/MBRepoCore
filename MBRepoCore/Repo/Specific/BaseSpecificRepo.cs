@@ -221,6 +221,22 @@ namespace MBRepoCore.Repo.Specific
 
         }
 
+
+        /// <inheritdoc />
+        public virtual void UpdateExcept( TEntity record , Expression<Func<TEntity , object>> propertyToBeExcluded)
+        {
+            var entity = Context.Set<TEntity>();
+            entity.Attach( record );
+            Context.Entry( record ).State                                      = EntityState.Modified;
+            Context.Entry( record ).Property( propertyToBeExcluded ).IsModified = false;
+        }
+
+        /// <inheritdoc />
+        public virtual Task UpdateExceptAsync( TEntity record , Expression<Func<TEntity , object>> propertyToBeExcluded )
+        {
+            return Task.Factory.StartNew( () => UpdateExcept( record , propertyToBeExcluded ) );
+        }
+
         #endregion
 
         #region Contains

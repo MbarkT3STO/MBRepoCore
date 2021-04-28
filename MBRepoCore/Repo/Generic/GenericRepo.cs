@@ -295,7 +295,22 @@ namespace MBRepoCore.Repo.Generic
         public Task UpdateAsync<TEntity>(Expression<Func<TEntity, bool>> filterExpression, Action<TEntity> updateAction) where TEntity : class
         {
             return Task.Factory.StartNew(() => Update<TEntity>(filterExpression, updateAction));
+        }
 
+
+        /// <inheritdoc />
+        public virtual void UpdateExcept<TEntity>(TEntity record, Expression<Func<TEntity, object>> propertyToBeExcluded) where TEntity : class
+        {
+            var entity = Context.Set<TEntity>();
+            entity.Attach(record);
+            Context.Entry(record).State                                         = EntityState.Modified;
+            Context.Entry( record ).Property( propertyToBeExcluded ).IsModified = false;
+        }
+
+        /// <inheritdoc />
+        public virtual Task UpdateExceptAsync<TEntity>(TEntity record, Expression<Func<TEntity, object>> propertyToBeExcluded) where TEntity : class
+        {
+            return Task.Factory.StartNew( () => UpdateExcept( record , propertyToBeExcluded ) );
         }
 
 
