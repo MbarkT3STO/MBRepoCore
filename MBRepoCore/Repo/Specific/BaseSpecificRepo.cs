@@ -137,13 +137,16 @@ namespace MBRepoCore.Repo.Specific
         /// <inheritdoc />
         public virtual TEntity GetById( object pkValue , params Expression<Func<TEntity , object>>[] relatedEntitiesToBeLoaded )
         {
+            // Change DbContext tracking behavior to track all entities
+            Context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.TrackAll;
+
             // Get one object using primary key
             var resultObject = Context.Set<TEntity>().Find( pkValue );
 
             // Load all selected objects from selected entities
             foreach ( var entityToLoad in relatedEntitiesToBeLoaded )
             {
-                Context.Entry( resultObject ).Reference( entityToLoad.GetPropertyAccess().Name ).Load();
+                Context.Entry( resultObject ).Reference( entityToLoad ).Load();
             }
 
             return resultObject;

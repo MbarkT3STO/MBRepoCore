@@ -211,6 +211,9 @@ namespace MBRepoCore.Repo.Generic
         /// <inheritdoc />
         public TEntity GetById<TEntity>( object pkValue , params Expression<Func<TEntity , object>>[] relatedEntitiesToBeLoaded ) where TEntity : class
         {
+            // Change DbContext tracking behavior to track all entities
+            Context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.TrackAll;
+
             // Get one object using primary key
             var resultObject = Context.Set<TEntity>().Find( pkValue );
 
