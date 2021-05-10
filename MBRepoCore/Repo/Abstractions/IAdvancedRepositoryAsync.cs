@@ -59,6 +59,14 @@ namespace MBRepoCore.Repo.Abstractions
         /// <returns><see cref="Task"/></returns>
         ///  <inheritdoc cref="IAdvancedRepository.UpdateExcept{TEntity}"/>
         Task UpdateExceptAsync<TEntity>(TEntity record, Expression<Func<TEntity, object>> propertyToBeExcluded) where TEntity : class;
+
+        /// <summary>
+        /// Asynchronously, <inheritdoc cref="IAdvancedRepository.UpdateExcept{TEntity}(TEntity,System.Linq.Expressions.Expression{System.Func{TEntity,object}}[])"/>
+        /// </summary>
+        /// <returns><see cref="Task"/></returns>
+        ///  <inheritdoc cref="IAdvancedRepository.UpdateExcept{TEntity}(TEntity,System.Linq.Expressions.Expression{System.Func{TEntity,object}}[])"/>
+        Task UpdateExceptAsync<TEntity>( TEntity record , params Expression<Func<TEntity , object>>[] propertiesToBeExcluded ) where TEntity : class;
+
         #endregion
 
         #region Filter
@@ -162,6 +170,13 @@ namespace MBRepoCore.Repo.Abstractions
         /// <returns><see cref="Task"/></returns>
         ///  <inheritdoc cref="IAdvancedRepository{TEntity}.UpdateExcept"/>
         Task UpdateExceptAsync( TEntity record , Expression<Func<TEntity , object>> propertyToBeExcluded);
+
+        /// <summary>
+        /// Asynchronously, <inheritdoc cref="IAdvancedRepository{TEntity}.UpdateExcept(TEntity,System.Linq.Expressions.Expression{System.Func{TEntity,object}}[])"/>
+        /// </summary>
+        /// <returns><see cref="Task"/></returns>
+        ///  <inheritdoc cref="IAdvancedRepository{TEntity}.UpdateExcept(TEntity,System.Linq.Expressions.Expression{System.Func{TEntity,object}}[])"/>
+        Task UpdateExceptAsync( TEntity record ,params Expression<Func<TEntity , object>>[] propertiesToBeExcluded );
 
         #endregion
 

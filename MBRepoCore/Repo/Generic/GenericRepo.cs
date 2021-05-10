@@ -317,6 +317,25 @@ namespace MBRepoCore.Repo.Generic
         }
 
 
+        /// <inheritdoc />
+        public void UpdateExcept<TEntity>( TEntity record , params Expression<Func<TEntity , object>>[] propertiesToBeExcluded ) where TEntity : class
+        {
+            var entity = Context.Set<TEntity>();
+            entity.Attach( record );
+            Context.Entry( record ).State = EntityState.Modified;
+
+            foreach ( var property in propertiesToBeExcluded )
+            {
+                Context.Entry( record ).Property( property ).IsModified = false;
+            }
+        }
+
+        /// <inheritdoc />
+        public Task UpdateExceptAsync<TEntity>( TEntity record , params Expression<Func<TEntity , object>>[] propertiesToBeExcluded ) where TEntity : class
+        {
+            return Task.Factory.StartNew( () => UpdateExcept( record , propertiesToBeExcluded ) );
+        }
+
         #endregion
 
 
