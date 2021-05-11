@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using MBRepoCore.Interfaces;
 
 
 namespace MBRepoCore.Repo.Abstractions
@@ -72,6 +73,23 @@ namespace MBRepoCore.Repo.Abstractions
         /// <param name="propertiesToBeExcluded"><b><see cref="record"/></b>'s properties to be excluded from update</param>
         void UpdateExcept<TEntity>( TEntity record , params Expression<Func<TEntity , object>>[] propertiesToBeExcluded ) where TEntity : class;
 
+        /// <summary>
+        /// Update one <b><see cref="TEntity"/></b> record, except selected properties from an <see cref="ISkippable{T}"/> implementation
+        /// </summary>
+        /// <typeparam name="TSkippable">An <see cref="ISkippable{T}"/> implementation</typeparam>
+        /// <typeparam name="TEntity">Entity to update in</typeparam>
+        /// <param name="record"><b><see cref="TEntity"/></b> record to be updated</param>
+        void UpdateExcept<TEntity,TSkippable>( TEntity record ) where TSkippable : ISkippable<TEntity> , new() where TEntity : class;
+
+        /// <summary>
+        /// Update one <b><see cref="TEntity"/></b> record, except selected properties from an <see cref="ISkippable{T}"/> implementation and other selected properties from the parameters
+        /// </summary>
+        /// <typeparam name="TEntity">Entity to update in</typeparam>
+        /// <typeparam name="TSkippable">An <see cref="ISkippable{T}"/> implementation</typeparam>
+        /// <param name="record"><b><see cref="TEntity"/></b> record to be updated</param>
+        /// <param name="propertiesToBeExcluded">Additional <b><see cref="record"/></b>'s properties to be excluded from update</param>
+        void UpdateExcept<TEntity,TSkippable>( TEntity record , params Expression<Func<TEntity , object>>[] propertiesToBeExcluded ) where TSkippable : ISkippable<TEntity> , new() where TEntity : class;
+
         #endregion
 
         #region Filter
@@ -136,7 +154,7 @@ namespace MBRepoCore.Repo.Abstractions
     /// Represent the advanced specific repository
     /// </summary>
     /// <typeparam name="TEntity">Entity to create repository for</typeparam>
-    public interface IAdvancedRepository<TEntity>
+    public interface IAdvancedRepository<TEntity> where TEntity : class
     {
 
         #region Get
@@ -193,6 +211,21 @@ namespace MBRepoCore.Repo.Abstractions
         /// <param name="record"><b><see cref="TEntity"/></b> record to be updated</param>
         /// <param name="propertiesToBeExcluded"><b><see cref="record"/></b>'s properties to be excluded from update</param>
         void UpdateExcept( TEntity record ,params Expression<Func<TEntity , object>>[] propertiesToBeExcluded );
+
+        /// <summary>
+        /// Update one <b><see cref="TEntity"/></b> record, except selected properties from an <see cref="ISkippable{T}"/> implementation
+        /// </summary>
+        /// <typeparam name="TSkippable">An <see cref="ISkippable{T}"/> implementation</typeparam>
+        /// <param name="record"><b><see cref="TEntity"/></b> record to be updated</param>
+        void UpdateExcept<TSkippable>( TEntity record ) where TSkippable : ISkippable<TEntity> , new();
+
+        /// <summary>
+        /// Update one <b><see cref="TEntity"/></b> record, except selected properties from an <see cref="ISkippable{T}"/> implementation and other selected properties from the parameters
+        /// </summary>
+        /// <typeparam name="TSkippable">An <see cref="ISkippable{T}"/> implementation</typeparam>
+        /// <param name="record"><b><see cref="TEntity"/></b> record to be updated</param>
+        /// <param name="propertiesToBeExcluded">Additional <b><see cref="record"/></b>'s properties to be excluded from update</param>
+        void UpdateExcept<TSkippable>( TEntity record , params Expression<Func<TEntity , object>>[] propertiesToBeExcluded ) where TSkippable : ISkippable<TEntity> , new();
 
         #endregion
 

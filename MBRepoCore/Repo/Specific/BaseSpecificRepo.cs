@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using MBRepoCore.Interfaces;
 
 
 namespace MBRepoCore.Repo.Specific
@@ -258,6 +259,51 @@ namespace MBRepoCore.Repo.Specific
         public virtual Task UpdateExceptAsync( TEntity record ,params Expression<Func<TEntity , object>>[] propertiesToBeExcluded )
         {
             return Task.Factory.StartNew( () => UpdateExcept( record , propertiesToBeExcluded ) );
+        }
+
+
+        /// <inheritdoc />
+        public virtual void UpdateExcept<TSkippable>( TEntity record ) where TSkippable : ISkippable<TEntity>,new()
+        {
+            var entity = Context.Set<TEntity>();
+            entity.Attach( record );
+            Context.Entry( record ).State = EntityState.Modified;
+
+            var propertiesToBeExcluded = new TSkippable().GetSkiped();
+
+            foreach ( var property in  propertiesToBeExcluded)
+            {
+                Context.Entry( record ).Property( property ).IsModified = false;
+            }
+        }
+
+        /// <inheritdoc />
+        public virtual Task UpdateExceptAsync<TSkippable>( TEntity record ) where TSkippable : ISkippable<TEntity>,new()
+        {
+            return Task.Factory.StartNew( () => UpdateExcept<TSkippable>( record ) );
+        }
+
+
+        /// <inheritdoc />
+        public virtual void UpdateExcept<TSkippable>( TEntity record, params Expression<Func<TEntity , object>>[] propertiesToBeExcluded ) where TSkippable : ISkippable<TEntity>,new()
+        {
+            var entity = Context.Set<TEntity>();
+            entity.Attach( record );
+            Context.Entry( record ).State = EntityState.Modified;
+
+            List<Expression<Func<TEntity , object>>> propertiesToBeSkiped = new TSkippable().GetSkiped().ToList();
+            propertiesToBeSkiped.AddRange( propertiesToBeExcluded );
+
+            foreach ( var property in  propertiesToBeSkiped)
+            {
+                Context.Entry( record ).Property( property ).IsModified = false;
+            }
+        }
+
+        /// <inheritdoc />
+        public virtual Task UpdateExceptAsync<TSkippable>( TEntity record, params Expression<Func<TEntity , object>>[] propertiesToBeExcluded ) where TSkippable : ISkippable<TEntity>,new()
+        {
+            return Task.Factory.StartNew( () => UpdateExcept<TSkippable>( record , propertiesToBeExcluded ) );
         }
 
         #endregion
