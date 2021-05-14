@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using MBRepoCore.Extensions;
 using MBRepoCore.Interfaces;
 
 
@@ -303,40 +304,24 @@ namespace MBRepoCore.Repo.Generic
 
 
         /// <inheritdoc />
-        public virtual void UpdateExcept<TEntity>(TEntity record, Expression<Func<TEntity, object>> propertyToBeExcluded) where TEntity : class
-        {
-            var entity = Context.Set<TEntity>();
-            entity.Attach(record);
-            Context.Entry(record).State                                         = EntityState.Modified;
-            Context.Entry( record ).Property( propertyToBeExcluded ).IsModified = false;
-        }
-
-        /// <inheritdoc />
-        public virtual Task UpdateExceptAsync<TEntity>(TEntity record, Expression<Func<TEntity, object>> propertyToBeExcluded) where TEntity : class
-        {
-            return Task.Factory.StartNew( () => UpdateExcept( record , propertyToBeExcluded ) );
-        }
-
-
-        /// <inheritdoc />
-        public void UpdateExcept<TEntity>( TEntity record , params Expression<Func<TEntity , object>>[] propertiesToBeExcluded ) where TEntity : class
+        public void UpdateExcept<TEntity>( TEntity record , Expression<Func<TEntity , object>> propertiesToBeSkipped ) where TEntity : class
         {
             var entity = Context.Set<TEntity>();
             entity.Attach( record );
             Context.Entry( record ).State = EntityState.Modified;
 
-            foreach ( var property in propertiesToBeExcluded )
+            foreach ( var property in propertiesToBeSkipped.GetMemberAccessList() )
             {
-                Context.Entry( record ).Property( property ).IsModified = false;
+                Context.Entry( record ).Property( property.Name ).IsModified = false;
             }
         }
 
-
         /// <inheritdoc />
-        public Task UpdateExceptAsync<TEntity>( TEntity record , params Expression<Func<TEntity , object>>[] propertiesToBeExcluded ) where TEntity : class
+        public Task UpdateExceptAsync<TEntity>( TEntity record , Expression<Func<TEntity , object>> propertiesToBeExcluded ) where TEntity : class
         {
             return Task.Factory.StartNew( () => UpdateExcept( record , propertiesToBeExcluded ) );
         }
+
 
         /// <inheritdoc />
         public void UpdateExcept<TEntity , TSkippable>( TEntity record ) where TEntity : class where TSkippable : ISkippable<TEntity> , new()
@@ -347,9 +332,9 @@ namespace MBRepoCore.Repo.Generic
 
             var propertiesToBeExcluded = new TSkippable().GetSkiped();
 
-            foreach ( var property in  propertiesToBeExcluded)
+            foreach ( var property in  propertiesToBeExcluded.GetPropertyAccessList())
             {
-                Context.Entry( record ).Property( property ).IsModified = false;
+                Context.Entry( record ).Property( property.Name ).IsModified = false;
             }
         }
 
@@ -361,24 +346,26 @@ namespace MBRepoCore.Repo.Generic
 
 
         /// <inheritdoc />
-        public void UpdateExcept<TEntity , TSkippable>( TEntity record , params Expression<Func<TEntity , object>>[] propertiesToBeExcluded ) where TEntity : class where TSkippable : ISkippable<TEntity> , new()
+        public void UpdateExcept<TEntity , TSkippable>( TEntity record , Expression<Func<TEntity , object>> otherPropertiesToBeSkipped ) where TEntity : class where TSkippable : ISkippable<TEntity> , new()
         {
             var entity = Context.Set<TEntity>();
             entity.Attach( record );
             Context.Entry( record ).State = EntityState.Modified;
 
-            List<Expression<Func<TEntity , object>>> propertiesToBeSkiped = new TSkippable().GetSkiped().ToList();
-            propertiesToBeSkiped.AddRange( propertiesToBeExcluded );
+            var propertiesToBeSkiped = new List<Expression<Func<TEntity , object>>>
+                                       {
+                                           new TSkippable().GetSkiped() , otherPropertiesToBeSkipped
+                                       };
 
-            foreach ( var property in  propertiesToBeSkiped)
+            foreach (var property in propertiesToBeSkiped.GetMemberAccess())
             {
-                Context.Entry( record ).Property( property ).IsModified = false;
+                Context.Entry(record).Property(property.Name).IsModified = false;
             }
         }
 
 
         /// <inheritdoc />
-        public Task UpdateExceptAsync<TEntity , TSkippable>( TEntity record , params Expression<Func<TEntity , object>>[] propertiesToBeExcluded ) where TEntity : class where TSkippable : ISkippable<TEntity> , new()
+        public Task UpdateExceptAsync<TEntity , TSkippable>( TEntity record , Expression<Func<TEntity , object>> propertiesToBeExcluded ) where TEntity : class where TSkippable : ISkippable<TEntity> , new()
         {
             return Task.Factory.StartNew( () => UpdateExcept<TEntity , TSkippable>( record , propertiesToBeExcluded ) );
         }

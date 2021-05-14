@@ -10,8 +10,8 @@ namespace MBRepoCore.Interfaces
     public interface ISkippable<T> where T : class
     {
         /// <summary>
-        /// Configure the properties to be skiped
+        /// Configure and/or select the properties to be skipped
         /// </summary>
-        Expression<Func<T , object>>[] GetSkiped();
+        Expression<Func<T , object>> GetSkiped();
     }
 }

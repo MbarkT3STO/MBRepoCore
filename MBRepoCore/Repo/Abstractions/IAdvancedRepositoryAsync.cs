@@ -55,18 +55,11 @@ namespace MBRepoCore.Repo.Abstractions
         Task UpdateAsync<TEntity>( Expression<Func<TEntity , bool>> filterExpression , Action<TEntity> updateAction ) where TEntity : class;
 
         /// <summary>
-        /// Asynchronously, <inheritdoc cref="IAdvancedRepository.UpdateExcept{TEntity}"/>
+        /// Asynchronously, <inheritdoc cref="IAdvancedRepository.UpdateExcept{TEntity}(TEntity,System.Linq.Expressions.Expression{System.Func{TEntity,object}})"/>
         /// </summary>
         /// <returns><see cref="Task"/></returns>
-        ///  <inheritdoc cref="IAdvancedRepository.UpdateExcept{TEntity}"/>
-        Task UpdateExceptAsync<TEntity>(TEntity record, Expression<Func<TEntity, object>> propertyToBeExcluded) where TEntity : class;
-
-        /// <summary>
-        /// Asynchronously, <inheritdoc cref="IAdvancedRepository.UpdateExcept{TEntity}(TEntity,System.Linq.Expressions.Expression{System.Func{TEntity,object}}[])"/>
-        /// </summary>
-        /// <returns><see cref="Task"/></returns>
-        ///  <inheritdoc cref="IAdvancedRepository.UpdateExcept{TEntity}(TEntity,System.Linq.Expressions.Expression{System.Func{TEntity,object}}[])"/>
-        Task UpdateExceptAsync<TEntity>( TEntity record , params Expression<Func<TEntity , object>>[] propertiesToBeExcluded ) where TEntity : class;
+        ///  <inheritdoc cref="IAdvancedRepository.UpdateExcept{TEntity}(TEntity,System.Linq.Expressions.Expression{System.Func{TEntity,object}})"/>
+        Task UpdateExceptAsync<TEntity>( TEntity record , Expression<Func<TEntity , object>> propertiesToBeSkipped ) where TEntity : class;
 
         /// <summary>
         /// Asynchronously, <inheritdoc cref="IAdvancedRepository.UpdateExcept{TEntity,TSkippable}(TEntity)"/>
@@ -76,11 +69,11 @@ namespace MBRepoCore.Repo.Abstractions
         Task UpdateExceptAsync<TEntity,TSkippable>( TEntity record ) where TSkippable : ISkippable<TEntity> , new() where TEntity : class;
 
         /// <summary>
-        /// Asynchronously, <inheritdoc cref="IAdvancedRepository.UpdateExcept{TEntity,TSkippable}(TEntity,Expression{Func{TEntity , object}}[] )"/>
+        /// Asynchronously, <inheritdoc cref="IAdvancedRepository.UpdateExcept{TEntity,TSkippable}(TEntity,Expression{Func{TEntity , object}} )"/>
         /// </summary>
         /// <returns><see cref="Task"/></returns>
-        ///  <inheritdoc cref="IAdvancedRepository.UpdateExcept{TEntity,TSkippable}(TEntity,Expression{Func{TEntity , object}}[] )"/>
-        Task UpdateExceptAsync<TEntity,TSkippable>( TEntity record , params Expression<Func<TEntity , object>>[] propertiesToBeExcluded ) where TSkippable : ISkippable<TEntity> , new() where TEntity : class;
+        ///  <inheritdoc cref="IAdvancedRepository.UpdateExcept{TEntity,TSkippable}(TEntity,Expression{Func{TEntity , object}} )"/>
+        Task UpdateExceptAsync<TEntity,TSkippable>( TEntity record , Expression<Func<TEntity , object>> otherPropertiesToBeSkipped ) where TSkippable : ISkippable<TEntity> , new() where TEntity : class;
 
 
         #endregion
@@ -181,18 +174,11 @@ namespace MBRepoCore.Repo.Abstractions
         Task UpdateAsync(Expression<Func<TEntity, bool>> filterExpression, Action<TEntity> updateAction);
 
         /// <summary>
-        /// Asynchronously, <inheritdoc cref="IAdvancedRepository{TEntity}.UpdateExcept"/>
+        /// Asynchronously, <inheritdoc cref="IAdvancedRepository{TEntity}.UpdateExcept(TEntity,System.Linq.Expressions.Expression{System.Func{TEntity,object}})"/>
         /// </summary>
         /// <returns><see cref="Task"/></returns>
-        ///  <inheritdoc cref="IAdvancedRepository{TEntity}.UpdateExcept"/>
-        Task UpdateExceptAsync( TEntity record , Expression<Func<TEntity , object>> propertyToBeExcluded);
-
-        /// <summary>
-        /// Asynchronously, <inheritdoc cref="IAdvancedRepository{TEntity}.UpdateExcept(TEntity,System.Linq.Expressions.Expression{System.Func{TEntity,object}}[])"/>
-        /// </summary>
-        /// <returns><see cref="Task"/></returns>
-        ///  <inheritdoc cref="IAdvancedRepository{TEntity}.UpdateExcept(TEntity,System.Linq.Expressions.Expression{System.Func{TEntity,object}}[])"/>
-        Task UpdateExceptAsync( TEntity record ,params Expression<Func<TEntity , object>>[] propertiesToBeExcluded );
+        ///  <inheritdoc cref="IAdvancedRepository{TEntity}.UpdateExcept(TEntity,System.Linq.Expressions.Expression{System.Func{TEntity,object}})"/>
+        Task UpdateExceptAsync( TEntity record ,Expression<Func<TEntity , object>> propertiesToBeSkipped );
 
         /// <summary>
         /// Asynchronously, <inheritdoc cref="IAdvancedRepository{TEntity}.UpdateExcept{TSkippable}(TEntity)"/>
@@ -202,11 +188,11 @@ namespace MBRepoCore.Repo.Abstractions
         Task UpdateExceptAsync<TSkippable>( TEntity record ) where TSkippable : ISkippable<TEntity> , new();
 
         /// <summary>
-        /// Asynchronously, <inheritdoc cref="IAdvancedRepository{TEntity}.UpdateExcept{TSkippable}(TEntity,Expression{Func{TEntity , object}}[] )"/>
+        /// Asynchronously, <inheritdoc cref="IAdvancedRepository{TEntity}.UpdateExcept{TSkippable}(TEntity,Expression{Func{TEntity , object}} )"/>
         /// </summary>
         /// <returns><see cref="Task"/></returns>
-        ///  <inheritdoc cref="IAdvancedRepository{TEntity}.UpdateExcept{TSkippable}(TEntity,Expression{Func{TEntity , object}}[] )"/>
-        Task UpdateExceptAsync<TSkippable>( TEntity record , params Expression<Func<TEntity , object>>[] propertiesToBeExcluded ) where TSkippable : ISkippable<TEntity> , new();
+        ///  <inheritdoc cref="IAdvancedRepository{TEntity}.UpdateExcept{TSkippable}(TEntity,Expression{Func{TEntity , object}} )"/>
+        Task UpdateExceptAsync<TSkippable>( TEntity record , Expression<Func<TEntity , object>> otherPropertiesToBeSkipped ) where TSkippable : ISkippable<TEntity> , new();
 
         #endregion
 
