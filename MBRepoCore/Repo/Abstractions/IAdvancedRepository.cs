@@ -63,7 +63,7 @@ namespace MBRepoCore.Repo.Abstractions
         /// <typeparam name="TEntity">Entity to update in</typeparam>
         /// <param name="record"><b><see cref="TEntity"/></b> record to be updated</param>
         /// <param name="propertiesToBeSkipped"><b><see cref="record"/></b>'s properties to be excluded/skipped from update</param>
-        void UpdateExcept<TEntity>( TEntity record , Expression<Func<TEntity , object>> propertiesToBeSkipped ) where TEntity : class;
+        void UpdateExcept<TEntity>(TEntity record, Expression<Func<TEntity, object>> propertiesToBeSkipped) where TEntity : class;
 
         /// <summary>
         /// Update one <b><see cref="TEntity"/></b> record, except selected properties from an <see cref="ISkippable{T}"/> implementation
@@ -71,7 +71,7 @@ namespace MBRepoCore.Repo.Abstractions
         /// <typeparam name="TSkippable">An <see cref="ISkippable{T}"/> implementation</typeparam>
         /// <typeparam name="TEntity">Entity to update in</typeparam>
         /// <param name="record"><b><see cref="TEntity"/></b> record to be updated</param>
-        void UpdateExcept<TEntity,TSkippable>( TEntity record ) where TSkippable : ISkippable<TEntity> , new() where TEntity : class;
+        void UpdateExcept<TEntity, TSkippable>(TEntity record) where TSkippable : ISkippable<TEntity>, new() where TEntity : class;
 
         /// <summary>
         /// Update one <b><see cref="TEntity"/></b> record, except selected properties from an <see cref="ISkippable{T}"/> implementation and other selected properties from the parameters
@@ -80,7 +80,7 @@ namespace MBRepoCore.Repo.Abstractions
         /// <typeparam name="TSkippable">An <see cref="ISkippable{T}"/> implementation</typeparam>
         /// <param name="record"><b><see cref="TEntity"/></b> record to be updated</param>
         /// <param name="otherPropertiesToBeSkipped">Additional <b><see cref="record"/></b>'s properties to be excluded from update</param>
-        void UpdateExcept<TEntity,TSkippable>( TEntity record , Expression<Func<TEntity , object>> otherPropertiesToBeSkipped ) where TSkippable : ISkippable<TEntity> , new() where TEntity : class;
+        void UpdateExcept<TEntity, TSkippable>(TEntity record, Expression<Func<TEntity, object>> otherPropertiesToBeSkipped) where TSkippable : ISkippable<TEntity>, new() where TEntity : class;
 
         #endregion
 
@@ -101,7 +101,7 @@ namespace MBRepoCore.Repo.Abstractions
         /// <param name="filterExpression">The <b><see cref="Expression"/></b> filter</param>
         /// <param name="orderingFunc">The <b><see cref="IOrderedQueryable"/></b> ordering expression</param>
         /// <returns></returns>
-        List<TEntity> FilterAndOrder<TEntity>(Expression<Func<TEntity, bool>>                       filterExpression,
+        List<TEntity> FilterAndOrder<TEntity>(Expression<Func<TEntity, bool>> filterExpression,
                                               Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderingFunc)
             where TEntity : class;
 
@@ -115,7 +115,7 @@ namespace MBRepoCore.Repo.Abstractions
         /// <typeparam name="TEntity">The entity to be checked</typeparam>
         /// <param name="pkValue">The primary key value</param>
         /// <returns><see cref="bool"/></returns>
-        bool IsExist<TEntity>( object pkValue ) where TEntity : class;
+        bool IsExist<TEntity>(object pkValue) where TEntity : class;
 
         /// <summary>
         /// Check if a <b><see cref="TEntity"/></b> object matched with the <see cref="Expression{TDelegate}"/> expression is exist
@@ -123,7 +123,7 @@ namespace MBRepoCore.Repo.Abstractions
         /// <typeparam name="TEntity">The entity to be checked</typeparam>
         /// <param name="selectExpression">Selection expression</param>
         /// <returns><see cref="bool"/></returns>
-        bool IsExist<TEntity>( Expression<Func<TEntity , bool>> selectExpression ) where TEntity : class;
+        bool IsExist<TEntity>(Expression<Func<TEntity, bool>> selectExpression) where TEntity : class;
 
         #endregion
 
@@ -136,7 +136,18 @@ namespace MBRepoCore.Repo.Abstractions
         /// <typeparam name="TEntityComparer">Custom <see cref="IEqualityComparer{TEntity}"/> comparer</typeparam>
         /// <param name="obj">The object to be looking for</param>
         /// <returns><see cref="bool"/></returns>
-        bool Contains<TEntity , TEntityComparer>( TEntity obj ) where TEntity : class where TEntityComparer : IEqualityComparer<TEntity> , new();
+        bool Contains<TEntity, TEntityComparer>(TEntity obj) where TEntity : class where TEntityComparer : IEqualityComparer<TEntity>, new();
+
+        #endregion
+
+        #region Get Partial
+
+        /// <summary>
+        /// Get a list of <b><typeparamref name="TProperty"/></b> from a <b><typeparamref name="TEntity"/></b>
+        /// </summary>
+        /// <typeparam name="TEntity">The entity to select from</typeparam>
+        /// <typeparam name="TProperty">The <typeparamref name="TEntity"/> property to be selected</typeparam>
+        List<TProperty> GetPartial<TEntity, TProperty>(Expression<Func<TEntity, object>> propertyToBeLoaded) where TEntity : class;
 
         #endregion
 
@@ -259,6 +270,16 @@ namespace MBRepoCore.Repo.Abstractions
         /// <param name="obj">The object to be looking for</param>
         /// <returns><see cref="bool"/></returns>
         bool Contains<TEntityComparer>( TEntity obj ) where TEntityComparer : IEqualityComparer<TEntity> , new();
+
+        #endregion
+
+        #region Get Partial
+
+        /// <summary>
+        /// Get a list of <b><typeparamref name="TProperty"/></b> from a <b><typeparamref name="TEntity"/></b>
+        /// </summary>
+        /// <typeparam name="TProperty">The <typeparamref name="TEntity"/> property to be selected</typeparam>
+        List<TProperty> GetPartial<TProperty>(Expression<Func<TEntity, object>> propertyToBeLoaded);
 
         #endregion
 

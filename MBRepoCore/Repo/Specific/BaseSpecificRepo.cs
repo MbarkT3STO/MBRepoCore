@@ -425,6 +425,17 @@ namespace MBRepoCore.Repo.Specific
 
         #endregion
 
+        #region Get Partial
+
+        /// <inheritdoc />
+        public List<TProperty> GetPartial<TProperty>(Expression<Func<TEntity, object>> propertyToBeLoaded)
+        {
+            List<TProperty> result = (from x in Context.Set<TEntity>().AsEnumerable() select (TProperty)x.GetType().GetProperty(propertyToBeLoaded.Name).GetValue(x)).ToList();
+            return result;
+        }
+
+        #endregion
+
         #endregion
 
     }
