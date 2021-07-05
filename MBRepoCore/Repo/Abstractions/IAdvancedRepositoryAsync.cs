@@ -124,6 +124,17 @@ namespace MBRepoCore.Repo.Abstractions
         Task<bool> ContainsAsync<TEntity, TEntityComparer>(TEntity obj) where TEntity : class where TEntityComparer : IEqualityComparer<TEntity>, new();
 
         #endregion
+
+        #region Get Partial
+
+        /// <summary>
+        /// Asynchronously, <inheritdoc cref="IAdvancedRepository.GetPartial{TEntity, TProperty}(Expression{Func{TEntity, object}})"/
+        /// </summary>
+        /// <returns><see cref="Task{TResult}"/></returns>
+        /// <inheritdoc cref="IAdvancedRepository.GetPartial{TEntity, TProperty}(Expression{Func{TEntity, object}})"/
+        Task<List<TProperty>> GetPartialAsync<TEntity, TProperty>(Expression<Func<TEntity, object>> propertyToBeLoaded) where TEntity : class;
+
+        #endregion
     }
 
     /// <summary>
@@ -240,6 +251,17 @@ namespace MBRepoCore.Repo.Abstractions
         /// <returns><see cref="Task{TResult}"/></returns>
         /// <inheritdoc cref="IAdvancedRepository{TEntity}.Contains{TEntityComparer}"/>
         Task<bool> ContainsAsync<TEntityComparer>(TEntity obj) where TEntityComparer : IEqualityComparer<TEntity>, new();
+
+        #endregion
+
+        #region Get Partial
+
+        /// <summary>
+        /// Asynchronously, <inheritdoc cref="IAdvancedRepository{TEntity}.GetPartial{TProperty}(Expression{Func{TEntity, object}})"/>
+        /// </summary>
+        /// <returns><see cref="Task{TResult}"/></returns>
+        /// <inheritdoc cref="IAdvancedRepository{TEntity}.GetPartial{TProperty}(Expression{Func{TEntity, object}})"/>
+        Task<List<TProperty>> GetPartialAsync<TProperty>(Expression<Func<TEntity, object>> propertyToBeLoaded);
 
         #endregion
 

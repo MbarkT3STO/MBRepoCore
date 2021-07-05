@@ -509,8 +509,14 @@ namespace MBRepoCore.Repo.Generic
         /// <inheritdoc />
         public List<TProperty> GetPartial<TEntity, TProperty>(Expression<Func<TEntity, object>> propertyToBeLoaded) where TEntity : class
         {
-            List<TProperty> result = (from x in Context.Set<TEntity>().AsEnumerable() select (TProperty) x.GetType().GetProperty(propertyToBeLoaded.Name).GetValue(x)).ToList();
+            List<TProperty> result = (from x in Context.Set<TEntity>().AsEnumerable() select (TProperty) x.GetType().GetProperty(propertyToBeLoaded.GetPropertyAccess().Name).GetValue(x, null)).ToList();
             return result;
+        } 
+        
+        /// <inheritdoc />
+        public Task<List<TProperty>> GetPartialAsync<TEntity, TProperty>(Expression<Func<TEntity, object>> propertyToBeLoaded) where TEntity : class
+        {
+            return Task.Factory.StartNew(() => GetPartial<TEntity, TProperty>(propertyToBeLoaded));
         }
 
         #endregion
