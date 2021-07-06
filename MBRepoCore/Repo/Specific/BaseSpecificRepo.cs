@@ -440,6 +440,20 @@ namespace MBRepoCore.Repo.Specific
             return Task.Factory.StartNew(() => GetPartial<TProperty>(propertyToBeLoaded));
         }
 
+
+        /// <inheritdoc />
+        public List<TProperty> GetPartial<TProperty>(Expression<Func<TEntity, object>> propertyToBeLoaded, Expression<Func<TEntity, bool>> filterExpression)
+        {
+            List<TProperty> result = Context.Set<TEntity>().Where(filterExpression).Select(x => (TProperty)x.GetType().GetProperty(propertyToBeLoaded.GetPropertyAccess().Name).GetValue(x, null)).ToList();
+            return result;
+        }
+
+        /// <inheritdoc />
+        public Task<List<TProperty>> GetPartialAsync<TProperty>(Expression<Func<TEntity, object>> propertyToBeLoaded, Expression<Func<TEntity, bool>> filterExpression)
+        {
+            return Task.Factory.StartNew(() => GetPartial<TProperty>(propertyToBeLoaded, filterExpression));
+        }
+
         #endregion
 
         #endregion
