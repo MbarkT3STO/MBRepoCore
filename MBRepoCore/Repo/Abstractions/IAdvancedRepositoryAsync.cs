@@ -132,14 +132,14 @@ namespace MBRepoCore.Repo.Abstractions
         /// </summary>
         /// <returns><see cref="Task{TResult}"/></returns>
         /// <inheritdoc cref="IAdvancedRepository.GetPartial{TEntity, TProperty}(Expression{Func{TEntity, object}})"/>
-        Task<List<TProperty>> GetPartialAsync<TEntity, TProperty>(Expression<Func<TEntity, object>> propertyToBeLoaded) where TEntity : class;
+        Task<List<TProperty>> GetPartialAsync<TEntity, TProperty>(Expression<Func<TEntity, object>> propertyToBeSelected) where TEntity : class;
 
         /// <summary>
         /// Asynchronously, <inheritdoc cref="IAdvancedRepository.GetPartial{TEntity, TProperty}(Expression{Func{TEntity, object}}, Expression{Func{TEntity, bool}})"/>
         /// </summary>
         /// <returns><see cref="Task{TResult}"/></returns>
         /// <inheritdoc cref="IAdvancedRepository.GetPartial{TEntity, TProperty}(Expression{Func{TEntity, object}}, Expression{Func{TEntity, bool}})"/>
-        Task<List<TProperty>> GetPartialAsync<TEntity, TProperty>(Expression<Func<TEntity, object>> propertyToBeLoaded, Expression<Func<TEntity, bool>> filterExpression) where TEntity : class;
+        Task<List<TProperty>> GetPartialAsync<TEntity, TProperty>(Expression<Func<TEntity, object>> propertyToBeSelected, Expression<Func<TEntity, bool>> filterExpression) where TEntity : class;
 
         #endregion
     }
@@ -268,14 +268,14 @@ namespace MBRepoCore.Repo.Abstractions
         /// </summary>
         /// <returns><see cref="Task{TResult}"/></returns>
         /// <inheritdoc cref="IAdvancedRepository{TEntity}.GetPartial{TProperty}(Expression{Func{TEntity, object}})"/>
-        Task<List<TProperty>> GetPartialAsync<TProperty>(Expression<Func<TEntity, object>> propertyToBeLoaded);
+        Task<List<TProperty>> GetPartialAsync<TProperty>(Expression<Func<TEntity, object>> propertyToBeSelected);
 
         /// <summary>
         /// Asynchronously, <inheritdoc cref="IAdvancedRepository{TEntity}.GetPartial{TProperty}(Expression{Func{TEntity, object}}, Expression{Func{TEntity, bool}})"/>
         /// </summary>
         /// <returns><see cref="Task{TResult}"/></returns>
         /// <inheritdoc cref="IAdvancedRepository{TEntity}.GetPartial{TProperty}(Expression{Func{TEntity, object}}, Expression{Func{TEntity, bool}})"/>
-        Task<List<TProperty>> GetPartialAsync<TProperty>(Expression<Func<TEntity, object>> propertyToBeLoaded, Expression<Func<TEntity, bool>> filterExpression);
+        Task<List<TProperty>> GetPartialAsync<TProperty>(Expression<Func<TEntity, object>> propertyToBeSelected, Expression<Func<TEntity, bool>> filterExpression);
 
         #endregion
 

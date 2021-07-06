@@ -428,30 +428,30 @@ namespace MBRepoCore.Repo.Specific
         #region Get Partial
 
         /// <inheritdoc />
-        public List<TProperty> GetPartial<TProperty>(Expression<Func<TEntity, object>> propertyToBeLoaded)
+        public virtual List<TProperty> GetPartial<TProperty>(Expression<Func<TEntity, object>> propertyToBeSelected)
         {
-            List<TProperty> result = (from x in Context.Set<TEntity>().AsEnumerable() select (TProperty)x.GetType().GetProperty(propertyToBeLoaded.GetPropertyAccess().Name).GetValue(x, null)).ToList();
-            return result;
-        }  
-        
-        /// <inheritdoc />
-        public Task<List<TProperty>> GetPartialAsync<TProperty>(Expression<Func<TEntity, object>> propertyToBeLoaded)
-        {
-            return Task.Factory.StartNew(() => GetPartial<TProperty>(propertyToBeLoaded));
-        }
-
-
-        /// <inheritdoc />
-        public List<TProperty> GetPartial<TProperty>(Expression<Func<TEntity, object>> propertyToBeLoaded, Expression<Func<TEntity, bool>> filterExpression)
-        {
-            List<TProperty> result = Context.Set<TEntity>().Where(filterExpression).Select(x => (TProperty)x.GetType().GetProperty(propertyToBeLoaded.GetPropertyAccess().Name).GetValue(x, null)).ToList();
+            List<TProperty> result = (from x in Context.Set<TEntity>().AsEnumerable() select (TProperty)x.GetType().GetProperty(propertyToBeSelected.GetPropertyAccess().Name).GetValue(x, null)).ToList();
             return result;
         }
 
         /// <inheritdoc />
-        public Task<List<TProperty>> GetPartialAsync<TProperty>(Expression<Func<TEntity, object>> propertyToBeLoaded, Expression<Func<TEntity, bool>> filterExpression)
+        public virtual Task<List<TProperty>> GetPartialAsync<TProperty>(Expression<Func<TEntity, object>> propertyToBeSelected)
         {
-            return Task.Factory.StartNew(() => GetPartial<TProperty>(propertyToBeLoaded, filterExpression));
+            return Task.Factory.StartNew(() => GetPartial<TProperty>(propertyToBeSelected));
+        }
+
+
+        /// <inheritdoc />
+        public virtual List<TProperty> GetPartial<TProperty>(Expression<Func<TEntity, object>> propertyToBeSelected, Expression<Func<TEntity, bool>> filterExpression)
+        {
+            List<TProperty> result = Context.Set<TEntity>().Where(filterExpression).Select(x => (TProperty)x.GetType().GetProperty(propertyToBeSelected.GetPropertyAccess().Name).GetValue(x, null)).ToList();
+            return result;
+        }
+
+        /// <inheritdoc />
+        public virtual Task<List<TProperty>> GetPartialAsync<TProperty>(Expression<Func<TEntity, object>> propertyToBeSelected, Expression<Func<TEntity, bool>> filterExpression)
+        {
+            return Task.Factory.StartNew(() => GetPartial<TProperty>(propertyToBeSelected, filterExpression));
         }
 
         #endregion
