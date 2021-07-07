@@ -454,6 +454,18 @@ namespace MBRepoCore.Repo.Specific
             return Task.Factory.StartNew(() => GetPartial<TProperty>(propertyToBeSelected, filterExpression));
         }
 
+
+        /// <inheritdoc />
+        public virtual object GetPartial( Expression<Func<TEntity, object>> propertiesToBeSelected )
+        {
+            //List<TProperty> result = Context.Set<TEntity>().Where(filterExpression).Select(x => (TProperty)x.GetType().GetProperty(propertyToBeSelected.GetPropertyAccess().Name).GetValue(x, null)).ToList();
+            //return result;
+
+            var result = (from x in Context.Set<TEntity>().AsEnumerable() select propertiesToBeSelected.GetMemberAccessList()).ToList();
+            return result;
+        }
+
+
         #endregion
 
         #endregion

@@ -159,6 +159,15 @@ namespace MBRepoCore.Repo.Abstractions
         /// <param name="filterExpression">One or set of conditions to filter by</param>
         List<TProperty> GetPartial<TEntity, TProperty>(Expression<Func<TEntity, object>> propertyToBeSelected, Expression<Func<TEntity, bool>> filterExpression) where TEntity : class;
 
+
+        /// <summary>
+        /// Get a list of <b><see cref="object"/></b> from a <b><typeparamref name="TEntity"/></b>
+        /// </summary>
+        /// <typeparam name="TEntity">The entity to select from</typeparam>
+        /// <param name="propertiesToBeSelected">The <typeparamref name="TEntity"/> properties to be selected</param>
+        /// <returns><see cref="object"/></returns>
+        object GetPartial<TEntity>(Expression<Func<TEntity, object>> propertiesToBeSelected) where TEntity : class;
+
         #endregion
 
     }
@@ -299,6 +308,14 @@ namespace MBRepoCore.Repo.Abstractions
         /// <param name="propertyToBeSelected">The <typeparamref name="TEntity"/> property to be selected</param>
         /// <param name="filterExpression">One or set of conditions to filter by</param>
         List<TProperty> GetPartial<TProperty>(Expression<Func<TEntity, object>> propertyToBeSelected, Expression<Func<TEntity, bool>> filterExpression);
+
+
+        /// <summary>
+        /// Get a list of <b><see cref="object"/></b> from a <b><typeparamref name="TEntity"/></b>
+        /// </summary>
+        /// <param name="propertiesToBeSelected">The <typeparamref name="TEntity"/> properties to be selected</param>
+        /// <returns><see cref="object"/></returns>
+        object GetPartial( Expression<Func<TEntity, object>> propertiesToBeSelected);
 
         #endregion
 

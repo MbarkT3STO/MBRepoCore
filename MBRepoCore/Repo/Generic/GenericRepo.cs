@@ -533,6 +533,16 @@ namespace MBRepoCore.Repo.Generic
             return Task.Factory.StartNew(() => GetPartial<TEntity, TProperty>(propertyToBeLoaded, filterExpression));
         }
 
+
+        /// <inheritdoc />
+        public object GetPartial<TEntity>( Expression<Func<TEntity, object>> propertiesToBeSelected ) where TEntity : class
+        {
+            //var result = (from x in Context.Set<TEntity>() select propertiesToBeSelected).ToList();
+            var result = Context.Set<TEntity>().Select(propertiesToBeSelected);
+
+            return result;
+        }
+
         #endregion
 
 
