@@ -149,6 +149,13 @@ namespace MBRepoCore.Repo.Abstractions
         /// <inheritdoc cref="IAdvancedRepository.GetPartial{TEntity}(Func{TEntity, object})"/>
         Task<IEnumerable<object>> GetPartialAsync<TEntity>(Func<TEntity, object> propertiesToBeSelected) where TEntity : class;
 
+        /// <summary>
+        /// Asynchronously, <inheritdoc cref="IAdvancedRepository.GetPartial{TEntity}(Func{TEntity, object}, Expression{Func{TEntity, bool}})"/>
+        /// </summary>
+        /// <returns><see cref="Task{TResult}"/></returns>
+        /// <inheritdoc cref="IAdvancedRepository.GetPartial{TEntity}(Func{TEntity, object}, Expression{Func{TEntity, bool}})"/>
+        Task<IEnumerable<object>> GetPartialAsync<TEntity>(Func<TEntity, object> propertiesToBeSelected, Expression<Func<TEntity, bool>> filterExpression) where TEntity : class;
+
         #endregion
     }
 
@@ -291,7 +298,14 @@ namespace MBRepoCore.Repo.Abstractions
         /// </summary>
         /// <returns><see cref="Task{TResult}"/></returns>
         /// <inheritdoc cref="IAdvancedRepository{TEntity}.GetPartial(Func{TEntity, object})"/>
-        Task<IEnumerable<object>> GetPartialAsync(Func<TEntity, object> propertiesToBeSelected);
+        Task<IEnumerable<object>> GetPartialAsync(Func<TEntity, object> propertiesToBeSelected); 
+        
+        /// <summary>
+        /// Asynchronously, <inheritdoc cref="IAdvancedRepository{TEntity}.GetPartial(Func{TEntity, object}, Expression{Func{TEntity, bool}})"/>
+        /// </summary>
+        /// <returns><see cref="Task{TResult}"/></returns>
+        /// <inheritdoc cref="IAdvancedRepository{TEntity}.GetPartial(Func{TEntity, object}, Expression{Func{TEntity, bool}})"/>
+        Task<IEnumerable<object>> GetPartialAsync(Func<TEntity, object> propertiesToBeSelected, Expression<Func<TEntity, bool>> filterExpression);
 
         #endregion
 

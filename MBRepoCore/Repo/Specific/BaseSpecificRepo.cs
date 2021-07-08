@@ -467,6 +467,19 @@ namespace MBRepoCore.Repo.Specific
         {
             return Task.Factory.StartNew(() => GetPartial(propertiesToBeSelected));
         }
+        
+        /// <inheritdoc />
+        public virtual IEnumerable<object> GetPartial( Func<TEntity, object> propertiesToBeSelected, Expression<Func<TEntity, bool>> filterExpression )
+        {
+            var result = Context.Set<TEntity>().Where(filterExpression).Select(propertiesToBeSelected).ToList();
+            return result;
+        }
+
+        /// <inheritdoc />
+        public virtual Task<IEnumerable<object>> GetPartialAsync(Func<TEntity, object> propertiesToBeSelected, Expression<Func<TEntity, bool>> filterExpression)
+        {
+            return Task.Factory.StartNew(() => GetPartial(propertiesToBeSelected, filterExpression));
+        }
 
         #endregion
 
