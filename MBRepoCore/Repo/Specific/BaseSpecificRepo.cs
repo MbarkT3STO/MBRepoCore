@@ -456,15 +456,17 @@ namespace MBRepoCore.Repo.Specific
 
 
         /// <inheritdoc />
-        public virtual object GetPartial( Expression<Func<TEntity, object>> propertiesToBeSelected )
+        public virtual IEnumerable<object> GetPartial( Func<TEntity, object> propertiesToBeSelected )
         {
-            //List<TProperty> result = Context.Set<TEntity>().Where(filterExpression).Select(x => (TProperty)x.GetType().GetProperty(propertyToBeSelected.GetPropertyAccess().Name).GetValue(x, null)).ToList();
-            //return result;
-
-            var result = (from x in Context.Set<TEntity>().AsEnumerable() select propertiesToBeSelected.GetMemberAccessList()).ToList();
+            var result = Context.Set<TEntity>().Select(propertiesToBeSelected).ToList();
             return result;
         }
 
+        /// <inheritdoc />
+        public virtual Task<IEnumerable<object>> GetPartialAsync(Func<TEntity, object> propertiesToBeSelected)
+        {
+            return Task.Factory.StartNew(() => GetPartial(propertiesToBeSelected));
+        }
 
         #endregion
 

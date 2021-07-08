@@ -535,12 +535,17 @@ namespace MBRepoCore.Repo.Generic
 
 
         /// <inheritdoc />
-        public object GetPartial<TEntity>( Expression<Func<TEntity, object>> propertiesToBeSelected ) where TEntity : class
+        public IEnumerable<object> GetPartial<TEntity>( Func<TEntity, object> propertiesToBeSelected ) where TEntity : class
         {
-            //var result = (from x in Context.Set<TEntity>() select propertiesToBeSelected).ToList();
             var result = Context.Set<TEntity>().Select(propertiesToBeSelected);
 
             return result;
+        }
+
+        /// <inheritdoc />
+        public Task<IEnumerable<object>> GetPartialAsync<TEntity>( Func<TEntity, object> propertiesToBeSelected ) where TEntity : class
+        {
+            return Task.Factory.StartNew(() => GetPartial<TEntity>(propertiesToBeSelected));
         }
 
         #endregion

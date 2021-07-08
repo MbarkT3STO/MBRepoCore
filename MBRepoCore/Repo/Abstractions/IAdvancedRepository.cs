@@ -161,12 +161,12 @@ namespace MBRepoCore.Repo.Abstractions
 
 
         /// <summary>
-        /// Get a list of <b><see cref="object"/></b> from a <b><typeparamref name="TEntity"/></b>
+        /// Get a list of <b><see cref="object"/>s</b> with a custom properties from a <b><typeparamref name="TEntity"/></b>
         /// </summary>
         /// <typeparam name="TEntity">The entity to select from</typeparam>
         /// <param name="propertiesToBeSelected">The <typeparamref name="TEntity"/> properties to be selected</param>
-        /// <returns><see cref="object"/></returns>
-        object GetPartial<TEntity>(Expression<Func<TEntity, object>> propertiesToBeSelected) where TEntity : class;
+        /// <returns><see cref="IEnumerable{object}"/></returns>
+        IEnumerable<object> GetPartial<TEntity>(Func<TEntity, object> propertiesToBeSelected) where TEntity : class;
 
         #endregion
 
@@ -311,11 +311,11 @@ namespace MBRepoCore.Repo.Abstractions
 
 
         /// <summary>
-        /// Get a list of <b><see cref="object"/></b> from a <b><typeparamref name="TEntity"/></b>
+        /// Get a list of <b><see cref="object"/>s</b> with a custom properties from a <b><typeparamref name="TEntity"/></b>
         /// </summary>
         /// <param name="propertiesToBeSelected">The <typeparamref name="TEntity"/> properties to be selected</param>
-        /// <returns><see cref="object"/></returns>
-        object GetPartial( Expression<Func<TEntity, object>> propertiesToBeSelected);
+        /// <returns><see cref="IEnumerable{object}"/></returns>
+        IEnumerable<object> GetPartial( Func<TEntity, object> propertiesToBeSelected);
 
         #endregion
 
