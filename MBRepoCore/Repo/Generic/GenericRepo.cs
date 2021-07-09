@@ -535,29 +535,58 @@ namespace MBRepoCore.Repo.Generic
 
 
         /// <inheritdoc />
-        public IEnumerable<object> GetPartial<TEntity>( Func<TEntity, object> propertiesToBeSelected ) where TEntity : class
+        public List<object> GetPartial<TEntity>( Func<TEntity, object> propertiesToBeSelected ) where TEntity : class
         {
-            var result = Context.Set<TEntity>().Select(propertiesToBeSelected);
+            var result = Context.Set<TEntity>().Select(propertiesToBeSelected).ToList();
 
             return result;
         }
 
         /// <inheritdoc />
-        public Task<IEnumerable<object>> GetPartialAsync<TEntity>( Func<TEntity, object> propertiesToBeSelected ) where TEntity : class
+        public Task<List<object>> GetPartialAsync<TEntity>( Func<TEntity, object> propertiesToBeSelected ) where TEntity : class
         {
             return Task.Factory.StartNew(() => GetPartial<TEntity>(propertiesToBeSelected));
         }
 
         /// <inheritdoc />
-        public IEnumerable<object> GetPartial<TEntity>(Func<TEntity, object> propertiesToBeSelected, Expression<Func<TEntity, bool>> filterExpression) where TEntity : class
+        public List<object> GetPartial<TEntity>(Func<TEntity, object> propertiesToBeSelected, Expression<Func<TEntity, bool>> filterExpression) where TEntity : class
         {
-            var result = Context.Set<TEntity>().Where(filterExpression).Select(propertiesToBeSelected);
+            var result = Context.Set<TEntity>().Where(filterExpression).Select(propertiesToBeSelected).ToList();
 
             return result;
         }
 
         /// <inheritdoc />
-        public Task<IEnumerable<object>> GetPartialAsync<TEntity>(Func<TEntity, object> propertiesToBeSelected, Expression<Func<TEntity, bool>> filterExpression) where TEntity : class
+        public Task<List<object>> GetPartialAsync<TEntity>(Func<TEntity, object> propertiesToBeSelected, Expression<Func<TEntity, bool>> filterExpression) where TEntity : class
+        {
+            return Task.Factory.StartNew(() => GetPartial<TEntity>(propertiesToBeSelected, filterExpression));
+        }
+
+
+        /// <inheritdoc />
+        public List<TEntity> GetPartial<TEntity>( Func<TEntity, TEntity> propertiesToBeSelected ) where TEntity : class
+        {
+            var result = Context.Set<TEntity>().Select(propertiesToBeSelected).ToList();
+
+            return result;
+        }
+
+        /// <inheritdoc />
+        public Task<List<TEntity>> GetPartialAsync<TEntity>( Func<TEntity, TEntity> propertiesToBeSelected ) where TEntity : class
+        {
+            return Task.Factory.StartNew(() => GetPartial<TEntity>(propertiesToBeSelected));
+        }
+
+        /// <inheritdoc />
+        public List<TEntity> GetPartial<TEntity>(Func<TEntity, TEntity> propertiesToBeSelected, Expression<Func<TEntity, bool>> filterExpression) where TEntity : class
+        {
+            var result = Context.Set<TEntity>().Where(filterExpression).Select(propertiesToBeSelected).ToList();
+
+            return result;
+        }
+
+        /// <inheritdoc />
+        public Task<List<TEntity>> GetPartialAsync<TEntity>(Func<TEntity, TEntity> propertiesToBeSelected, Expression<Func<TEntity, bool>> filterExpression) where TEntity : class
         {
             return Task.Factory.StartNew(() => GetPartial<TEntity>(propertiesToBeSelected, filterExpression));
         }

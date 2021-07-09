@@ -456,27 +456,54 @@ namespace MBRepoCore.Repo.Specific
 
 
         /// <inheritdoc />
-        public virtual IEnumerable<object> GetPartial( Func<TEntity, object> propertiesToBeSelected )
+        public virtual List<object> GetPartial( Func<TEntity, object> propertiesToBeSelected )
         {
             var result = Context.Set<TEntity>().Select(propertiesToBeSelected).ToList();
             return result;
         }
 
         /// <inheritdoc />
-        public virtual Task<IEnumerable<object>> GetPartialAsync(Func<TEntity, object> propertiesToBeSelected)
+        public virtual Task<List<object>> GetPartialAsync(Func<TEntity, object> propertiesToBeSelected)
         {
             return Task.Factory.StartNew(() => GetPartial(propertiesToBeSelected));
         }
         
         /// <inheritdoc />
-        public virtual IEnumerable<object> GetPartial( Func<TEntity, object> propertiesToBeSelected, Expression<Func<TEntity, bool>> filterExpression )
+        public virtual List<object> GetPartial( Func<TEntity, object> propertiesToBeSelected, Expression<Func<TEntity, bool>> filterExpression )
         {
             var result = Context.Set<TEntity>().Where(filterExpression).Select(propertiesToBeSelected).ToList();
             return result;
         }
 
         /// <inheritdoc />
-        public virtual Task<IEnumerable<object>> GetPartialAsync(Func<TEntity, object> propertiesToBeSelected, Expression<Func<TEntity, bool>> filterExpression)
+        public virtual Task<List<object>> GetPartialAsync(Func<TEntity, object> propertiesToBeSelected, Expression<Func<TEntity, bool>> filterExpression)
+        {
+            return Task.Factory.StartNew(() => GetPartial(propertiesToBeSelected, filterExpression));
+        }
+
+
+        /// <inheritdoc />
+        public virtual List<TEntity> GetPartial( Func<TEntity, TEntity> propertiesToBeSelected )
+        {
+            var result = Context.Set<TEntity>().Select(propertiesToBeSelected).ToList();
+            return result;
+        }
+
+        /// <inheritdoc />
+        public virtual Task<List<TEntity>> GetPartialAsync(Func<TEntity, TEntity> propertiesToBeSelected)
+        {
+            return Task.Factory.StartNew(() => GetPartial(propertiesToBeSelected));
+        }
+        
+        /// <inheritdoc />
+        public virtual List<TEntity> GetPartial( Func<TEntity, TEntity> propertiesToBeSelected, Expression<Func<TEntity, bool>> filterExpression )
+        {
+            var result = Context.Set<TEntity>().Where(filterExpression).Select(propertiesToBeSelected).ToList();
+            return result;
+        }
+
+        /// <inheritdoc />
+        public virtual Task<List<TEntity>> GetPartialAsync(Func<TEntity, TEntity> propertiesToBeSelected, Expression<Func<TEntity, bool>> filterExpression)
         {
             return Task.Factory.StartNew(() => GetPartial(propertiesToBeSelected, filterExpression));
         }
