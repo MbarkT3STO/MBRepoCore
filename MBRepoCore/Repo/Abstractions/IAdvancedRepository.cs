@@ -370,5 +370,16 @@ namespace MBRepoCore.Repo.Abstractions
 
         #endregion
 
+        #region Get Where Not In
+
+        /// <summary>
+        ///  Get <b><see cref="TEntity"/></b> records whose not in <b><typeparamref name="TNotIn"/></b>
+        /// </summary>
+        /// <typeparam name="TNotIn">Entity that <b><see cref="TEntity"/></b> records not in</typeparam>
+        /// <returns><see cref="List{T}"/></returns>
+        List<TEntity> GetWhereNotIn<TNotIn>(Func<TEntity, object> PropertyToBeChecked, Func<TNotIn, object> propertyToCheckIn) where TNotIn : class;
+
+        #endregion
+
     }
 }

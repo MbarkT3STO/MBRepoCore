@@ -510,6 +510,18 @@ namespace MBRepoCore.Repo.Specific
 
         #endregion
 
+
+        #region Get Where Not In
+
+
+        /// <inheritdoc />
+        public virtual List<TEntity> GetWhereNotIn<TNotIn>(Func<TEntity, object> PropertyToBeChecked, Func<TNotIn, object> propertyToCheckIn) where TNotIn : class
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
+
         #endregion
 
     }
