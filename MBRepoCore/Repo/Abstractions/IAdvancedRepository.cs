@@ -373,11 +373,45 @@ namespace MBRepoCore.Repo.Abstractions
         #region Get Where Not In
 
         /// <summary>
-        ///  Get <b><see cref="TEntity"/></b> records whose not in <b><typeparamref name="TNotIn"/></b>
+        ///  Get <b><see cref="TEntity"/></b> records who's not in <b><typeparamref name="TNotIn"/></b>
         /// </summary>
         /// <typeparam name="TNotIn">Entity that <b><see cref="TEntity"/></b> records not in</typeparam>
+        /// <param name="PropertyToBeChecked"><b><see cref="TEntity"/></b> property to be checked</param>
+        /// <param name="propertyToLookIn"><b><typeparamref name="TNotIn"/></b> property/column to look in</param>
         /// <returns><see cref="List{T}"/></returns>
-        List<TEntity> GetWhereNotIn<TNotIn>(Func<TEntity, object> PropertyToBeChecked, Func<TNotIn, object> propertyToCheckIn) where TNotIn : class;
+        List<TEntity> GetWhereNotIn<TNotIn>(Expression<Func<TEntity, object>> PropertyToBeChecked, Func<TNotIn, object> propertyToLookIn) where TNotIn : class;
+
+
+        /// <summary>
+        ///  Get <b><see cref="TEntity"/></b> records who's not in <b><typeparamref name="TNotIn"/></b> with filtering
+        /// </summary>
+        /// <typeparam name="TNotIn">Entity that <b><see cref="TEntity"/></b> records not in</typeparam>
+        /// <param name="PropertyToBeChecked"><b><see cref="TEntity"/></b> property to be checked</param>
+        /// <param name="propertyToLookIn"><b><typeparamref name="TNotIn"/></b> property/column to look in</param>
+        /// <param name="tEntityFilter">One or set of conditions to be applied on <b><see cref="TEntity"/></b></param>
+        /// <returns><see cref="List{T}"/></returns>
+        List<TEntity> GetWhereNotIn<TNotIn>(Expression<Func<TEntity, object>> PropertyToBeChecked, Func<TNotIn, object> propertyToLookIn, Func<TEntity, bool> tEntityFilter) where TNotIn : class;
+        
+        /// <summary>
+        ///  Get <b><see cref="TEntity"/></b> records who's not in <b><typeparamref name="TNotIn"/></b> with filtering
+        /// </summary>
+        /// <typeparam name="TNotIn">Entity that <b><see cref="TEntity"/></b> records not in</typeparam>
+        /// <param name="PropertyToBeChecked"><b><see cref="TEntity"/></b> property to be checked</param>
+        /// <param name="propertyToLookIn"><b><typeparamref name="TNotIn"/></b> property/column to look in</param>
+        /// <param name="tNotInFilter">One or set of conditions to be applied on <b><typeparamref name="TNotIn"/></b></param>
+        /// <returns><see cref="List{T}"/></returns>
+        List<TEntity> GetWhereNotIn<TNotIn>(Expression<Func<TEntity, object>> PropertyToBeChecked, Func<TNotIn, object> propertyToLookIn, Func<TNotIn, bool> tNotInFilter) where TNotIn : class;
+
+        /// <summary>
+        ///  Get <b><see cref="TEntity"/></b> records who's not in <b><typeparamref name="TNotIn"/></b> with filtering
+        /// </summary>
+        /// <typeparam name="TNotIn">Entity that <b><see cref="TEntity"/></b> records not in</typeparam>
+        /// <param name="PropertyToBeChecked"><b><see cref="TEntity"/></b> property to be checked</param>
+        /// <param name="propertyToLookIn"><b><typeparamref name="TNotIn"/></b> property/column to look in</param>
+        /// <param name="tEntityFilter">One or set of conditions to be applied on <b><see cref="TEntity"/></b></param>
+        /// <param name="tNotInFilter">One or set of conditions to be applied on <b><typeparamref name="TNotIn"/></b></param>
+        /// <returns><see cref="List{T}"/></returns>
+        List<TEntity> GetWhereNotIn<TNotIn>(Expression<Func<TEntity, object>> PropertyToBeChecked, Func<TNotIn, object> propertyToLookIn, Func<TEntity, bool> tEntityFilter, Func<TNotIn, bool> tNotInFilter) where TNotIn : class;
 
         #endregion
 

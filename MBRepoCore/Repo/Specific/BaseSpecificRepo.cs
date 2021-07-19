@@ -513,14 +513,57 @@ namespace MBRepoCore.Repo.Specific
 
         #region Get Where Not In
 
+        /// <inheritdoc />
+        public virtual List<TEntity> GetWhereNotIn<TNotIn>(Expression<Func<TEntity, object>> PropertyToBeChecked, Func<TNotIn, object> propertyToLookIn) where TNotIn : class
+        {
+            // Get data to look in
+            var dataToCheckIn = Context.Set<TNotIn>().Select(propertyToLookIn).ToList();
+
+            // Get data not in dataToCheckIn
+            var result = Context.Set<TEntity>().AsEnumerable().Where(x => !dataToCheckIn.Contains(x.GetType().GetProperty(PropertyToBeChecked.GetPropertyAccess().Name).GetValue(x, null))).ToList();
+
+            return result;
+        } 
+        
 
         /// <inheritdoc />
-        public virtual List<TEntity> GetWhereNotIn<TNotIn>(Func<TEntity, object> PropertyToBeChecked, Func<TNotIn, object> propertyToCheckIn) where TNotIn : class
+        public virtual List<TEntity> GetWhereNotIn<TNotIn>(Expression<Func<TEntity, object>> PropertyToBeChecked, Func<TNotIn, object> propertyToLookIn, Func<TEntity, bool> tEntityFilter) where TNotIn : class
         {
-            throw new NotImplementedException();
+            // Get data to look in
+            var dataToCheckIn = Context.Set<TNotIn>().Select(propertyToLookIn).ToList();
+
+            // Get filtered TEntity data not in dataToCheckIn
+            var result = Context.Set<TEntity>().AsEnumerable().Where(tEntityFilter).Where(x => !dataToCheckIn.Contains(x.GetType().GetProperty(PropertyToBeChecked.GetPropertyAccess().Name).GetValue(x, null))).ToList();
+
+            return result;
+        }  
+        
+        /// <inheritdoc />
+        public virtual List<TEntity> GetWhereNotIn<TNotIn>(Expression<Func<TEntity, object>> PropertyToBeChecked, Func<TNotIn, object> propertyToLookIn, Func<TNotIn, bool> tNotInFilter) where TNotIn : class
+        {
+            // Get data to look in
+            var dataToCheckIn = Context.Set<TNotIn>().Where(tNotInFilter).Select(propertyToLookIn).ToList();
+
+            // Get filtered TEntity data not in dataToCheckIn
+            var result = Context.Set<TEntity>().AsEnumerable().Where(x => !dataToCheckIn.Contains(x.GetType().GetProperty(PropertyToBeChecked.GetPropertyAccess().Name).GetValue(x, null))).ToList();
+
+            return result;
+        }
+        
+        /// <inheritdoc />
+        public virtual List<TEntity> GetWhereNotIn<TNotIn>(Expression<Func<TEntity, object>> PropertyToBeChecked, Func<TNotIn, object> propertyToLookIn, Func<TEntity, bool> tEntityFilter, Func<TNotIn, bool> tNotInFilter) where TNotIn : class
+        {
+            // Get data to look in
+            var dataToCheckIn = Context.Set<TNotIn>().Where(tNotInFilter).Select(propertyToLookIn).ToList();
+
+            // Get filtered TEntity data not in dataToCheckIn
+            var result = Context.Set<TEntity>().AsEnumerable().Where(tEntityFilter).Where(x => !dataToCheckIn.Contains(x.GetType().GetProperty(PropertyToBeChecked.GetPropertyAccess().Name).GetValue(x, null))).ToList();
+
+            return result;
         }
 
         #endregion
+
 
         #endregion
 
