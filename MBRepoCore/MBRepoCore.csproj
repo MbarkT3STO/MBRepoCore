@@ -10,7 +10,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net5.0</TargetFramework>
-    <Version>5.1</Version>
+    <Version>5.2</Version>
     <Copyright>MB-WAR</Copyright>
     <Description>An Open-Source, full generic repository project for Entity Framework Core (Targeted .NET 5), and cross RDBMS providers (works with [SQL Server, MySQL, Oracle])</Description>
     <Company>MB-WAR</Company>

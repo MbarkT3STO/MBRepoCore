@@ -415,5 +415,50 @@ namespace MBRepoCore.Repo.Abstractions
 
         #endregion
 
+        #region Get Where In
+
+        /// <summary>
+        ///  Get <b><see cref="TEntity"/></b> records who's in <b><typeparamref name="Tin"/></b>
+        /// </summary>
+        /// <typeparam name="Tin">Entity to look in</typeparam>
+        /// <param name="propertyToBeChecked"><b><see cref="TEntity"/></b> property to be checked</param>
+        /// <param name="propertyToLookIn"><b><typeparamref name="Tin"/></b> property/column to look in</param>
+        /// <returns><see cref="List{T}"/></returns>
+        List<TEntity> GetWhereIn<Tin>( Expression<Func<TEntity, object>> propertyToBeChecked, Func<Tin, object> propertyToLookIn) where Tin : class;
+
+
+        /// <summary>
+        ///  Get <b><see cref="TEntity"/></b> records who's in <b><typeparamref name="Tin"/></b> with filtering
+        /// </summary>
+        /// <typeparam name="Tin">Entity to look in</typeparam>
+        /// <param name="propertyToBeChecked"><b><see cref="TEntity"/></b> property to be checked</param>
+        /// <param name="propertyToLookIn"><b><typeparamref name="Tin"/></b> property/column to look in</param>
+        /// <param name="tEntityFilter">One or set of conditions to be applied on <b><see cref="TEntity"/></b></param>
+        /// <returns><see cref="List{T}"/></returns>
+        List<TEntity> GetWhereIn<Tin>(Expression<Func<TEntity, object>> propertyToBeChecked, Func<Tin, object> propertyToLookIn, Func<TEntity, bool> tEntityFilter) where Tin : class;
+
+        /// <summary>
+        ///  Get <b><see cref="TEntity"/></b> records who's in <b><typeparamref name="Tin"/></b> with filtering
+        /// </summary>
+        /// <typeparam name="Tin">Entity to look in</typeparam>
+        /// <param name="propertyToBeChecked"><b><see cref="TEntity"/></b> property to be checked</param>
+        /// <param name="propertyToLookIn"><b><typeparamref name="Tin"/></b> property/column to look in</param>
+        /// <param name="tInFilter">One or set of conditions to be applied on <b><typeparamref name="Tin"/></b></param>
+        /// <returns><see cref="List{T}"/></returns>
+        List<TEntity> GetWhereIn<Tin>(Expression<Func<TEntity, object>> propertyToBeChecked, Func<Tin, object> propertyToLookIn, Func<Tin, bool> tInFilter) where Tin : class;
+
+        /// <summary>
+        ///  Get <b><see cref="TEntity"/></b> records who's in <b><typeparamref name="Tin"/></b> with filtering
+        /// </summary>
+        /// <typeparam name="Tin">Entity to look in</typeparam>
+        /// <param name="propertyToBeChecked"><b><see cref="TEntity"/></b> property to be checked</param>
+        /// <param name="propertyToLookIn"><b><typeparamref name="Tin"/></b> property/column to look in</param>
+        /// <param name="tEntityFilter">One or set of conditions to be applied on <b><typeparamref name="TEntity"/></b></param>
+        /// <param name="tInFilter">One or set of conditions to be applied on <b><typeparamref name="Tin"/></b></param>
+        /// <returns><see cref="List{T}"/></returns>
+        List<TEntity> GetWhereIn<Tin>(Expression<Func<TEntity, object>> propertyToBeChecked, Func<Tin, object> propertyToLookIn, Func<TEntity, bool> tEntityFilter, Func<Tin, bool> tInFilter) where Tin : class;
+
+        #endregion
+
     }
 }

@@ -510,7 +510,6 @@ namespace MBRepoCore.Repo.Specific
 
         #endregion
 
-
         #region Get Where Not In
 
         /// <inheritdoc />
@@ -523,8 +522,14 @@ namespace MBRepoCore.Repo.Specific
             var result = Context.Set<TEntity>().AsEnumerable().Where(x => !dataToCheckIn.Contains(x.GetType().GetProperty(PropertyToBeChecked.GetPropertyAccess().Name).GetValue(x, null))).ToList();
 
             return result;
-        } 
+        }
         
+        /// <inheritdoc/>
+        public virtual Task<List<TEntity>> GetWhereNotInAsync<TNotIn>(Expression<Func<TEntity, object>> PropertyToBeChecked, Func<TNotIn, object> propertyToLookIn) where TNotIn : class
+        {
+            return Task.Factory.StartNew(() => GetWhereNotIn<TNotIn>(PropertyToBeChecked, propertyToLookIn));
+        }
+
 
         /// <inheritdoc />
         public virtual List<TEntity> GetWhereNotIn<TNotIn>(Expression<Func<TEntity, object>> PropertyToBeChecked, Func<TNotIn, object> propertyToLookIn, Func<TEntity, bool> tEntityFilter) where TNotIn : class
@@ -536,8 +541,15 @@ namespace MBRepoCore.Repo.Specific
             var result = Context.Set<TEntity>().AsEnumerable().Where(tEntityFilter).Where(x => !dataToCheckIn.Contains(x.GetType().GetProperty(PropertyToBeChecked.GetPropertyAccess().Name).GetValue(x, null))).ToList();
 
             return result;
-        }  
+        }
         
+        /// <inheritdoc/>
+        public virtual Task<List<TEntity>> GetWhereNotInAsync<TNotIn>(Expression<Func<TEntity, object>> PropertyToBeChecked, Func<TNotIn, object> propertyToLookIn, Func<TEntity, bool> tEntityFilter) where TNotIn : class
+        {
+            return Task.Factory.StartNew(() => GetWhereNotIn<TNotIn>(PropertyToBeChecked, propertyToLookIn, tEntityFilter));
+        }
+
+
         /// <inheritdoc />
         public virtual List<TEntity> GetWhereNotIn<TNotIn>(Expression<Func<TEntity, object>> PropertyToBeChecked, Func<TNotIn, object> propertyToLookIn, Func<TNotIn, bool> tNotInFilter) where TNotIn : class
         {
@@ -549,7 +561,14 @@ namespace MBRepoCore.Repo.Specific
 
             return result;
         }
-        
+
+        /// <inheritdoc/>
+        public virtual Task<List<TEntity>> GetWhereNotInAsync<TNotIn>(Expression<Func<TEntity, object>> PropertyToBeChecked, Func<TNotIn, object> propertyToLookIn, Func<TNotIn, bool> tNotInFilter) where TNotIn : class
+        {
+            return Task.Factory.StartNew(() => GetWhereNotIn<TNotIn>(PropertyToBeChecked, propertyToLookIn, tNotInFilter));
+        }
+
+
         /// <inheritdoc />
         public virtual List<TEntity> GetWhereNotIn<TNotIn>(Expression<Func<TEntity, object>> PropertyToBeChecked, Func<TNotIn, object> propertyToLookIn, Func<TEntity, bool> tEntityFilter, Func<TNotIn, bool> tNotInFilter) where TNotIn : class
         {
@@ -561,9 +580,93 @@ namespace MBRepoCore.Repo.Specific
 
             return result;
         }
+        
+        /// <inheritdoc/>
+        public virtual Task<List<TEntity>> GetWhereNotInAsync<TNotIn>(Expression<Func<TEntity, object>> PropertyToBeChecked, Func<TNotIn, object> propertyToLookIn, Func<TEntity, bool> tEntityFilter, Func<TNotIn, bool> tNotInFilter) where TNotIn : class
+        {
+            return Task.Factory.StartNew(() => GetWhereNotIn<TNotIn>(PropertyToBeChecked, propertyToLookIn, tEntityFilter, tNotInFilter));
+        }
 
         #endregion
 
+        #region Get Where In
+
+        /// <inheritdoc/>
+        public virtual List<TEntity> GetWhereIn<Tin>(Expression<Func<TEntity, object>> propertyToBeChecked, Func<Tin, object> propertyToLookIn) where Tin : class
+        {
+            // Get data to look in
+            var dataToLookIn = Context.Set<Tin>().Select(propertyToLookIn).ToList();
+
+            // Get data in dataToLookIn
+            var result = Context.Set<TEntity>().Where(x => dataToLookIn.Contains(x.GetType().GetProperty(propertyToBeChecked.GetPropertyAccess().Name).GetValue(x, null))).ToList();
+
+            return result;
+        }
+
+        /// <inheritdoc/>
+        public virtual Task<List<TEntity>> GetWhereInAsync<TNotIn>(Expression<Func<TEntity, object>> PropertyToBeChecked, Func<TNotIn, object> propertyToLookIn) where TNotIn : class
+        {
+           return Task.Factory.StartNew(() => GetWhereIn<TNotIn>(PropertyToBeChecked, propertyToLookIn));
+        }
+
+
+        /// <inheritdoc/>
+        public virtual List<TEntity> GetWhereIn<Tin>(Expression<Func<TEntity, object>> propertyToBeChecked, Func<Tin, object> propertyToLookIn, Func<TEntity, bool> tEntityFilter) where Tin : class
+        {
+            // Ge data to look in
+            var dataToLookIn = Context.Set<Tin>().Select(propertyToLookIn).ToList();
+
+            // Get data in dataToLookIn
+            var result = Context.Set<TEntity>().Where(tEntityFilter).Where(x => dataToLookIn.Contains(x.GetType().GetProperty(propertyToBeChecked.GetPropertyAccess().Name).GetValue(x, null))).ToList();
+
+            return result;
+            }
+
+        /// <inheritdoc/>
+        public virtual Task<List<TEntity>> GetWhereInAsync<TNotIn>(Expression<Func<TEntity, object>> PropertyToBeChecked, Func<TNotIn, object> propertyToLookIn, Func<TEntity, bool> tEntityFilter) where TNotIn : class
+        {
+            return Task.Factory.StartNew(() => GetWhereIn<TNotIn>(PropertyToBeChecked, propertyToLookIn, tEntityFilter));
+        }
+
+
+        /// <inheritdoc/>
+        public virtual List<TEntity> GetWhereIn<Tin>(Expression<Func<TEntity, object>> propertyToBeChecked, Func<Tin, object> propertyToLookIn, Func<Tin, bool> tInFilter) where Tin : class
+        {
+            // Ge data to look in
+            var dataToLookIn = Context.Set<Tin>().Where(tInFilter).Select(propertyToLookIn).ToList();
+
+            // Get data in dataToLookIn
+            var result = Context.Set<TEntity>().Where(x => dataToLookIn.Contains(x.GetType().GetProperty(propertyToBeChecked.GetPropertyAccess().Name).GetValue(x, null))).ToList();
+
+            return result;
+         }
+
+        /// <inheritdoc/>
+        public virtual Task<List<TEntity>> GetWhereInAsync<TNotIn>(Expression<Func<TEntity, object>> PropertyToBeChecked, Func<TNotIn, object> propertyToLookIn, Func<TNotIn, bool> tNotInFilter) where TNotIn : class
+        {
+            return Task.Factory.StartNew(() => GetWhereIn<TNotIn>(PropertyToBeChecked, propertyToLookIn, tNotInFilter));
+        }
+
+
+        /// <inheritdoc/>
+        public virtual List<TEntity> GetWhereIn<Tin> (Expression<Func<TEntity, object>> propertyToBeChecked, Func<Tin, object> propertyToLookIn, Func<TEntity, bool> tEntityFilter, Func<Tin, bool> tInFilter) where Tin : class
+        {
+            // Get data to look in
+            var dataToLookIn = Context.Set<Tin>().Where(tInFilter).Select(propertyToLookIn).ToList();
+
+            // Get result
+            var result = Context.Set<TEntity>().Where(tEntityFilter).Where(x => dataToLookIn.Contains(x.GetType().GetProperty(propertyToBeChecked.GetPropertyAccess().Name).GetValue(x, null))).ToList();
+
+            return result;
+        }
+
+        /// <inheritdoc/>
+        public virtual Task<List<TEntity>> GetWhereInAsync<TNotIn>(Expression<Func<TEntity, object>> PropertyToBeChecked, Func<TNotIn, object> propertyToLookIn, Func<TEntity, bool> tEntityFilter, Func<TNotIn, bool> tNotInFilter) where TNotIn : class
+        {
+            return Task.Factory.StartNew(() => GetWhereIn<TNotIn>(PropertyToBeChecked, propertyToLookIn, tEntityFilter, tNotInFilter));
+        }
+
+        #endregion
 
         #endregion
 

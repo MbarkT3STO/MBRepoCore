@@ -339,5 +339,71 @@ namespace MBRepoCore.Repo.Abstractions
 
         #endregion
 
+        #region Get Where Not In
+
+        /// <summary>
+        /// Asynchronously, <inheritdoc cref="IAdvancedRepository{TEntity}.GetWhereNotIn{TNotIn}(Expression{Func{TEntity, object}}, Func{TNotIn, object})"/>
+        /// </summary>
+        /// <returns><see cref="Task{TResult}"/></returns>
+        /// <inheritdoc cref="IAdvancedRepository{TEntity}.GetWhereNotIn{TNotIn}(Expression{Func{TEntity, object}}, Func{TNotIn, object})"/>
+        Task<List<TEntity>> GetWhereNotInAsync<TNotIn>(Expression<Func<TEntity, object>> PropertyToBeChecked, Func<TNotIn, object> propertyToLookIn) where TNotIn : class;
+
+
+        /// <summary>
+        /// Asynchronously, <inheritdoc cref="IAdvancedRepository{TEntity}.GetWhereNotIn{TNotIn}(Expression{Func{TEntity, object}}, Func{TNotIn, object}, Func{TEntity, bool})"/>
+        /// </summary>
+        /// <returns><see cref="Task{TResult}"/></returns>
+        /// <inheritdoc cref="IAdvancedRepository{TEntity}.GetWhereNotIn{TNotIn}(Expression{Func{TEntity, object}}, Func{TNotIn, object}, Func{TEntity, bool})"/>
+        Task<List<TEntity>> GetWhereNotInAsync<TNotIn>(Expression<Func<TEntity, object>> PropertyToBeChecked, Func<TNotIn, object> propertyToLookIn, Func<TEntity, bool> tEntityFilter) where TNotIn : class;
+
+        /// <summary>
+        /// Asynchronously, <inheritdoc cref="IAdvancedRepository{TEntity}.GetWhereNotIn{TNotIn}(Expression{Func{TEntity, object}}, Func{TNotIn, object}, Func{TNotIn, bool})"/>
+        /// </summary>
+        /// <returns><see cref="Task{TResult}"/></returns>
+        /// <inheritdoc cref="IAdvancedRepository{TEntity}.GetWhereNotIn{TNotIn}(Expression{Func{TEntity, object}}, Func{TNotIn, object}, Func{TNotIn, bool})"/>
+        Task<List<TEntity>> GetWhereNotInAsync<TNotIn>(Expression<Func<TEntity, object>> PropertyToBeChecked, Func<TNotIn, object> propertyToLookIn, Func<TNotIn, bool> tNotInFilter) where TNotIn : class;
+
+        /// <summary>
+        /// Asynchronously, <inheritdoc cref="IAdvancedRepository{TEntity}.GetWhereNotIn{TNotIn}(Expression{Func{TEntity, object}}, Func{TNotIn, object}, Func{TEntity, bool}, Func{TNotIn, bool})"/>
+        /// </summary>
+        /// <returns><see cref="Task{TResult}"/></returns>
+        /// <inheritdoc cref="IAdvancedRepository{TEntity}.GetWhereNotIn{TNotIn}(Expression{Func{TEntity, object}}, Func{TNotIn, object}, Func{TEntity, bool}, Func{TNotIn, bool})"/>
+        Task<List<TEntity>> GetWhereNotInAsync <TNotIn>(Expression<Func<TEntity, object>> PropertyToBeChecked, Func<TNotIn, object> propertyToLookIn, Func<TEntity, bool> tEntityFilter, Func<TNotIn, bool> tNotInFilter) where TNotIn : class;
+
+        #endregion
+
+        #region Get Where In
+
+        /// <summary>
+        /// Asynchronously, <inheritdoc cref="IAdvancedRepository{TEntity}.GetWhereIn{Tin}(Expression{Func{TEntity, object}}, Func{Tin, object})"/>
+        /// </summary>
+        /// <returns><see cref="Task{TResult}"/></returns>
+        /// <inheritdoc cref="IAdvancedRepository{TEntity}.GetWhereIn{Tin}(Expression{Func{TEntity, object}}, Func{Tin, object})"/>
+        Task<List<TEntity>> GetWhereInAsync<Tin> (Expression<Func<TEntity, object>> propertyToBeChecked, Func<Tin, object> propertyToLookIn) where Tin : class;
+
+
+        /// <summary>
+        /// Asynchronously, <inheritdoc cref="IAdvancedRepository{TEntity}.GetWhereIn{Tin}(Expression{Func{TEntity, object}}, Func{Tin, object}, Func{TEntity, bool})"/>
+        /// </summary>
+        /// <returns><see cref="Task{TResult}"/></returns>
+        /// <inheritdoc cref="IAdvancedRepository{TEntity}.GetWhereIn{Tin}(Expression{Func{TEntity, object}}, Func{Tin, object}, Func{TEntity, bool})"/>
+        Task<List<TEntity>> GetWhereInAsync<Tin> (Expression<Func<TEntity, object>> propertyToBeChecked, Func<Tin, object> propertyToLookIn, Func<TEntity, bool> tEntityFilter) where Tin : class;
+
+        /// <summary>
+        /// Asynchronously, <inheritdoc cref="IAdvancedRepository{TEntity}.GetWhereIn{Tin}(Expression{Func{TEntity, object}}, Func{Tin, object}, Func{Tin, bool})"/>
+        /// </summary>
+        /// <returns><see cref="Task{TResult}"/></returns>
+        /// <inheritdoc cref="IAdvancedRepository{TEntity}.GetWhereIn{Tin}(Expression{Func{TEntity, object}}, Func{Tin, object}, Func{Tin, bool})"/>
+        Task<List<TEntity>> GetWhereInAsync<Tin> (Expression<Func<TEntity, object>> propertyToBeChecked, Func<Tin, object> propertyToLookIn, Func<Tin, bool> tInFilter) where Tin : class;
+
+        /// <summary>
+        /// Asynchronously, <inheritdoc cref="IAdvancedRepository{TEntity}.GetWhereIn{Tin}(Expression{Func{TEntity, object}}, Func{Tin, object}, Func{TEntity, bool}, Func{Tin, bool})"/>
+        /// </summary>
+        /// <returns><see cref="Task{TResult}"/></returns>
+        /// <inheritdoc cref="IAdvancedRepository{TEntity}.GetWhereIn{Tin}(Expression{Func{TEntity, object}}, Func{Tin, object}, Func{TEntity, bool}, Func{Tin, bool})"/>
+        Task<List<TEntity>> GetWhereInAsync<Tin> (Expression<Func<TEntity, object>> propertyToBeChecked, Func<Tin, object> propertyToLookIn, Func<TEntity, bool> tEntityFilter, Func<Tin, bool> tInFilter) where Tin : class;
+
+        #endregion
+
     }
 }
