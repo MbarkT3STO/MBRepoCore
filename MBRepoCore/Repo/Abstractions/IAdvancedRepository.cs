@@ -197,7 +197,6 @@ namespace MBRepoCore.Repo.Abstractions
 
         #endregion
 
-
         #region Get Where Not In
 
         /// <summary>

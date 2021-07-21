@@ -238,7 +238,6 @@ namespace MBRepoCore.Repo.Generic
 
         #endregion
 
-
         #region Add
 
         /// <inheritdoc />
@@ -267,7 +266,6 @@ namespace MBRepoCore.Repo.Generic
         }
 
         #endregion
-
 
         #region Update
 
@@ -372,7 +370,6 @@ namespace MBRepoCore.Repo.Generic
 
         #endregion
 
-
         #region Remove
 
         /// <inheritdoc />
@@ -401,7 +398,6 @@ namespace MBRepoCore.Repo.Generic
         }
 
         #endregion
-
 
         #region Is Exist
 
@@ -435,7 +431,6 @@ namespace MBRepoCore.Repo.Generic
 
         #endregion
         
-        
         #region Contains
 
         /// <inheritdoc />
@@ -466,7 +461,6 @@ namespace MBRepoCore.Repo.Generic
         }
 
         #endregion
-
 
         #region Filter
 
@@ -502,7 +496,6 @@ namespace MBRepoCore.Repo.Generic
         }
 
         #endregion
-
 
         #region Get Partial
 
@@ -593,8 +586,6 @@ namespace MBRepoCore.Repo.Generic
 
         #endregion
 
-
-
         #region Get Where Not In
 
         /// <inheritdoc />
@@ -673,7 +664,6 @@ namespace MBRepoCore.Repo.Generic
         }
 
         #endregion
-
 
 
         #endregion
