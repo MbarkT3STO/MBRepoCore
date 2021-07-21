@@ -197,6 +197,57 @@ namespace MBRepoCore.Repo.Abstractions
 
         #endregion
 
+
+        #region Get Where Not In
+
+        /// <summary>
+        ///  Get <b><typeparam name="TEntity"></b> records who's not in <b><typeparamref name="TNotIn"/></b>
+        /// </summary>
+        /// <typeparam name="TEntity">The entity to select from</typeparam>
+        /// <typeparam name="TNotIn">Entity that <b><typeparam name="TEntity"></b> records not in</typeparam>
+        /// <param name="PropertyToBeChecked"><b><typeparam name="TEntity"></b> property to be checked</param>
+        /// <param name="propertyToLookIn"><b><typeparamref name="TNotIn"/></b> property/column to look in</param>
+        /// <returns><see cref="List{T}"/></returns>
+        List<TEntity> GetWhereNotIn<TEntity, TNotIn>(Expression<Func<TEntity, object>> PropertyToBeChecked, Func<TNotIn, object> propertyToLookIn) where TEntity : class where TNotIn : class;
+
+
+        /// <summary>
+        ///  Get <b><typeparam name="TEntity"></b> records who's not in <b><typeparamref name="TNotIn"/></b> with filtering
+        /// </summary>
+        ///  <typeparam name="TEntity">The entity to select from</typeparam>
+        /// <typeparam name="TNotIn">Entity that <b><typeparam name="TEntity"></b> records not in</typeparam>
+        /// <param name="PropertyToBeChecked"><b><typeparam name="TEntity"></b> property to be checked</param>
+        /// <param name="propertyToLookIn"><b><typeparamref name="TNotIn"/></b> property/column to look in</param>
+        /// <param name="tEntityFilter">One or set of conditions to be applied on <b><typeparam name="TEntity"></b></param>
+        /// <returns><see cref="List{T}"/></returns>
+        List<TEntity> GetWhereNotIn<TEntity, TNotIn>(Expression<Func<TEntity, object>> PropertyToBeChecked, Func<TNotIn, object> propertyToLookIn, Func<TEntity, bool> tEntityFilter) where TEntity : class where TNotIn : class;
+
+        /// <summary>
+        ///  Get <b><typeparam name="TEntity"></b> records who's not in <b><typeparamref name="TNotIn"/></b> with filtering
+        /// </summary>
+        ///  <typeparam name="TEntity">The entity to select from</typeparam>
+        /// <typeparam name="TNotIn">Entity that <b><typeparam name="TEntity"></b> records not in</typeparam>
+        /// <param name="PropertyToBeChecked"><b><typeparam name="TEntity"></b> property to be checked</param>
+        /// <param name="propertyToLookIn"><b><typeparamref name="TNotIn"/></b> property/column to look in</param>
+        /// <param name="tNotInFilter">One or set of conditions to be applied on <b><typeparamref name="TNotIn"/></b></param>
+        /// <returns><see cref="List{T}"/></returns>
+        List<TEntity> GetWhereNotIn<TEntity, TNotIn>(Expression<Func<TEntity, object>> PropertyToBeChecked, Func<TNotIn, object> propertyToLookIn, Func<TNotIn, bool> tNotInFilter) where TEntity : class where TNotIn : class;
+
+        /// <summary>
+        /// Get <b><typeparam name="TEntity"></b> records who's not in <b><typeparamref name="TNotIn"/></b> with filtering
+        /// </summary>
+        /// <typeparam name="TEntity">The entity to select from</typeparam>
+        /// <typeparam name="TNotIn">Entity that <b><typeparam name="TEntity"></b> records not in</typeparam>
+        /// <param name="PropertyToBeChecked"><b><typeparam name="TEntity"></b> property to be checked</param>
+        /// <param name="propertyToLookIn"><b><typeparamref name="TNotIn"/></b> property/column to look in</param>
+        /// <param name="tEntityFilter">One or set of conditions to be applied on <b><typeparam name="TEntity"></b></param>
+        /// <param name="tNotInFilter">One or set of conditions to be applied on <b><typeparamref name="TNotIn"/></b></param>
+        /// <returns><see cref="List{T}"/></returns>
+        List<TEntity> GetWhereNotIn<TEntity, TNotIn>(Expression<Func<TEntity, object>> PropertyToBeChecked, Func<TNotIn, object> propertyToLookIn, Func<TEntity, bool> tEntityFilter, Func<TNotIn, bool> tNotInFilter) where TEntity : class where TNotIn : class;
+
+        #endregion
+
+
     }
 
     /// <summary>
