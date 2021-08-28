@@ -12,6 +12,6 @@ namespace MBRepoCore.Interfaces
         /// <summary>
         /// Configure and/or select the properties to be skipped
         /// </summary>
-        Expression<Func<T , object>> GetSkiped();
+        Expression<Func<T , object>> GetSkipped();
     }
 }

@@ -254,7 +254,7 @@ namespace MBRepoCore.Repo.Specific
             entity.Attach( record );
             Context.Entry( record ).State = EntityState.Modified;
 
-            var propertiesToBeExcluded = new TSkippable().GetSkiped();
+            var propertiesToBeExcluded = new TSkippable().GetSkipped();
 
             foreach ( var property in  propertiesToBeExcluded.GetPropertyAccessList())
             {
@@ -278,7 +278,7 @@ namespace MBRepoCore.Repo.Specific
 
             var propertiesToBeSkiped = new List<Expression<Func<TEntity , object>>>
                                        {
-                                           new TSkippable().GetSkiped() , propertiesToBeExcluded
+                                           new TSkippable().GetSkipped() , propertiesToBeExcluded
                                        };
 
             foreach (var property in propertiesToBeSkiped.GetMemberAccess())
