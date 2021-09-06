@@ -19,31 +19,31 @@ namespace MBRepoCore.Repo.Abstractions
         /// Get All <b><see cref="TEntity"/></b> records, and load related selected entities records
         /// </summary>
         /// <typeparam name="TEntity">The entity to select from</typeparam>
-        /// <param name="relatedEntitiesToBeLoaded">Entities to be load data from (Should be the <see cref="TEntity"/>'s navigation properties)</param>
-        List<TEntity> Get<TEntity>(params Expression<Func<TEntity, object>>[] relatedEntitiesToBeLoaded) where TEntity : class;
+        /// <param name="andLoad">Entities to be load data from (Should be the <see cref="TEntity"/>'s navigation properties)</param>
+        List<TEntity> Get<TEntity>(params Expression<Func<TEntity, object>>[] andLoad) where TEntity : class;
 
         /// <summary>
         /// Get All <b><see cref="TEntity"/></b> records that respects a set of conditions provided in the filter expression
         /// </summary>
         /// <typeparam name="TEntity">The entity to select from</typeparam>
-        /// <param name="filterExpression">One or set of conditions to be respected</param>
-        List<TEntity> Get<TEntity>(Expression<Func<TEntity, bool>> filterExpression) where TEntity : class;
+        /// <param name="where">One or set of conditions to be respected</param>
+        List<TEntity> Get<TEntity>(Expression<Func<TEntity, bool>> @where) where TEntity : class;
 
         /// <summary>
         /// Get All <b><see cref="TEntity"/></b> records that respects a set of conditions provided in the filter expression and load related selected entities records
         /// </summary>
         /// <typeparam name="TEntity">The entity to select from</typeparam>
-        /// <param name="filterExpression">One or set of conditions to be respected</param>
-        /// <param name="relatedEntitiesToBeLoaded">Entities to be load data from (Should be the <see cref="TEntity"/>'s navigation properties)</param>
-        List<TEntity> Get<TEntity>(Expression<Func<TEntity, bool>> filterExpression, params Expression<Func<TEntity, object>>[] relatedEntitiesToBeLoaded) where TEntity : class;
+        /// <param name="where">One or set of conditions to be respected</param>
+        /// <param name="andLoad">Entities to be load data from (Should be the <see cref="TEntity"/>'s navigation properties)</param>
+        List<TEntity> Get<TEntity>(Expression<Func<TEntity, bool>> @where, params Expression<Func<TEntity, object>>[] andLoad) where TEntity : class;
 
         /// <summary>
         /// Get one <b><see cref="TEntity"/></b> record and load related selected entities
         /// </summary>
         /// <typeparam name="TEntity">The entity to select from</typeparam>
         /// <param name="pkValue">Primary key value</param>
-        /// <param name="relatedEntitiesToBeLoaded">Entities to be loaded (Should be the <see cref="TEntity"/>'s navigation properties)</param>
-        TEntity GetById<TEntity>(object pkValue, params Expression<Func<TEntity, object>>[] relatedEntitiesToBeLoaded) where TEntity : class;
+        /// <param name="andLoad">Entities to be loaded (Should be the <see cref="TEntity"/>'s navigation properties)</param>
+        TEntity GetById<TEntity>(object pkValue, params Expression<Func<TEntity, object>>[] andLoad) where TEntity : class;
 
         #endregion
 
@@ -53,17 +53,17 @@ namespace MBRepoCore.Repo.Abstractions
         /// Update many <b><see cref="TEntity"/></b> records
         /// </summary>
         /// <typeparam name="TEntity">Entity to update in</typeparam>
-        /// <param name="filterExpression">The filter expression</param>
-        /// <param name="updateAction">The update action</param>
-        void Update<TEntity>(Expression<Func<TEntity, bool>> filterExpression, Action<TEntity> updateAction) where TEntity : class;
+        /// <param name="where">The filter expression</param>
+        /// <param name="do">The update action</param>
+        void Update<TEntity>(Expression<Func<TEntity, bool>> @where, Action<TEntity> @do) where TEntity : class;
 
         /// <summary>
         /// Update one <b><see cref="TEntity"/></b> record, except selected properties
         /// </summary>
         /// <typeparam name="TEntity">Entity to update in</typeparam>
         /// <param name="record"><b><see cref="TEntity"/></b> record to be updated</param>
-        /// <param name="propertiesToBeSkipped"><b><see cref="record"/></b>'s properties to be excluded/skipped from update</param>
-        void UpdateExcept<TEntity>(TEntity record, Expression<Func<TEntity, object>> propertiesToBeSkipped) where TEntity : class;
+        /// <param name="andSkip"><b><see cref="record"/></b>'s properties to be excluded/skipped from update</param>
+        void UpdateExcept<TEntity>(TEntity record, Expression<Func<TEntity, object>> andSkip) where TEntity : class;
 
         /// <summary>
         /// Update one <b><see cref="TEntity"/></b> record, except selected properties from an <see cref="ISkippable{T}"/> implementation
@@ -79,8 +79,8 @@ namespace MBRepoCore.Repo.Abstractions
         /// <typeparam name="TEntity">Entity to update in</typeparam>
         /// <typeparam name="TSkippable">An <see cref="ISkippable{T}"/> implementation</typeparam>
         /// <param name="record"><b><see cref="TEntity"/></b> record to be updated</param>
-        /// <param name="otherPropertiesToBeSkipped">Additional <b><see cref="record"/></b>'s properties to be excluded from update</param>
-        void UpdateExcept<TEntity, TSkippable>(TEntity record, Expression<Func<TEntity, object>> otherPropertiesToBeSkipped) where TSkippable : ISkippable<TEntity>, new() where TEntity : class;
+        /// <param name="andSkip">Additional <b><see cref="record"/></b>'s properties to be excluded from update</param>
+        void UpdateExcept<TEntity, TSkippable>(TEntity record, Expression<Func<TEntity, object>> andSkip) where TSkippable : ISkippable<TEntity>, new() where TEntity : class;
 
         #endregion
 
@@ -121,9 +121,9 @@ namespace MBRepoCore.Repo.Abstractions
         /// Check if a <b><see cref="TEntity"/></b> object matched with the <see cref="Expression{TDelegate}"/> expression is exist
         /// </summary>
         /// <typeparam name="TEntity">The entity to be checked</typeparam>
-        /// <param name="selectExpression">Selection expression</param>
+        /// <param name="where">Selection expression</param>
         /// <returns><see cref="bool"/></returns>
-        bool IsExist<TEntity>(Expression<Func<TEntity, bool>> selectExpression) where TEntity : class;
+        bool IsExist<TEntity>(Expression<Func<TEntity, bool>> @where) where TEntity : class;
 
         #endregion
 
@@ -146,54 +146,54 @@ namespace MBRepoCore.Repo.Abstractions
         /// Get a list of <b><typeparamref name="TProperty"/></b> from a <b><typeparamref name="TEntity"/></b>
         /// </summary>
         /// <typeparam name="TEntity">The entity to select from</typeparam>
-        /// <typeparam name="TProperty">Type of <paramref name="propertyToBeSelected"/></typeparam>
-        /// <param name="propertyToBeSelected">The <typeparamref name="TEntity"/> property to be selected</param>
-        List<TProperty> GetPartial<TEntity, TProperty>(Expression<Func<TEntity, object>> propertyToBeSelected) where TEntity : class;
+        /// <typeparam name="TProperty">Type of <paramref name="select"/></typeparam>
+        /// <param name="select">The <typeparamref name="TEntity"/> property to be selected</param>
+        List<TProperty> GetPartial<TEntity, TProperty>(Expression<Func<TEntity, object>> @select) where TEntity : class;
 
         /// <summary>
         /// Get a list of <b><typeparamref name="TProperty"/></b> from a <b><typeparamref name="TEntity"/></b> with filtering
         /// </summary>
         /// <typeparam name="TEntity">The entity to select from</typeparam>
-        /// <typeparam name="TProperty">Type of <paramref name="propertyToBeSelected"/></typeparam>
-        /// <param name="propertyToBeSelected">The <typeparamref name="TEntity"/> property to be selected</param>
-        /// <param name="filterExpression">One or set of conditions to filter by</param>
-        List<TProperty> GetPartial<TEntity, TProperty>(Expression<Func<TEntity, object>> propertyToBeSelected, Expression<Func<TEntity, bool>> filterExpression) where TEntity : class;
+        /// <typeparam name="TProperty">Type of <paramref name="select"/></typeparam>
+        /// <param name="select">The <typeparamref name="TEntity"/> property to be selected</param>
+        /// <param name="where">One or set of conditions to filter by</param>
+        List<TProperty> GetPartial<TEntity, TProperty>(Expression<Func<TEntity, object>> @select, Expression<Func<TEntity, bool>> @where) where TEntity : class;
 
 
         /// <summary>
         /// Get a list of <b><see cref="object"/>s</b> with a custom properties from a <b><typeparamref name="TEntity"/></b>
         /// </summary>
         /// <typeparam name="TEntity">The entity to select from</typeparam>
-        /// <param name="propertiesToBeSelected">The <typeparamref name="TEntity"/> properties to be selected</param>
+        /// <param name="select">The <typeparamref name="TEntity"/> properties to be selected</param>
         /// <returns><see cref="IEnumerable{object}"/></returns>
-        List<object> GetPartial<TEntity>(Func<TEntity, object> propertiesToBeSelected) where TEntity : class;
+        List<object> GetPartial<TEntity>(Func<TEntity, object> @select) where TEntity : class;
 
         /// <summary>
         /// Get a list of <b><see cref="object"/>s</b> with a custom properties from a <b><typeparamref name="TEntity"/></b> with filtering
         /// </summary>
         /// <typeparam name="TEntity">The entity to select from</typeparam>
-        /// <param name="propertiesToBeSelected">The <typeparamref name="TEntity"/> properties to be selected</param>
-        /// <param name="filterExpression">One or set of conditions to filter by</param>
+        /// <param name="select">The <typeparamref name="TEntity"/> properties to be selected</param>
+        /// <param name="where">One or set of conditions to filter by</param>
         /// <returns><see cref="IEnumerable{object}"/></returns>
-        List<object> GetPartial<TEntity>(Func<TEntity, object> propertiesToBeSelected, Expression<Func<TEntity, bool>> filterExpression) where TEntity : class;
+        List<object> GetPartial<TEntity>(Func<TEntity, object> @select, Expression<Func<TEntity, bool>> @where) where TEntity : class;
 
 
         /// <summary>
         /// Get a list of <b><see cref="TEntity"/></b> objects with a custom properties
         /// </summary>
         /// <typeparam name="TEntity">The entity to select from</typeparam>
-        /// <param name="propertiesToBeSelected">The <typeparamref name="TEntity"/> properties to be selected</param>
+        /// <param name="select">The <typeparamref name="TEntity"/> properties to be selected</param>
         /// <returns><see cref="IEnumerable{TEntity}"/></returns>
-        List<TEntity> GetPartial<TEntity>(Func<TEntity, TEntity> propertiesToBeSelected) where TEntity : class;
+        List<TEntity> GetPartial<TEntity>(Func<TEntity, TEntity> @select) where TEntity : class;
 
         /// <summary>
         /// Get a list of <b><see cref="TEntity"/></b> objects with a custom properties and filtering
         /// </summary>
         /// <typeparam name="TEntity">The entity to select from</typeparam>
-        /// <param name="propertiesToBeSelected">The <typeparamref name="TEntity"/> properties to be selected</param>
-        /// <param name="filterExpression">One or set of conditions to filter by</param>
+        /// <param name="select">The <typeparamref name="TEntity"/> properties to be selected</param>
+        /// <param name="where">One or set of conditions to filter by</param>
         /// <returns><see cref="IEnumerable{TEntity}"/></returns>
-        List<TEntity> GetPartial<TEntity>(Func<TEntity, TEntity> propertiesToBeSelected, Expression<Func<TEntity, bool>> filterExpression) where TEntity : class;
+        List<TEntity> GetPartial<TEntity>(Func<TEntity, TEntity> @select, Expression<Func<TEntity, bool>> @where) where TEntity : class;
 
         #endregion
 
@@ -204,10 +204,10 @@ namespace MBRepoCore.Repo.Abstractions
         /// </summary>
         /// <typeparam name="TEntity">The entity to select from</typeparam>
         /// <typeparam name="TNotIn">Entity that <b><typeparam name="TEntity"></b> records not in</typeparam>
-        /// <param name="PropertyToBeChecked"><b><typeparam name="TEntity"></b> property to be checked</param>
-        /// <param name="propertyToLookIn"><b><typeparamref name="TNotIn"/></b> property/column to look in</param>
+        /// <param name="check"><b><typeparam name="TEntity"></b> property to be checked</param>
+        /// <param name="ifNotIn"><b><typeparamref name="TNotIn"/></b> property/column to look in</param>
         /// <returns><see cref="List{T}"/></returns>
-        List<TEntity> GetWhereNotIn<TEntity, TNotIn>(Expression<Func<TEntity, object>> PropertyToBeChecked, Func<TNotIn, object> propertyToLookIn) where TEntity : class where TNotIn : class;
+        List<TEntity> GetWhereNotIn<TEntity, TNotIn>(Expression<Func<TEntity, object>> check, Func<TNotIn, object> ifNotIn) where TEntity : class where TNotIn : class;
 
 
         /// <summary>
@@ -215,34 +215,34 @@ namespace MBRepoCore.Repo.Abstractions
         /// </summary>
         ///  <typeparam name="TEntity">The entity to select from</typeparam>
         /// <typeparam name="TNotIn">Entity that <b><typeparam name="TEntity"></b> records not in</typeparam>
-        /// <param name="PropertyToBeChecked"><b><typeparam name="TEntity"></b> property to be checked</param>
-        /// <param name="propertyToLookIn"><b><typeparamref name="TNotIn"/></b> property/column to look in</param>
-        /// <param name="tEntityFilter">One or set of conditions to be applied on <b><typeparam name="TEntity"></b></param>
+        /// <param name="check"><b><typeparam name="TEntity"></b> property to be checked</param>
+        /// <param name="ifNotIn"><b><typeparamref name="TNotIn"/></b> property/column to look in</param>
+        /// <param name="where">One or set of conditions to be applied on <b><typeparam name="TEntity"></b></param>
         /// <returns><see cref="List{T}"/></returns>
-        List<TEntity> GetWhereNotIn<TEntity, TNotIn>(Expression<Func<TEntity, object>> PropertyToBeChecked, Func<TNotIn, object> propertyToLookIn, Func<TEntity, bool> tEntityFilter) where TEntity : class where TNotIn : class;
+        List<TEntity> GetWhereNotIn<TEntity, TNotIn>(Expression<Func<TEntity, object>> check, Func<TNotIn, object> ifNotIn, Func<TEntity, bool> @where) where TEntity : class where TNotIn : class;
 
         /// <summary>
         ///  Get <b><typeparam name="TEntity"></b> records who's not in <b><typeparamref name="TNotIn"/></b> with filtering
         /// </summary>
         ///  <typeparam name="TEntity">The entity to select from</typeparam>
         /// <typeparam name="TNotIn">Entity that <b><typeparam name="TEntity"></b> records not in</typeparam>
-        /// <param name="PropertyToBeChecked"><b><typeparam name="TEntity"></b> property to be checked</param>
-        /// <param name="propertyToLookIn"><b><typeparamref name="TNotIn"/></b> property/column to look in</param>
-        /// <param name="tNotInFilter">One or set of conditions to be applied on <b><typeparamref name="TNotIn"/></b></param>
+        /// <param name="check"><b><typeparam name="TEntity"></b> property to be checked</param>
+        /// <param name="ifNotIn"><b><typeparamref name="TNotIn"/></b> property/column to look in</param>
+        /// <param name="where">One or set of conditions to be applied on <b><typeparamref name="TNotIn"/></b></param>
         /// <returns><see cref="List{T}"/></returns>
-        List<TEntity> GetWhereNotIn<TEntity, TNotIn>(Expression<Func<TEntity, object>> PropertyToBeChecked, Func<TNotIn, object> propertyToLookIn, Func<TNotIn, bool> tNotInFilter) where TEntity : class where TNotIn : class;
+        List<TEntity> GetWhereNotIn<TEntity, TNotIn>(Expression<Func<TEntity, object>> check, Func<TNotIn, object> ifNotIn, Func<TNotIn, bool> @where) where TEntity : class where TNotIn : class;
 
         /// <summary>
         /// Get <b><typeparam name="TEntity"></b> records who's not in <b><typeparamref name="TNotIn"/></b> with filtering
         /// </summary>
         /// <typeparam name="TEntity">The entity to select from</typeparam>
         /// <typeparam name="TNotIn">Entity that <b><typeparam name="TEntity"></b> records not in</typeparam>
-        /// <param name="PropertyToBeChecked"><b><typeparam name="TEntity"></b> property to be checked</param>
-        /// <param name="propertyToLookIn"><b><typeparamref name="TNotIn"/></b> property/column to look in</param>
-        /// <param name="tEntityFilter">One or set of conditions to be applied on <b><typeparam name="TEntity"></b></param>
-        /// <param name="tNotInFilter">One or set of conditions to be applied on <b><typeparamref name="TNotIn"/></b></param>
+        /// <param name="check"><b><typeparam name="TEntity"></b> property to be checked</param>
+        /// <param name="ifNotIn"><b><typeparamref name="TNotIn"/></b> property/column to look in</param>
+        /// <param name="where">One or set of conditions to be applied on <b><typeparam name="TEntity"></b></param>
+        /// <param name="andWhere">One or set of conditions to be applied on <b><typeparamref name="TNotIn"/></b></param>
         /// <returns><see cref="List{T}"/></returns>
-        List<TEntity> GetWhereNotIn<TEntity, TNotIn>(Expression<Func<TEntity, object>> PropertyToBeChecked, Func<TNotIn, object> propertyToLookIn, Func<TEntity, bool> tEntityFilter, Func<TNotIn, bool> tNotInFilter) where TEntity : class where TNotIn : class;
+        List<TEntity> GetWhereNotIn<TEntity, TNotIn>(Expression<Func<TEntity, object>> check, Func<TNotIn, object> ifNotIn, Func<TEntity, bool> @where, Func<TNotIn, bool> andWhere) where TEntity : class where TNotIn : class;
 
         #endregion
 
@@ -261,30 +261,29 @@ namespace MBRepoCore.Repo.Abstractions
         /// <summary>
         /// Get All <b><see cref="TEntity"/></b> records, and load related selected entities records
         /// </summary>
-        /// <param name="relatedEntitiesToBeLoaded">Entities to be load data from (Should be the <see cref="TEntity"/>'s navigation properties)</param>
-        List<TEntity> Get(params Expression<Func<TEntity, object>>[] relatedEntitiesToBeLoaded);
+        /// <param name="andLoad">Entities to be load data from (Should be the <see cref="TEntity"/>'s navigation properties)</param>
+        List<TEntity> Get(params Expression<Func<TEntity, object>>[] andLoad);
 
         /// <summary>
         /// Get All <b><see cref="TEntity"/></b> records that respects a set of conditions provided in the filter expression
         /// </summary>
         /// <typeparam name="TEntity">The entity to select from</typeparam>
-        /// <param name="filterExpression">One or set of conditions to be respected</param>
-        List<TEntity> Get(Expression<Func<TEntity, bool>> filterExpression);
+        /// <param name="where">One or set of conditions to be respected</param>
+        List<TEntity> Get(Expression<Func<TEntity, bool>> @where);
 
         /// <summary>
         /// Get All <b><see cref="TEntity"/></b> records that respects a set of conditions provided in the filter expression and load related selected entities records
         /// </summary>
-        /// <param name="filterExpression">One or set of conditions to be respected</param>
-        /// <param name="relatedEntitiesToBeLoaded">Entities to be loaded (Should be the <see cref="TEntity"/>'s navigation properties)</param>
-        List<TEntity> Get(Expression<Func<TEntity, bool>>            filterExpression,
-                              params Expression<Func<TEntity, object>>[] relatedEntitiesToBeLoaded);
+        /// <param name="where">One or set of conditions to be respected</param>
+        /// <param name="andLoad">Entities to be loaded (Should be the <see cref="TEntity"/>'s navigation properties)</param>
+        List<TEntity> Get( Expression<Func<TEntity , bool>> @where , params Expression<Func<TEntity , object>>[] andLoad );
 
         /// <summary>
         /// Get one <b><see cref="TEntity"/></b> record and load related selected entities
         /// </summary>
         /// <param name="pkValue">Primary key value</param>
-        /// <param name="relatedEntitiesToBeLoaded">Entities to be loaded (Should be the <see cref="TEntity"/>'s navigation properties)</param>
-        TEntity GetById(object pkValue,params Expression<Func<TEntity, object>>[] relatedEntitiesToBeLoaded);
+        /// <param name="andLoad">Entities to be loaded (Should be the <see cref="TEntity"/>'s navigation properties)</param>
+        TEntity GetById(object pkValue,params Expression<Func<TEntity, object>>[] andLoad);
 
         #endregion
 
@@ -293,16 +292,16 @@ namespace MBRepoCore.Repo.Abstractions
         /// <summary>
         /// Update many <b><see cref="TEntity"/></b> records
         /// </summary>
-        /// <param name="filterExpression">The filter expression</param>
-        /// <param name="updateAction">The update action</param>
-        void Update( Expression<Func<TEntity , bool>> filterExpression , Action<TEntity> updateAction );
+        /// <param name="where">The filter expression</param>
+        /// <param name="do">The update action</param>
+        void Update( Expression<Func<TEntity , bool>> @where , Action<TEntity> @do );
 
         /// <summary>
         /// Update one <b><see cref="TEntity"/></b> record, except selected properties
         /// </summary>
         /// <param name="record"><b><see cref="TEntity"/></b> record to be updated</param>
-        /// <param name="propertiesToBeSkipped"><b><see cref="record"/></b>'s properties to be excluded from update</param>
-        void UpdateExcept( TEntity record , Expression<Func<TEntity , object>> propertiesToBeSkipped );
+        /// <param name="andSkip"><b><see cref="record"/></b>'s properties to be excluded from update</param>
+        void UpdateExcept( TEntity record , Expression<Func<TEntity , object>> andSkip );
 
         /// <summary>
         /// Update one <b><see cref="TEntity"/></b> record, except selected properties from an <see cref="ISkippable{T}"/> implementation
@@ -316,8 +315,8 @@ namespace MBRepoCore.Repo.Abstractions
         /// </summary>
         /// <typeparam name="TSkippable">An <see cref="ISkippable{T}"/> implementation</typeparam>
         /// <param name="record"><b><see cref="TEntity"/></b> record to be updated</param>
-        /// <param name="otherPropertiesToBeSkipped">Additional <b><see cref="record"/></b>'s properties to be excluded/skipped from update</param>
-        void UpdateExcept<TSkippable>( TEntity record , Expression<Func<TEntity , object>> otherPropertiesToBeSkipped ) where TSkippable : ISkippable<TEntity> , new();
+        /// <param name="andSkip">Additional <b><see cref="record"/></b>'s properties to be excluded/skipped from update</param>
+        void UpdateExcept<TSkippable>( TEntity record , Expression<Func<TEntity , object>> andSkip ) where TSkippable : ISkippable<TEntity> , new();
 
         #endregion
 
@@ -334,8 +333,7 @@ namespace MBRepoCore.Repo.Abstractions
         /// </summary>
         /// <param name="filterExpression">The <b><see cref="Expression"/></b> filter</param>
         /// <param name="orderingFunc">The <b><see cref="IOrderedQueryable"/></b> ordering expression</param>
-        List<TEntity> FilterAndOrder(Expression<Func<TEntity, bool>>                       filterExpression,
-                                     Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderingFunc);
+        List<TEntity> FilterAndOrder(Expression<Func<TEntity, bool>> filterExpression, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderingFunc);
 
         #endregion
 
@@ -351,9 +349,9 @@ namespace MBRepoCore.Repo.Abstractions
         /// <summary>
         /// Check if a <b><see cref="TEntity"/></b> object matched with the <see cref="Expression{TDelegate}"/> expression is exist
         /// </summary>
-        /// <param name="selectExpression">Selection expression</param>
+        /// <param name="where">Selection expression</param>
         /// <returns><see cref="bool"/></returns>
-        bool IsExist( Expression<Func<TEntity , bool>> selectExpression );
+        bool IsExist( Expression<Func<TEntity , bool>> @where );
 
         #endregion
 
@@ -374,49 +372,49 @@ namespace MBRepoCore.Repo.Abstractions
         /// <summary>
         /// Get a list of <b><typeparamref name="TProperty"/></b> from a <b><typeparamref name="TEntity"/></b>
         /// </summary>
-        /// <typeparam name="TProperty">Type of <paramref name="propertyToBeSelected"/></typeparam>
-        /// <param name="propertyToBeSelected">The <typeparamref name="TEntity"/> property to be selected</param>
-        List<TProperty> GetPartial<TProperty>(Expression<Func<TEntity, object>> propertyToBeSelected);
+        /// <typeparam name="TProperty">Type of <paramref name="select"/></typeparam>
+        /// <param name="select">The <typeparamref name="TEntity"/> property to be selected</param>
+        List<TProperty> GetPartial<TProperty>(Expression<Func<TEntity, object>> @select);
 
         /// <summary>
         /// Get a list of <b><typeparamref name="TProperty"/></b> from a <b><typeparamref name="TEntity"/></b> with filtering
         /// </summary>
-        /// <typeparam name="TProperty">Type of <paramref name="propertyToBeSelected"/></typeparam>
-        /// <param name="propertyToBeSelected">The <typeparamref name="TEntity"/> property to be selected</param>
-        /// <param name="filterExpression">One or set of conditions to filter by</param>
-        List<TProperty> GetPartial<TProperty>(Expression<Func<TEntity, object>> propertyToBeSelected, Expression<Func<TEntity, bool>> filterExpression);
+        /// <typeparam name="TProperty">Type of <paramref name="select"/></typeparam>
+        /// <param name="select">The <typeparamref name="TEntity"/> property to be selected</param>
+        /// <param name="where">One or set of conditions to filter by</param>
+        List<TProperty> GetPartial<TProperty>(Expression<Func<TEntity, object>> @select, Expression<Func<TEntity, bool>> @where);
 
 
         /// <summary>
         /// Get a list of <b><see cref="object"/>s</b> with a custom properties from a <b><typeparamref name="TEntity"/></b>
         /// </summary>
-        /// <param name="propertiesToBeSelected">The <typeparamref name="TEntity"/> properties to be selected</param>
+        /// <param name="select">The <typeparamref name="TEntity"/> properties to be selected</param>
         /// <returns><see cref="IEnumerable{object}"/></returns>
-        List<object> GetPartial( Func<TEntity, object> propertiesToBeSelected);
+        List<object> GetPartial( Func<TEntity, object> @select);
 
         /// <summary>
         /// Get a list of <b><see cref="object"/>s</b> with a custom properties from a <b><typeparamref name="TEntity"/></b> with filtering
         /// </summary>
-        /// <param name="propertiesToBeSelected">The <typeparamref name="TEntity"/> properties to be selected</param>
-        /// <param name="filterExpression">One or set of conditions to filter by</param>
+        /// <param name="select">The <typeparamref name="TEntity"/> properties to be selected</param>
+        /// <param name="where">One or set of conditions to filter by</param>
         /// <returns><see cref="IEnumerable{object}"/></returns>
-        List<object> GetPartial( Func<TEntity, object> propertiesToBeSelected, Expression<Func<TEntity, bool>> filterExpression);
+        List<object> GetPartial( Func<TEntity, object> @select, Expression<Func<TEntity, bool>> @where);
 
 
         /// <summary>
         /// Get a list of <b><see cref="TEntity"/></b> objects with a custom properties
         /// </summary>
-        /// <param name="propertiesToBeSelected">The <typeparamref name="TEntity"/> properties to be selected</param>
+        /// <param name="select">The <typeparamref name="TEntity"/> properties to be selected</param>
         /// <returns><see cref="IEnumerable{TEntity}"/></returns>
-        List<TEntity> GetPartial( Func<TEntity, TEntity> propertiesToBeSelected);
+        List<TEntity> GetPartial( Func<TEntity, TEntity> @select);
 
         /// <summary>
         /// Get a list of <b><see cref="TEntity"/></b> objects with a custom properties and filtering
         /// </summary>
-        /// <param name="propertiesToBeSelected">The <typeparamref name="TEntity"/> properties to be selected</param>
-        /// <param name="filterExpression">One or set of conditions to filter by</param>
+        /// <param name="select">The <typeparamref name="TEntity"/> properties to be selected</param>
+        /// <param name="where">One or set of conditions to filter by</param>
         /// <returns><see cref="IEnumerable{TEntity}"/></returns>
-        List<TEntity> GetPartial( Func<TEntity, TEntity> propertiesToBeSelected, Expression<Func<TEntity, bool>> filterExpression);
+        List<TEntity> GetPartial( Func<TEntity, TEntity> @select, Expression<Func<TEntity, bool>> @where);
 
         #endregion
 
@@ -426,42 +424,42 @@ namespace MBRepoCore.Repo.Abstractions
         ///  Get <b><see cref="TEntity"/></b> records who's not in <b><typeparamref name="TNotIn"/></b>
         /// </summary>
         /// <typeparam name="TNotIn">Entity that <b><see cref="TEntity"/></b> records not in</typeparam>
-        /// <param name="PropertyToBeChecked"><b><see cref="TEntity"/></b> property to be checked</param>
-        /// <param name="propertyToLookIn"><b><typeparamref name="TNotIn"/></b> property/column to look in</param>
+        /// <param name="check"><b><see cref="TEntity"/></b> property to be checked</param>
+        /// <param name="ifNotIn"><b><typeparamref name="TNotIn"/></b> property/column to look in</param>
         /// <returns><see cref="List{T}"/></returns>
-        List<TEntity> GetWhereNotIn<TNotIn>(Expression<Func<TEntity, object>> PropertyToBeChecked, Func<TNotIn, object> propertyToLookIn) where TNotIn : class;
+        List<TEntity> GetWhereNotIn<TNotIn>(Expression<Func<TEntity, object>> check, Func<TNotIn, object> ifNotIn) where TNotIn : class;
 
 
         /// <summary>
         ///  Get <b><see cref="TEntity"/></b> records who's not in <b><typeparamref name="TNotIn"/></b> with filtering
         /// </summary>
         /// <typeparam name="TNotIn">Entity that <b><see cref="TEntity"/></b> records not in</typeparam>
-        /// <param name="PropertyToBeChecked"><b><see cref="TEntity"/></b> property to be checked</param>
-        /// <param name="propertyToLookIn"><b><typeparamref name="TNotIn"/></b> property/column to look in</param>
-        /// <param name="tEntityFilter">One or set of conditions to be applied on <b><see cref="TEntity"/></b></param>
+        /// <param name="check"><b><see cref="TEntity"/></b> property to be checked</param>
+        /// <param name="ifNotIn"><b><typeparamref name="TNotIn"/></b> property/column to look in</param>
+        /// <param name="where">One or set of conditions to be applied on <b><see cref="TEntity"/></b></param>
         /// <returns><see cref="List{T}"/></returns>
-        List<TEntity> GetWhereNotIn<TNotIn>(Expression<Func<TEntity, object>> PropertyToBeChecked, Func<TNotIn, object> propertyToLookIn, Func<TEntity, bool> tEntityFilter) where TNotIn : class;
+        List<TEntity> GetWhereNotIn<TNotIn>(Expression<Func<TEntity, object>> check, Func<TNotIn, object> ifNotIn, Func<TEntity, bool> @where) where TNotIn : class;
         
         /// <summary>
         ///  Get <b><see cref="TEntity"/></b> records who's not in <b><typeparamref name="TNotIn"/></b> with filtering
         /// </summary>
         /// <typeparam name="TNotIn">Entity that <b><see cref="TEntity"/></b> records not in</typeparam>
-        /// <param name="PropertyToBeChecked"><b><see cref="TEntity"/></b> property to be checked</param>
-        /// <param name="propertyToLookIn"><b><typeparamref name="TNotIn"/></b> property/column to look in</param>
-        /// <param name="tNotInFilter">One or set of conditions to be applied on <b><typeparamref name="TNotIn"/></b></param>
+        /// <param name="check"><b><see cref="TEntity"/></b> property to be checked</param>
+        /// <param name="ifNotIn"><b><typeparamref name="TNotIn"/></b> property/column to look in</param>
+        /// <param name="where">One or set of conditions to be applied on <b><typeparamref name="TNotIn"/></b></param>
         /// <returns><see cref="List{T}"/></returns>
-        List<TEntity> GetWhereNotIn<TNotIn>(Expression<Func<TEntity, object>> PropertyToBeChecked, Func<TNotIn, object> propertyToLookIn, Func<TNotIn, bool> tNotInFilter) where TNotIn : class;
+        List<TEntity> GetWhereNotIn<TNotIn>(Expression<Func<TEntity, object>> check, Func<TNotIn, object> ifNotIn, Func<TNotIn, bool> @where) where TNotIn : class;
 
         /// <summary>
         ///  Get <b><see cref="TEntity"/></b> records who's not in <b><typeparamref name="TNotIn"/></b> with filtering
         /// </summary>
         /// <typeparam name="TNotIn">Entity that <b><see cref="TEntity"/></b> records not in</typeparam>
-        /// <param name="PropertyToBeChecked"><b><see cref="TEntity"/></b> property to be checked</param>
-        /// <param name="propertyToLookIn"><b><typeparamref name="TNotIn"/></b> property/column to look in</param>
-        /// <param name="tEntityFilter">One or set of conditions to be applied on <b><see cref="TEntity"/></b></param>
-        /// <param name="tNotInFilter">One or set of conditions to be applied on <b><typeparamref name="TNotIn"/></b></param>
+        /// <param name="check"><b><see cref="TEntity"/></b> property to be checked</param>
+        /// <param name="ifNotIn"><b><typeparamref name="TNotIn"/></b> property/column to look in</param>
+        /// <param name="where">One or set of conditions to be applied on <b><see cref="TEntity"/></b></param>
+        /// <param name="andWhere">One or set of conditions to be applied on <b><typeparamref name="TNotIn"/></b></param>
         /// <returns><see cref="List{T}"/></returns>
-        List<TEntity> GetWhereNotIn<TNotIn>(Expression<Func<TEntity, object>> PropertyToBeChecked, Func<TNotIn, object> propertyToLookIn, Func<TEntity, bool> tEntityFilter, Func<TNotIn, bool> tNotInFilter) where TNotIn : class;
+        List<TEntity> GetWhereNotIn<TNotIn>(Expression<Func<TEntity, object>> check, Func<TNotIn, object> ifNotIn, Func<TEntity, bool> @where, Func<TNotIn, bool> andWhere) where TNotIn : class;
 
         #endregion
 
@@ -471,42 +469,42 @@ namespace MBRepoCore.Repo.Abstractions
         ///  Get <b><see cref="TEntity"/></b> records who's in <b><typeparamref name="Tin"/></b>
         /// </summary>
         /// <typeparam name="Tin">Entity to look in</typeparam>
-        /// <param name="propertyToBeChecked"><b><see cref="TEntity"/></b> property to be checked</param>
-        /// <param name="propertyToLookIn"><b><typeparamref name="Tin"/></b> property/column to look in</param>
+        /// <param name="check"><b><see cref="TEntity"/></b> property to be checked</param>
+        /// <param name="ifIn"><b><typeparamref name="Tin"/></b> property/column to look in</param>
         /// <returns><see cref="List{T}"/></returns>
-        List<TEntity> GetWhereIn<Tin>( Expression<Func<TEntity, object>> propertyToBeChecked, Func<Tin, object> propertyToLookIn) where Tin : class;
+        List<TEntity> GetWhereIn<Tin>( Expression<Func<TEntity, object>> check, Func<Tin, object> ifIn) where Tin : class;
 
 
         /// <summary>
         ///  Get <b><see cref="TEntity"/></b> records who's in <b><typeparamref name="Tin"/></b> with filtering
         /// </summary>
         /// <typeparam name="Tin">Entity to look in</typeparam>
-        /// <param name="propertyToBeChecked"><b><see cref="TEntity"/></b> property to be checked</param>
-        /// <param name="propertyToLookIn"><b><typeparamref name="Tin"/></b> property/column to look in</param>
-        /// <param name="tEntityFilter">One or set of conditions to be applied on <b><see cref="TEntity"/></b></param>
+        /// <param name="check"><b><see cref="TEntity"/></b> property to be checked</param>
+        /// <param name="ifIn"><b><typeparamref name="Tin"/></b> property/column to look in</param>
+        /// <param name="where">One or set of conditions to be applied on <b><see cref="TEntity"/></b></param>
         /// <returns><see cref="List{T}"/></returns>
-        List<TEntity> GetWhereIn<Tin>(Expression<Func<TEntity, object>> propertyToBeChecked, Func<Tin, object> propertyToLookIn, Func<TEntity, bool> tEntityFilter) where Tin : class;
+        List<TEntity> GetWhereIn<Tin>(Expression<Func<TEntity, object>> check, Func<Tin, object> ifIn, Func<TEntity, bool> @where) where Tin : class;
 
         /// <summary>
         ///  Get <b><see cref="TEntity"/></b> records who's in <b><typeparamref name="Tin"/></b> with filtering
         /// </summary>
         /// <typeparam name="Tin">Entity to look in</typeparam>
-        /// <param name="propertyToBeChecked"><b><see cref="TEntity"/></b> property to be checked</param>
-        /// <param name="propertyToLookIn"><b><typeparamref name="Tin"/></b> property/column to look in</param>
-        /// <param name="tInFilter">One or set of conditions to be applied on <b><typeparamref name="Tin"/></b></param>
+        /// <param name="check"><b><see cref="TEntity"/></b> property to be checked</param>
+        /// <param name="ifIn"><b><typeparamref name="Tin"/></b> property/column to look in</param>
+        /// <param name="where">One or set of conditions to be applied on <b><typeparamref name="Tin"/></b></param>
         /// <returns><see cref="List{T}"/></returns>
-        List<TEntity> GetWhereIn<Tin>(Expression<Func<TEntity, object>> propertyToBeChecked, Func<Tin, object> propertyToLookIn, Func<Tin, bool> tInFilter) where Tin : class;
+        List<TEntity> GetWhereIn<Tin>(Expression<Func<TEntity, object>> check, Func<Tin, object> ifIn, Func<Tin, bool> @where) where Tin : class;
 
         /// <summary>
         ///  Get <b><see cref="TEntity"/></b> records who's in <b><typeparamref name="Tin"/></b> with filtering
         /// </summary>
         /// <typeparam name="Tin">Entity to look in</typeparam>
-        /// <param name="propertyToBeChecked"><b><see cref="TEntity"/></b> property to be checked</param>
-        /// <param name="propertyToLookIn"><b><typeparamref name="Tin"/></b> property/column to look in</param>
-        /// <param name="tEntityFilter">One or set of conditions to be applied on <b><typeparamref name="TEntity"/></b></param>
-        /// <param name="tInFilter">One or set of conditions to be applied on <b><typeparamref name="Tin"/></b></param>
+        /// <param name="check"><b><see cref="TEntity"/></b> property to be checked</param>
+        /// <param name="ifIn"><b><typeparamref name="Tin"/></b> property/column to look in</param>
+        /// <param name="where">One or set of conditions to be applied on <b><typeparamref name="TEntity"/></b></param>
+        /// <param name="andWhere">One or set of conditions to be applied on <b><typeparamref name="Tin"/></b></param>
         /// <returns><see cref="List{T}"/></returns>
-        List<TEntity> GetWhereIn<Tin>(Expression<Func<TEntity, object>> propertyToBeChecked, Func<Tin, object> propertyToLookIn, Func<TEntity, bool> tEntityFilter, Func<Tin, bool> tInFilter) where Tin : class;
+        List<TEntity> GetWhereIn<Tin>(Expression<Func<TEntity, object>> check, Func<Tin, object> ifIn, Func<TEntity, bool> @where, Func<Tin, bool> andWhere) where Tin : class;
 
         #endregion
 

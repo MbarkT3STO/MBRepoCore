@@ -19,14 +19,14 @@ namespace MBRepoCore.Repo.Abstractions
         /// </summary>
         /// <returns><see cref="Task{TResult}"/></returns>
         /// <inheritdoc cref="IAdvancedRepository.Get{TEntity}(System.Linq.Expressions.Expression{System.Func{TEntity,object}}[])"/>
-        Task<List<TEntity>> GetAsync<TEntity>(params Expression<Func<TEntity, object>>[] relatedEntitiesToBeLoaded) where TEntity : class;
+        Task<List<TEntity>> GetAsync<TEntity>(params Expression<Func<TEntity, object>>[] andLoad) where TEntity : class;
 
         /// <summary>
         /// Asynchronously, <inheritdoc cref="IAdvancedRepository.Get{TEntity}(System.Linq.Expressions.Expression{System.Func{TEntity,bool}})"/>
         /// </summary>
         /// <returns><see cref="Task{TResult}"/></returns>
         /// <inheritdoc cref="IAdvancedRepository.Get{TEntity}(System.Linq.Expressions.Expression{System.Func{TEntity,bool}})"/>
-        Task<List<TEntity>> GetAsync<TEntity>(Expression<Func<TEntity, bool>> filterExpression) where TEntity : class;
+        Task<List<TEntity>> GetAsync<TEntity>(Expression<Func<TEntity, bool>> @where) where TEntity : class;
 
         /// <summary>
         /// Asynchronously, <inheritdoc cref="IAdvancedRepository.Get{TEntity}(System.Linq.Expressions.Expression{System.Func{TEntity,bool}},System.Linq.Expressions.Expression{System.Func{TEntity,object}}[])"/>
@@ -34,14 +34,14 @@ namespace MBRepoCore.Repo.Abstractions
         /// <typeparam name="TEntity"></typeparam>
         /// <returns><see cref="Task{TResult}"/></returns>
         /// <inheritdoc cref="IAdvancedRepository.Get{TEntity}(System.Linq.Expressions.Expression{System.Func{TEntity,bool}},System.Linq.Expressions.Expression{System.Func{TEntity,object}}[])"/>
-        Task<List<TEntity>> GetAsync<TEntity>(Expression<Func<TEntity, bool>> filterExpression, params Expression<Func<TEntity, object>>[] relatedEntitiesToBeLoaded) where TEntity : class;
+        Task<List<TEntity>> GetAsync<TEntity>(Expression<Func<TEntity, bool>> @where, params Expression<Func<TEntity, object>>[] andLoad) where TEntity : class;
 
         /// <summary>
         /// Asynchronously, <inheritdoc cref="IAdvancedRepository.GetById{TEntity}"/>
         /// </summary>
         /// <returns><see cref="Task{TResult}"/></returns>
         /// <inheritdoc cref="IAdvancedRepository.GetById{TEntity}"/>
-        Task<TEntity> GetByIdAsync<TEntity>(object pkValue, params Expression<Func<TEntity, object>>[] relatedEntitiesToBeLoaded) where TEntity : class;
+        Task<TEntity> GetByIdAsync<TEntity>(object pkValue, params Expression<Func<TEntity, object>>[] andLoad) where TEntity : class;
 
         #endregion
 
@@ -52,14 +52,14 @@ namespace MBRepoCore.Repo.Abstractions
         /// </summary>
         /// <returns><see cref="Task"/></returns>
         /// <inheritdoc cref="IAdvancedRepository.Update{TEntity}"/>
-        Task UpdateAsync<TEntity>( Expression<Func<TEntity , bool>> filterExpression , Action<TEntity> updateAction ) where TEntity : class;
+        Task UpdateAsync<TEntity>( Expression<Func<TEntity , bool>> @where , Action<TEntity> @do ) where TEntity : class;
 
         /// <summary>
         /// Asynchronously, <inheritdoc cref="IAdvancedRepository.UpdateExcept{TEntity}(TEntity,System.Linq.Expressions.Expression{System.Func{TEntity,object}})"/>
         /// </summary>
         /// <returns><see cref="Task"/></returns>
         ///  <inheritdoc cref="IAdvancedRepository.UpdateExcept{TEntity}(TEntity,System.Linq.Expressions.Expression{System.Func{TEntity,object}})"/>
-        Task UpdateExceptAsync<TEntity>( TEntity record , Expression<Func<TEntity , object>> propertiesToBeSkipped ) where TEntity : class;
+        Task UpdateExceptAsync<TEntity>( TEntity record , Expression<Func<TEntity , object>> andSkip ) where TEntity : class;
 
         /// <summary>
         /// Asynchronously, <inheritdoc cref="IAdvancedRepository.UpdateExcept{TEntity,TSkippable}(TEntity)"/>
@@ -73,7 +73,7 @@ namespace MBRepoCore.Repo.Abstractions
         /// </summary>
         /// <returns><see cref="Task"/></returns>
         ///  <inheritdoc cref="IAdvancedRepository.UpdateExcept{TEntity,TSkippable}(TEntity,Expression{Func{TEntity , object}} )"/>
-        Task UpdateExceptAsync<TEntity,TSkippable>( TEntity record , Expression<Func<TEntity , object>> otherPropertiesToBeSkipped ) where TSkippable : ISkippable<TEntity> , new() where TEntity : class;
+        Task UpdateExceptAsync<TEntity,TSkippable>( TEntity record , Expression<Func<TEntity , object>> andSkip ) where TSkippable : ISkippable<TEntity> , new() where TEntity : class;
 
 
         #endregion
@@ -110,7 +110,7 @@ namespace MBRepoCore.Repo.Abstractions
         /// </summary>
         /// <returns><see cref="Task{TResult}"/></returns>
         /// <inheritdoc cref="IAdvancedRepository.IsExist{TEntity}(System.Linq.Expressions.Expression{System.Func{TEntity,bool}})"/>
-        Task<bool> IsExistAsync<TEntity>(Expression<Func<TEntity, bool>> selectExpression) where TEntity : class;
+        Task<bool> IsExistAsync<TEntity>(Expression<Func<TEntity, bool>> @where) where TEntity : class;
 
         #endregion
 
@@ -132,14 +132,14 @@ namespace MBRepoCore.Repo.Abstractions
         /// </summary>
         /// <returns><see cref="Task{TResult}"/></returns>
         /// <inheritdoc cref="IAdvancedRepository.GetPartial{TEntity, TProperty}(Expression{Func{TEntity, object}})"/>
-        Task<List<TProperty>> GetPartialAsync<TEntity, TProperty>(Expression<Func<TEntity, object>> propertyToBeSelected) where TEntity : class;
+        Task<List<TProperty>> GetPartialAsync<TEntity, TProperty>(Expression<Func<TEntity, object>> @select) where TEntity : class;
 
         /// <summary>
         /// Asynchronously, <inheritdoc cref="IAdvancedRepository.GetPartial{TEntity, TProperty}(Expression{Func{TEntity, object}}, Expression{Func{TEntity, bool}})"/>
         /// </summary>
         /// <returns><see cref="Task{TResult}"/></returns>
         /// <inheritdoc cref="IAdvancedRepository.GetPartial{TEntity, TProperty}(Expression{Func{TEntity, object}}, Expression{Func{TEntity, bool}})"/>
-        Task<List<TProperty>> GetPartialAsync<TEntity, TProperty>(Expression<Func<TEntity, object>> propertyToBeSelected, Expression<Func<TEntity, bool>> filterExpression) where TEntity : class;
+        Task<List<TProperty>> GetPartialAsync<TEntity, TProperty>(Expression<Func<TEntity, object>> @select, Expression<Func<TEntity, bool>> @where) where TEntity : class;
 
 
         /// <summary>
@@ -147,14 +147,14 @@ namespace MBRepoCore.Repo.Abstractions
         /// </summary>
         /// <returns><see cref="Task{TResult}"/></returns>
         /// <inheritdoc cref="IAdvancedRepository.GetPartial{TEntity}(Func{TEntity, object})"/>
-        Task<List<object>> GetPartialAsync<TEntity>(Func<TEntity, object> propertiesToBeSelected) where TEntity : class;
+        Task<List<object>> GetPartialAsync<TEntity>(Func<TEntity, object> @select) where TEntity : class;
 
         /// <summary>
         /// Asynchronously, <inheritdoc cref="IAdvancedRepository.GetPartial{TEntity}(Func{TEntity, object}, Expression{Func{TEntity, bool}})"/>
         /// </summary>
         /// <returns><see cref="Task{TResult}"/></returns>
         /// <inheritdoc cref="IAdvancedRepository.GetPartial{TEntity}(Func{TEntity, object}, Expression{Func{TEntity, bool}})"/>
-        Task<List<object>> GetPartialAsync<TEntity>(Func<TEntity, object> propertiesToBeSelected, Expression<Func<TEntity, bool>> filterExpression) where TEntity : class;
+        Task<List<object>> GetPartialAsync<TEntity>(Func<TEntity, object> @select, Expression<Func<TEntity, bool>> @where) where TEntity : class;
 
 
         /// <summary>
@@ -162,14 +162,14 @@ namespace MBRepoCore.Repo.Abstractions
         /// </summary>
         /// <returns><see cref="Task{TResult}"/></returns>
         /// <inheritdoc cref="IAdvancedRepository.GetPartial{TEntity}(Func{TEntity, TEntity})"/>
-        Task<List<TEntity>> GetPartialAsync<TEntity>(Func<TEntity, TEntity> propertiesToBeSelected) where TEntity : class;
+        Task<List<TEntity>> GetPartialAsync<TEntity>(Func<TEntity, TEntity> @select) where TEntity : class;
 
         /// <summary>
         /// Asynchronously, <inheritdoc cref="IAdvancedRepository.GetPartial{TEntity}(Func{TEntity, TEntity}, Expression{Func{TEntity, bool}})"/>
         /// </summary>
         /// <returns><see cref="Task{TResult}"/></returns>
         /// <inheritdoc cref="IAdvancedRepository.GetPartial{TEntity}(Func{TEntity, TEntity}, Expression{Func{TEntity, bool}})"/>
-        Task<List<TEntity>> GetPartialAsync<TEntity>(Func<TEntity, TEntity> propertiesToBeSelected, Expression<Func<TEntity, bool>> filterExpression) where TEntity : class;
+        Task<List<TEntity>> GetPartialAsync<TEntity>(Func<TEntity, TEntity> @select, Expression<Func<TEntity, bool>> @where) where TEntity : class;
 
         #endregion
 
@@ -180,7 +180,7 @@ namespace MBRepoCore.Repo.Abstractions
         /// </summary>
         /// <returns><see cref="Task{TResult}"/></returns>
         /// <inheritdoc cref="IAdvancedRepository{TEntity}.GetWhereNotIn{TNotIn}(Expression{Func{TEntity, object}}, Func{TNotIn, object})"/>
-        Task<List<TEntity>> GetWhereNotInAsync<TEntity,TNotIn>(Expression<Func<TEntity, object>> PropertyToBeChecked, Func<TNotIn, object> propertyToLookIn) where TEntity : class where TNotIn : class;
+        Task<List<TEntity>> GetWhereNotInAsync<TEntity,TNotIn>(Expression<Func<TEntity, object>> check, Func<TNotIn, object> ifNotIn) where TEntity : class where TNotIn : class;
 
 
         /// <summary>
@@ -188,21 +188,21 @@ namespace MBRepoCore.Repo.Abstractions
         /// </summary>
         /// <returns><see cref="Task{TResult}"/></returns>
         /// <inheritdoc cref="IAdvancedRepository{TEntity}.GetWhereNotIn{TNotIn}(Expression{Func{TEntity, object}}, Func{TNotIn, object}, Func{TEntity, bool})"/>
-        Task<List<TEntity>> GetWhereNotInAsync<TEntity, TNotIn>(Expression<Func<TEntity, object>> PropertyToBeChecked, Func<TNotIn, object> propertyToLookIn, Func<TEntity, bool> tEntityFilter) where TEntity : class where TNotIn : class;
+        Task<List<TEntity>> GetWhereNotInAsync<TEntity, TNotIn>(Expression<Func<TEntity, object>> check, Func<TNotIn, object> ifNotIn, Func<TEntity, bool> @where) where TEntity : class where TNotIn : class;
 
         /// <summary>
         /// Asynchronously, <inheritdoc cref="IAdvancedRepository{TEntity}.GetWhereNotIn{TNotIn}(Expression{Func{TEntity, object}}, Func{TNotIn, object}, Func{TNotIn, bool})"/>
         /// </summary>
         /// <returns><see cref="Task{TResult}"/></returns>
         /// <inheritdoc cref="IAdvancedRepository{TEntity}.GetWhereNotIn{TNotIn}(Expression{Func{TEntity, object}}, Func{TNotIn, object}, Func{TNotIn, bool})"/>
-        Task<List<TEntity>> GetWhereNotInAsync<TEntity, TNotIn>(Expression<Func<TEntity, object>> PropertyToBeChecked, Func<TNotIn, object> propertyToLookIn, Func<TNotIn, bool> tNotInFilter) where TEntity : class where TNotIn : class;
+        Task<List<TEntity>> GetWhereNotInAsync<TEntity, TNotIn>(Expression<Func<TEntity, object>> check, Func<TNotIn, object> ifNotIn, Func<TNotIn, bool> @where) where TEntity : class where TNotIn : class;
 
         /// <summary>
         /// Asynchronously, <inheritdoc cref="IAdvancedRepository{TEntity}.GetWhereNotIn{TNotIn}(Expression{Func{TEntity, object}}, Func{TNotIn, object}, Func{TEntity, bool}, Func{TNotIn, bool})"/>
         /// </summary>
         /// <returns><see cref="Task{TResult}"/></returns>
         /// <inheritdoc cref="IAdvancedRepository{TEntity}.GetWhereNotIn{TNotIn}(Expression{Func{TEntity, object}}, Func{TNotIn, object}, Func{TEntity, bool}, Func{TNotIn, bool})"/>
-        Task<List<TEntity>> GetWhereNotInAsync<TEntity, TNotIn>(Expression<Func<TEntity, object>> PropertyToBeChecked, Func<TNotIn, object> propertyToLookIn, Func<TEntity, bool> tEntityFilter, Func<TNotIn, bool> tNotInFilter) where TEntity : class where TNotIn : class;
+        Task<List<TEntity>> GetWhereNotInAsync<TEntity, TNotIn>(Expression<Func<TEntity, object>> check, Func<TNotIn, object> ifNotIn, Func<TEntity, bool> @where, Func<TNotIn, bool> andWhere) where TEntity : class where TNotIn : class;
 
         #endregion
 
@@ -221,28 +221,28 @@ namespace MBRepoCore.Repo.Abstractions
         /// </summary>
         /// <returns><see cref="Task{TResult}"/></returns>
         /// <inheritdoc cref="IAdvancedRepository{TEntity}.Get(System.Linq.Expressions.Expression{System.Func{TEntity,object}}[])"/>
-        Task<List<TEntity>> GetAsync(params Expression<Func<TEntity, object>>[] relatedEntitiesToBeLoaded);
+        Task<List<TEntity>> GetAsync(params Expression<Func<TEntity, object>>[] andLoad);
 
         /// <summary>
         /// Asynchronously, <inheritdoc cref="IAdvancedRepository{TEntity}.Get(System.Linq.Expressions.Expression{System.Func{TEntity,bool}})"/>
         /// </summary>
         /// <returns><see cref="Task{TResult}"/></returns>
         /// <inheritdoc cref="IAdvancedRepository{TEntity}.Get(System.Linq.Expressions.Expression{System.Func{TEntity,bool}})"/>
-        Task<List<TEntity>> GetAsync(Expression<Func<TEntity, bool>> filterExpression);
+        Task<List<TEntity>> GetAsync(Expression<Func<TEntity, bool>> @where);
 
         /// <summary>
         /// Asynchronously, <inheritdoc cref="IAdvancedRepository{TEntity}.Get(System.Linq.Expressions.Expression{System.Func{TEntity,bool}},System.Linq.Expressions.Expression{System.Func{TEntity,object}}[])"/>
         /// </summary>
         /// <returns><see cref="Task{TResult}"/></returns>
         /// <inheritdoc cref="IAdvancedRepository{TEntity}.Get(System.Linq.Expressions.Expression{System.Func{TEntity,bool}},System.Linq.Expressions.Expression{System.Func{TEntity,object}}[])"/>
-        Task<List<TEntity>> GetAsync(Expression<Func<TEntity, bool>> filterExpression, params Expression<Func<TEntity, object>>[] relatedEntitiesToBeLoaded);
+        Task<List<TEntity>> GetAsync(Expression<Func<TEntity, bool>> @where, params Expression<Func<TEntity, object>>[] andLoad);
 
         /// <summary>
         /// Asynchronously, <inheritdoc cref="IAdvancedRepository{TEntity}.GetById"/>
         /// </summary>
         /// <returns><see cref="Task{TResult}"/></returns>
         /// <inheritdoc cref="IAdvancedRepository{TEntity}.GetById"/>
-        Task<TEntity> GetByIdAsync(object pkValue, params Expression<Func<TEntity, object>>[] relatedEntitiesToBeLoaded);
+        Task<TEntity> GetByIdAsync(object pkValue, params Expression<Func<TEntity, object>>[] andLoad);
 
         #endregion
 
@@ -253,14 +253,14 @@ namespace MBRepoCore.Repo.Abstractions
         /// </summary>
         /// <returns><see cref="Task"/></returns>
         /// <inheritdoc cref="IAdvancedRepository{TEntity}.Update"/>
-        Task UpdateAsync(Expression<Func<TEntity, bool>> filterExpression, Action<TEntity> updateAction);
+        Task UpdateAsync(Expression<Func<TEntity, bool>> @where, Action<TEntity> @do);
 
         /// <summary>
         /// Asynchronously, <inheritdoc cref="IAdvancedRepository{TEntity}.UpdateExcept(TEntity,System.Linq.Expressions.Expression{System.Func{TEntity,object}})"/>
         /// </summary>
         /// <returns><see cref="Task"/></returns>
         ///  <inheritdoc cref="IAdvancedRepository{TEntity}.UpdateExcept(TEntity,System.Linq.Expressions.Expression{System.Func{TEntity,object}})"/>
-        Task UpdateExceptAsync( TEntity record ,Expression<Func<TEntity , object>> propertiesToBeSkipped );
+        Task UpdateExceptAsync( TEntity record ,Expression<Func<TEntity , object>> andSkip );
 
         /// <summary>
         /// Asynchronously, <inheritdoc cref="IAdvancedRepository{TEntity}.UpdateExcept{TSkippable}(TEntity)"/>
@@ -274,7 +274,7 @@ namespace MBRepoCore.Repo.Abstractions
         /// </summary>
         /// <returns><see cref="Task"/></returns>
         ///  <inheritdoc cref="IAdvancedRepository{TEntity}.UpdateExcept{TSkippable}(TEntity,Expression{Func{TEntity , object}} )"/>
-        Task UpdateExceptAsync<TSkippable>( TEntity record , Expression<Func<TEntity , object>> otherPropertiesToBeSkipped ) where TSkippable : ISkippable<TEntity> , new();
+        Task UpdateExceptAsync<TSkippable>( TEntity record , Expression<Func<TEntity , object>> andSkip ) where TSkippable : ISkippable<TEntity> , new();
 
         #endregion
 
@@ -310,7 +310,7 @@ namespace MBRepoCore.Repo.Abstractions
         /// </summary>
         /// <returns><see cref="Task{TResult}"/></returns>
         /// <inheritdoc cref="IAdvancedRepository{TEntity}.IsExist(System.Linq.Expressions.Expression{System.Func{TEntity,bool}})"/>
-        Task<bool> IsExistAsync(Expression<Func<TEntity, bool>> selectExpression);
+        Task<bool> IsExistAsync(Expression<Func<TEntity, bool>> @where);
 
         #endregion
 
@@ -332,14 +332,14 @@ namespace MBRepoCore.Repo.Abstractions
         /// </summary>
         /// <returns><see cref="Task{TResult}"/></returns>
         /// <inheritdoc cref="IAdvancedRepository{TEntity}.GetPartial{TProperty}(Expression{Func{TEntity, object}})"/>
-        Task<List<TProperty>> GetPartialAsync<TProperty>(Expression<Func<TEntity, object>> propertyToBeSelected);
+        Task<List<TProperty>> GetPartialAsync<TProperty>(Expression<Func<TEntity, object>> @select);
 
         /// <summary>
         /// Asynchronously, <inheritdoc cref="IAdvancedRepository{TEntity}.GetPartial{TProperty}(Expression{Func{TEntity, object}}, Expression{Func{TEntity, bool}})"/>
         /// </summary>
         /// <returns><see cref="Task{TResult}"/></returns>
         /// <inheritdoc cref="IAdvancedRepository{TEntity}.GetPartial{TProperty}(Expression{Func{TEntity, object}}, Expression{Func{TEntity, bool}})"/>
-        Task<List<TProperty>> GetPartialAsync<TProperty>(Expression<Func<TEntity, object>> propertyToBeSelected, Expression<Func<TEntity, bool>> filterExpression);
+        Task<List<TProperty>> GetPartialAsync<TProperty>(Expression<Func<TEntity, object>> @select, Expression<Func<TEntity, bool>> @where);
 
 
         /// <summary>
@@ -347,14 +347,14 @@ namespace MBRepoCore.Repo.Abstractions
         /// </summary>
         /// <returns><see cref="Task{TResult}"/></returns>
         /// <inheritdoc cref="IAdvancedRepository{TEntity}.GetPartial(Func{TEntity, object})"/>
-        Task<List<object>> GetPartialAsync(Func<TEntity, object> propertiesToBeSelected); 
+        Task<List<object>> GetPartialAsync(Func<TEntity, object> @select); 
         
         /// <summary>
         /// Asynchronously, <inheritdoc cref="IAdvancedRepository{TEntity}.GetPartial(Func{TEntity, object}, Expression{Func{TEntity, bool}})"/>
         /// </summary>
         /// <returns><see cref="Task{TResult}"/></returns>
         /// <inheritdoc cref="IAdvancedRepository{TEntity}.GetPartial(Func{TEntity, object}, Expression{Func{TEntity, bool}})"/>
-        Task<List<object>> GetPartialAsync(Func<TEntity, object> propertiesToBeSelected, Expression<Func<TEntity, bool>> filterExpression);
+        Task<List<object>> GetPartialAsync(Func<TEntity, object> @select, Expression<Func<TEntity, bool>> @where);
 
 
         /// <summary>
@@ -362,14 +362,14 @@ namespace MBRepoCore.Repo.Abstractions
         /// </summary>
         /// <returns><see cref="Task{TResult}"/></returns>
         /// <inheritdoc cref="IAdvancedRepository{TEntity}.GetPartial(Func{TEntity, TEntity})"/>
-        Task<List<TEntity>> GetPartialAsync(Func<TEntity, TEntity> propertiesToBeSelected);
+        Task<List<TEntity>> GetPartialAsync(Func<TEntity, TEntity> @select);
 
         /// <summary>
         /// Asynchronously, <inheritdoc cref="IAdvancedRepository{TEntity}.GetPartial(Func{TEntity, TEntity}, Expression{Func{TEntity, bool}})"/>
         /// </summary>
         /// <returns><see cref="Task{TResult}"/></returns>
         /// <inheritdoc cref="IAdvancedRepository{TEntity}.GetPartial(Func{TEntity, TEntity}, Expression{Func{TEntity, bool}})"/>
-        Task<List<TEntity>> GetPartialAsync(Func<TEntity, TEntity> propertiesToBeSelected, Expression<Func<TEntity, bool>> filterExpression);
+        Task<List<TEntity>> GetPartialAsync(Func<TEntity, TEntity> @select, Expression<Func<TEntity, bool>> @where);
 
         #endregion
 
@@ -380,7 +380,7 @@ namespace MBRepoCore.Repo.Abstractions
         /// </summary>
         /// <returns><see cref="Task{TResult}"/></returns>
         /// <inheritdoc cref="IAdvancedRepository{TEntity}.GetWhereNotIn{TNotIn}(Expression{Func{TEntity, object}}, Func{TNotIn, object})"/>
-        Task<List<TEntity>> GetWhereNotInAsync<TNotIn>(Expression<Func<TEntity, object>> PropertyToBeChecked, Func<TNotIn, object> propertyToLookIn) where TNotIn : class;
+        Task<List<TEntity>> GetWhereNotInAsync<TNotIn>(Expression<Func<TEntity, object>> check, Func<TNotIn, object> ifNotIn) where TNotIn : class;
 
 
         /// <summary>
@@ -388,21 +388,21 @@ namespace MBRepoCore.Repo.Abstractions
         /// </summary>
         /// <returns><see cref="Task{TResult}"/></returns>
         /// <inheritdoc cref="IAdvancedRepository{TEntity}.GetWhereNotIn{TNotIn}(Expression{Func{TEntity, object}}, Func{TNotIn, object}, Func{TEntity, bool})"/>
-        Task<List<TEntity>> GetWhereNotInAsync<TNotIn>(Expression<Func<TEntity, object>> PropertyToBeChecked, Func<TNotIn, object> propertyToLookIn, Func<TEntity, bool> tEntityFilter) where TNotIn : class;
+        Task<List<TEntity>> GetWhereNotInAsync<TNotIn>(Expression<Func<TEntity, object>> check, Func<TNotIn, object> ifNotIn, Func<TEntity, bool> @where) where TNotIn : class;
 
         /// <summary>
         /// Asynchronously, <inheritdoc cref="IAdvancedRepository{TEntity}.GetWhereNotIn{TNotIn}(Expression{Func{TEntity, object}}, Func{TNotIn, object}, Func{TNotIn, bool})"/>
         /// </summary>
         /// <returns><see cref="Task{TResult}"/></returns>
         /// <inheritdoc cref="IAdvancedRepository{TEntity}.GetWhereNotIn{TNotIn}(Expression{Func{TEntity, object}}, Func{TNotIn, object}, Func{TNotIn, bool})"/>
-        Task<List<TEntity>> GetWhereNotInAsync<TNotIn>(Expression<Func<TEntity, object>> PropertyToBeChecked, Func<TNotIn, object> propertyToLookIn, Func<TNotIn, bool> tNotInFilter) where TNotIn : class;
+        Task<List<TEntity>> GetWhereNotInAsync<TNotIn>(Expression<Func<TEntity, object>> check, Func<TNotIn, object> ifNotIn, Func<TNotIn, bool> @where) where TNotIn : class;
 
         /// <summary>
         /// Asynchronously, <inheritdoc cref="IAdvancedRepository{TEntity}.GetWhereNotIn{TNotIn}(Expression{Func{TEntity, object}}, Func{TNotIn, object}, Func{TEntity, bool}, Func{TNotIn, bool})"/>
         /// </summary>
         /// <returns><see cref="Task{TResult}"/></returns>
         /// <inheritdoc cref="IAdvancedRepository{TEntity}.GetWhereNotIn{TNotIn}(Expression{Func{TEntity, object}}, Func{TNotIn, object}, Func{TEntity, bool}, Func{TNotIn, bool})"/>
-        Task<List<TEntity>> GetWhereNotInAsync <TNotIn>(Expression<Func<TEntity, object>> PropertyToBeChecked, Func<TNotIn, object> propertyToLookIn, Func<TEntity, bool> tEntityFilter, Func<TNotIn, bool> tNotInFilter) where TNotIn : class;
+        Task<List<TEntity>> GetWhereNotInAsync <TNotIn>(Expression<Func<TEntity, object>> check, Func<TNotIn, object> ifNotIn, Func<TEntity, bool> @where, Func<TNotIn, bool> andWhere) where TNotIn : class;
 
         #endregion
 
@@ -413,7 +413,7 @@ namespace MBRepoCore.Repo.Abstractions
         /// </summary>
         /// <returns><see cref="Task{TResult}"/></returns>
         /// <inheritdoc cref="IAdvancedRepository{TEntity}.GetWhereIn{Tin}(Expression{Func{TEntity, object}}, Func{Tin, object})"/>
-        Task<List<TEntity>> GetWhereInAsync<Tin> (Expression<Func<TEntity, object>> propertyToBeChecked, Func<Tin, object> propertyToLookIn) where Tin : class;
+        Task<List<TEntity>> GetWhereInAsync<Tin> (Expression<Func<TEntity, object>> check, Func<Tin, object> ifIn) where Tin : class;
 
 
         /// <summary>
@@ -421,21 +421,21 @@ namespace MBRepoCore.Repo.Abstractions
         /// </summary>
         /// <returns><see cref="Task{TResult}"/></returns>
         /// <inheritdoc cref="IAdvancedRepository{TEntity}.GetWhereIn{Tin}(Expression{Func{TEntity, object}}, Func{Tin, object}, Func{TEntity, bool})"/>
-        Task<List<TEntity>> GetWhereInAsync<Tin> (Expression<Func<TEntity, object>> propertyToBeChecked, Func<Tin, object> propertyToLookIn, Func<TEntity, bool> tEntityFilter) where Tin : class;
+        Task<List<TEntity>> GetWhereInAsync<Tin> (Expression<Func<TEntity, object>> check, Func<Tin, object> ifIn, Func<TEntity, bool> @where) where Tin : class;
 
         /// <summary>
         /// Asynchronously, <inheritdoc cref="IAdvancedRepository{TEntity}.GetWhereIn{Tin}(Expression{Func{TEntity, object}}, Func{Tin, object}, Func{Tin, bool})"/>
         /// </summary>
         /// <returns><see cref="Task{TResult}"/></returns>
         /// <inheritdoc cref="IAdvancedRepository{TEntity}.GetWhereIn{Tin}(Expression{Func{TEntity, object}}, Func{Tin, object}, Func{Tin, bool})"/>
-        Task<List<TEntity>> GetWhereInAsync<Tin> (Expression<Func<TEntity, object>> propertyToBeChecked, Func<Tin, object> propertyToLookIn, Func<Tin, bool> tInFilter) where Tin : class;
+        Task<List<TEntity>> GetWhereInAsync<Tin> (Expression<Func<TEntity, object>> check, Func<Tin, object> ifIn, Func<Tin, bool> @where) where Tin : class;
 
         /// <summary>
         /// Asynchronously, <inheritdoc cref="IAdvancedRepository{TEntity}.GetWhereIn{Tin}(Expression{Func{TEntity, object}}, Func{Tin, object}, Func{TEntity, bool}, Func{Tin, bool})"/>
         /// </summary>
         /// <returns><see cref="Task{TResult}"/></returns>
         /// <inheritdoc cref="IAdvancedRepository{TEntity}.GetWhereIn{Tin}(Expression{Func{TEntity, object}}, Func{Tin, object}, Func{TEntity, bool}, Func{Tin, bool})"/>
-        Task<List<TEntity>> GetWhereInAsync<Tin> (Expression<Func<TEntity, object>> propertyToBeChecked, Func<Tin, object> propertyToLookIn, Func<TEntity, bool> tEntityFilter, Func<Tin, bool> tInFilter) where Tin : class;
+        Task<List<TEntity>> GetWhereInAsync<Tin> (Expression<Func<TEntity, object>> check, Func<Tin, object> ifIn, Func<TEntity, bool> @where, Func<Tin, bool> andWhere) where Tin : class;
 
         #endregion
 
