@@ -10,6 +10,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using MBRepoCore.Extensions;
 using MBRepoCore.Interfaces;
+using Microsoft.EntityFrameworkCore.Query;
 
 
 namespace MBRepoCore.Repo.Specific
@@ -124,6 +125,23 @@ namespace MBRepoCore.Repo.Specific
 
 
         /// <inheritdoc />
+        public virtual List<TEntity> Get( Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include )
+        {
+            var query = Context.Set<TEntity>();
+
+            include( query );
+
+            return query.ToList();
+        }
+
+        /// <inheritdoc />
+        public virtual Task<List<TEntity>> GetAsync(Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include)
+        {
+            return Task.Run( () => Get( include ) );
+        }
+
+
+        /// <inheritdoc />
         public virtual TEntity GetById( object pkValue )
         {
             return Context.Set<TEntity>().Find( pkValue );
@@ -159,6 +177,7 @@ namespace MBRepoCore.Repo.Specific
         {
             return Task.Factory.StartNew(() => GetById(pkValue, andLoad));
         }
+
 
 
         #endregion
