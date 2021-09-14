@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using MBRepoCore.Interfaces;
+using Microsoft.EntityFrameworkCore.Query;
 
 
 namespace MBRepoCore.Repo.Abstractions
@@ -38,12 +39,42 @@ namespace MBRepoCore.Repo.Abstractions
         List<TEntity> Get<TEntity>(Expression<Func<TEntity, bool>> @where, params Expression<Func<TEntity, object>>[] andLoad) where TEntity : class;
 
         /// <summary>
+        /// Get All <b><see cref="TEntity"/></b> records load selected entities records
+        /// </summary>
+        /// <param name="include">Entities to be loaded</param>
+        List<TEntity> Get<TEntity>(Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include) where TEntity : class;
+
+        /// <summary>
+        /// Get one <b><see cref="TEntity"/></b> record and load related entities
+        /// </summary>
+        /// <typeparam name="TEntity">The entity to select from</typeparam>
+        /// <param name="where">Predicate</param>
+        /// <param name="include">Entities to be loaded</param>
+        List<TEntity> Get<TEntity>(Expression<Func<TEntity, bool>> @where, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include) where TEntity : class;
+
+        /// <summary>
         /// Get one <b><see cref="TEntity"/></b> record and load related selected entities
         /// </summary>
         /// <typeparam name="TEntity">The entity to select from</typeparam>
         /// <param name="pkValue">Primary key value</param>
         /// <param name="andLoad">Entities to be loaded (Should be the <see cref="TEntity"/>'s navigation properties)</param>
         TEntity GetById<TEntity>(object pkValue, params Expression<Func<TEntity, object>>[] andLoad) where TEntity : class;
+
+
+        /// <summary>
+        /// Get first <b><see cref="TEntity"/></b> record
+        /// </summary>
+        /// <typeparam name="TEntity">The entity to select from</typeparam>
+        /// <param name="where">Predicate</param>
+        TEntity GetFirstOrDefault<TEntity>(Expression<Func<TEntity, bool>> @where) where TEntity : class;
+
+        /// <summary>
+        /// Get first <b><see cref="TEntity"/></b> record and load related entities
+        /// </summary>
+        /// <typeparam name="TEntity">The entity to select from</typeparam>
+        /// <param name="where">Predicate</param>
+        /// <param name="include">Entities to be loaded</param>
+        TEntity GetFirstOrDefault<TEntity>(Expression<Func<TEntity, bool>> @where, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include) where TEntity : class;
 
         #endregion
 
@@ -272,11 +303,24 @@ namespace MBRepoCore.Repo.Abstractions
         List<TEntity> Get(Expression<Func<TEntity, bool>> @where);
 
         /// <summary>
+        /// Get All <b><see cref="TEntity"/></b> records load selected entities records
+        /// </summary>
+        /// <param name="include">Entities to be loaded</param>
+        List<TEntity> Get( Func<IQueryable<TEntity> , IIncludableQueryable<TEntity , object>> include );
+
+        /// <summary>
         /// Get All <b><see cref="TEntity"/></b> records that respects a set of conditions provided in the filter expression and load related selected entities records
         /// </summary>
         /// <param name="where">One or set of conditions to be respected</param>
         /// <param name="andLoad">Entities to be loaded (Should be the <see cref="TEntity"/>'s navigation properties)</param>
-        List<TEntity> Get( Expression<Func<TEntity , bool>> @where , params Expression<Func<TEntity , object>>[] andLoad );
+        List<TEntity> Get(Expression<Func<TEntity, bool>> @where, params Expression<Func<TEntity, object>>[] andLoad);
+
+        /// <summary>
+        /// Get All <b><see cref="TEntity"/></b> records load selected entities records
+        /// </summary>
+        /// <param name="where">Predicate</param>
+        /// <param name="include">Entities to be loaded</param>
+        List<TEntity> Get(Expression<Func<TEntity, bool>> @where, Func<IQueryable<TEntity> , IIncludableQueryable<TEntity , object>> include );
 
         /// <summary>
         /// Get one <b><see cref="TEntity"/></b> record and load related selected entities
@@ -284,6 +328,20 @@ namespace MBRepoCore.Repo.Abstractions
         /// <param name="pkValue">Primary key value</param>
         /// <param name="andLoad">Entities to be loaded (Should be the <see cref="TEntity"/>'s navigation properties)</param>
         TEntity GetById(object pkValue,params Expression<Func<TEntity, object>>[] andLoad);
+
+        /// <summary>
+        /// Get first <b><see cref="TEntity"/></b> record
+        /// </summary>
+        /// <param name="where">Predicate</param>
+        TEntity GetFirstOrDefault(Expression<Func<TEntity, bool>> @where);  
+        
+        /// <summary>
+        /// Get first <b><see cref="TEntity"/></b> record and load related entities
+        /// </summary>
+        /// <param name="where">Predicate</param>
+        /// <param name="include">Entities to be loaded</param>
+        TEntity GetFirstOrDefault(Expression<Func<TEntity, bool>> @where, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include);
+
 
         #endregion
 

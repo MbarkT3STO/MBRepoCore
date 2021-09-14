@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using MBRepoCore.Interfaces;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace MBRepoCore.Repo.Abstractions
 {
@@ -37,11 +38,40 @@ namespace MBRepoCore.Repo.Abstractions
         Task<List<TEntity>> GetAsync<TEntity>(Expression<Func<TEntity, bool>> @where, params Expression<Func<TEntity, object>>[] andLoad) where TEntity : class;
 
         /// <summary>
+        /// Asynchronously, <inheritdoc cref="IAdvancedRepository.Get{TEntity}(Func{IQueryable{TEntity} , IIncludableQueryable{TEntity , object}})"/>
+        /// </summary>
+        /// <returns><see cref="Task{TResult}"/></returns>
+        /// <inheritdoc cref="IAdvancedRepository.Get{TEntity}(Func{IQueryable{TEntity} , IIncludableQueryable{TEntity , object}})"/>
+        Task<List<TEntity>> GetAsync<TEntity>(Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include) where TEntity : class;
+
+        /// <summary>
+        /// Asynchronously, <inheritdoc cref="IAdvancedRepository.GetById{TEntity}(Expression{Func{TEntity, bool}} ,Func{IQueryable{TEntity},Func{IQueryable{TEntity} , IIncludableQueryable{TEntity , object}})"/>
+        /// </summary>
+        /// <returns><see cref="Task{TResult}"/></returns>
+        /// <inheritdoc cref="IAdvancedRepository.GetById{TEntity}(Expression{Func{TEntity, bool}} ,Func{IQueryable{TEntity},Func{IQueryable{TEntity} , IIncludableQueryable{TEntity , object}})"/>
+        Task<List<TEntity>> GetAsync<TEntity>(Expression<Func<TEntity, bool>> @where, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include) where TEntity : class;
+
+        /// <summary>
         /// Asynchronously, <inheritdoc cref="IAdvancedRepository.GetById{TEntity}"/>
         /// </summary>
         /// <returns><see cref="Task{TResult}"/></returns>
         /// <inheritdoc cref="IAdvancedRepository.GetById{TEntity}"/>
         Task<TEntity> GetByIdAsync<TEntity>(object pkValue, params Expression<Func<TEntity, object>>[] andLoad) where TEntity : class;
+
+        /// <summary>
+        /// Asynchronously, <inheritdoc cref="IAdvancedRepository{TEntity}.GetFirstOrDefault(Expression{Func{TEntity, bool}})"/>
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <returns><see cref="Task{TResult}"/></returns>
+        /// <inheritdoc cref="IAdvancedRepository{TEntity}.GetFirstOrDefault(Expression{Func{TEntity, bool}})"/>
+        Task<TEntity> GetFirstOrDefaultAsync<TEntity>(Expression<Func<TEntity, bool>> @where) where TEntity : class;
+
+        /// <summary>
+        /// Asynchronously, <inheritdoc cref="IAdvancedRepository{TEntity}.GetFirstOrDefault(Expression{Func{TEntity, bool}},Func{IQueryable{TEntity} , IIncludableQueryable{TEntity , object}})"/>
+        /// </summary>
+        /// <returns><see cref="Task{TResult}"/></returns>
+        /// <inheritdoc cref="IAdvancedRepository{TEntity}.GetFirstOrDefault(Expression{Func{TEntity, bool}},Func{IQueryable{TEntity} , IIncludableQueryable{TEntity , object}})"/>
+        Task<TEntity> GetFirstOrDefaultAsync<TEntity>(Expression<Func<TEntity, bool>> @where, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include) where TEntity : class;
 
         #endregion
 
@@ -238,11 +268,40 @@ namespace MBRepoCore.Repo.Abstractions
         Task<List<TEntity>> GetAsync(Expression<Func<TEntity, bool>> @where, params Expression<Func<TEntity, object>>[] andLoad);
 
         /// <summary>
+        /// Asynchronously, <inheritdoc cref="IAdvancedRepository{TEntity}.Get(Func{IQueryable{TEntity} , IIncludableQueryable{TEntity , object}})"/>
+        /// </summary>
+        /// <returns><see cref="Task{TResult}"/></returns>
+        /// <inheritdoc cref="IAdvancedRepository{TEntity}.Get(Func{IQueryable{TEntity} , IIncludableQueryable{TEntity , object}})"/>
+        Task<List<TEntity>> GetAsync(Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include);
+
+        /// <summary>
+        /// Asynchronously, <inheritdoc cref="IAdvancedRepository{TEntity}.Get(Expression{Func{TEntity, bool}} ,Func{IQueryable{TEntity} , IIncludableQueryable{TEntity , object}})"/>
+        /// </summary>
+        /// <returns><see cref="Task{TResult}"/></returns>
+        /// <inheritdoc cref="IAdvancedRepository{TEntity}.Get(Expression{Func{TEntity, bool}} ,Func{IQueryable{TEntity} , IIncludableQueryable{TEntity , object}})"/>
+        Task<List<TEntity>> GetAsync(Expression<Func<TEntity, bool>> @where, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include);
+
+        /// <summary>
         /// Asynchronously, <inheritdoc cref="IAdvancedRepository{TEntity}.GetById"/>
         /// </summary>
         /// <returns><see cref="Task{TResult}"/></returns>
         /// <inheritdoc cref="IAdvancedRepository{TEntity}.GetById"/>
         Task<TEntity> GetByIdAsync(object pkValue, params Expression<Func<TEntity, object>>[] andLoad);
+
+        /// <summary>
+        /// Asynchronously, <inheritdoc cref="IAdvancedRepository{TEntity}.GetFirstOrDefault(Expression{Func{TEntity, bool}})"/>
+        /// </summary>
+        /// <returns><see cref="Task{TResult}"/></returns>
+        /// <inheritdoc cref="IAdvancedRepository{TEntity}.GetFirstOrDefault(Expression{Func{TEntity, bool}})"/>
+        Task<TEntity> GetFirstOrDefaultAsync(Expression<Func<TEntity, bool>> @where);
+        
+        /// <summary>
+        /// Asynchronously, <inheritdoc cref="IAdvancedRepository{TEntity}.GetFirstOrDefault(Expression{Func{TEntity, bool}} ,Func{IQueryable{TEntity} , IIncludableQueryable{TEntity , object}})"/>
+        /// </summary>
+        /// <returns><see cref="Task{TResult}"/></returns>
+        /// <inheritdoc cref="IAdvancedRepository{TEntity}.GetFirstOrDefault(Expression{Func{TEntity, bool}} ,Func{IQueryable{TEntity} , IIncludableQueryable{TEntity , object}})"/>
+        Task<TEntity> GetFirstOrDefaultAsync(Expression<Func<TEntity, bool>> @where, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include);
+
 
         #endregion
 

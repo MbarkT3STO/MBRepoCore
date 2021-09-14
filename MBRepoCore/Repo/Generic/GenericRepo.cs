@@ -12,6 +12,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using MBRepoCore.Extensions;
 using MBRepoCore.Interfaces;
+using Microsoft.EntityFrameworkCore.Query;
 
 
 namespace MBRepoCore.Repo.Generic
@@ -211,6 +212,44 @@ namespace MBRepoCore.Repo.Generic
 
 
         /// <inheritdoc />
+        public virtual List<TEntity> Get<TEntity>(Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include) where  TEntity : class
+        {
+            var query = Context.Set<TEntity>();
+
+            include(query);
+
+            return query.ToList();
+        }
+
+        /// <inheritdoc />
+        public virtual Task<List<TEntity>> GetAsync<TEntity>(Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include) where TEntity : class
+        {
+            return Task.Run(() => Get(include));
+        }
+
+
+        /// <inheritdoc />
+        public virtual List<TEntity> Get<TEntity>(Expression<Func<TEntity, bool>> @where, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include) where TEntity : class
+        {
+            // Change DbContext tracking behavior to track all entities
+            Context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.TrackAll;
+
+            // Get one object using primary key
+            var query = Context.Set<TEntity>().Where( where );
+
+            include( query ).Load();
+
+            return query.ToList();
+        }
+
+        /// <inheritdoc />
+        public virtual Task<List<TEntity>> GetAsync<TEntity>(Expression<Func<TEntity, bool>> @where, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include) where TEntity : class
+        {
+            return Task.Run( () => Get( where , include ) );
+        }
+
+
+        /// <inheritdoc />
         public TEntity GetById<TEntity>( object pkValue , params Expression<Func<TEntity , object>>[] andLoad ) where TEntity : class
         {
             // Change DbContext tracking behavior to track all entities
@@ -234,6 +273,45 @@ namespace MBRepoCore.Repo.Generic
             return Task.Factory.StartNew(() => GetById<TEntity>(pkValue, andLoad));
         }
 
+
+        /// <inheritdoc />
+        public virtual TEntity GetFirstOrDefault<TEntity>(Expression<Func<TEntity, bool>> @where) where TEntity : class
+        {
+            // Change DbContext tracking behavior to track all entities
+            Context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.TrackAll;
+
+            // Get one object using primary key
+            var query = Context.Set<TEntity>().Where(where);
+
+            return query.FirstOrDefault();
+        }
+
+        /// <inheritdoc />
+        public Task<TEntity> GetFirstOrDefaultAsync<TEntity>(Expression<Func<TEntity, bool>> @where) where TEntity : class
+        {
+            return Task.Run( () => GetFirstOrDefault<TEntity>( where ) );
+        }
+
+
+        /// <inheritdoc />
+        public virtual TEntity GetFirstOrDefault<TEntity>(Expression<Func<TEntity, bool>> @where, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include) where TEntity : class
+        {
+            // Change DbContext tracking behavior to track all entities
+            Context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.TrackAll;
+
+            // Get one object using primary key
+            var query = Context.Set<TEntity>().Where( where );
+
+            include( query ).Load();
+
+            return query.FirstOrDefault();
+        }
+
+        /// <inheritdoc />
+        public Task<TEntity> GetFirstOrDefaultAsync<TEntity>(Expression<Func<TEntity, bool>> @where, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include) where TEntity : class
+        {
+            return Task.Run( () => GetFirstOrDefault( where , include ) );
+        }
 
 
         #endregion
