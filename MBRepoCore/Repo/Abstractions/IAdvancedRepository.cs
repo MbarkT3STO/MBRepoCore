@@ -14,7 +14,7 @@ namespace MBRepoCore.Repo.Abstractions
     /// </summary>
     public interface IAdvancedRepository
     {
-        #region Set
+        #region Set & Queryable
 
         /// <summary>
         /// Returns the original SET
@@ -22,6 +22,13 @@ namespace MBRepoCore.Repo.Abstractions
         /// <typeparam name="TEntity">The entity that represents the SET</typeparam>
         /// <returns><see cref="DbSet{T}"/></returns>
         DbSet<TEntity> Set<TEntity>() where TEntity : class;
+
+        /// <summary>
+        /// Returns the original entity as <see cref="IQueryable{T}"/>
+        /// </summary>
+        /// <typeparam name="TEntity">The entity that represents the SET</typeparam>
+        /// <returns><see cref="IQueryable{T}"/></returns>
+        IQueryable<TEntity> AsQueryable<TEntity>() where TEntity : class;
 
         #endregion
 
@@ -297,13 +304,19 @@ namespace MBRepoCore.Repo.Abstractions
     /// <typeparam name="TEntity">Entity to create repository for</typeparam>
     public interface IAdvancedRepository<TEntity> where TEntity : class
     {
-        #region Set
+        #region Set & Queryable
 
         /// <summary>
         /// Returns the original SET
         /// </summary>
         /// <returns><see cref="DbSet{T}"/></returns>
         DbSet<TEntity> Set();
+
+        /// <summary>
+        /// Returns the original entity as <see cref="IQueryable{T}"/>
+        /// </summary>
+        /// <returns><see cref="IQueryable{T}"/></returns>
+        IQueryable<TEntity> AsQueryable();
 
         #endregion
 

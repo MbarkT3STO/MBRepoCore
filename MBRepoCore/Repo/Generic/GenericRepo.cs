@@ -129,10 +129,13 @@ namespace MBRepoCore.Repo.Generic
 
         #region Routines
 
-        #region SET
+        #region SET & Queryable
 
         /// <inheritdoc />
         public DbSet<TEntity> Set<TEntity>() where TEntity : class => Context.Set<TEntity>();
+
+        /// <inheritdoc />
+        public IQueryable<TEntity> AsQueryable<TEntity>() where TEntity : class => Context.Set<TEntity>().AsQueryable();
 
         #endregion
 

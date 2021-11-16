@@ -63,6 +63,9 @@ namespace MBRepoCore.Repo.Specific
         /// <inheritdoc />
         public DbSet<TEntity> Set() => Context.Set<TEntity>();
 
+        /// <inheritdoc />
+        public IQueryable<TEntity> AsQueryable() => Context.Set<TEntity>().AsQueryable();
+
         #endregion
 
         #region Get
