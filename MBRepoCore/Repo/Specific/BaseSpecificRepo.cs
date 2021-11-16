@@ -58,6 +58,13 @@ namespace MBRepoCore.Repo.Specific
 
         #region Routins
 
+        #region Set
+
+        /// <inheritdoc />
+        public DbSet<TEntity> Set() => Context.Set<TEntity>();
+
+        #endregion
+
         #region Get
 
         /// <inheritdoc />
@@ -71,7 +78,6 @@ namespace MBRepoCore.Repo.Specific
         {
             return Task.Factory.StartNew(() => Get());
         }
-
 
         /// <inheritdoc />
         public virtual List<TEntity> Get( params Expression<Func<TEntity , object>>[] andLoad )
@@ -127,9 +133,9 @@ namespace MBRepoCore.Repo.Specific
         /// <inheritdoc />
         public virtual List<TEntity> Get( Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include )
         {
-            var query = Context.Set<TEntity>();
+            IQueryable<TEntity> query = Context.Set<TEntity>();
 
-            include( query );
+           query =  include( query );
 
             return query.ToList();
         }
@@ -156,12 +162,9 @@ namespace MBRepoCore.Repo.Specific
         /// <inheritdoc />
         public virtual List<TEntity> Get(Expression<Func<TEntity, bool>> @where, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include)
         {
-            // Change DbContext tracking behavior to track all entities
-            Context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.TrackAll;
-
             var query = Context.Set<TEntity>().Where( where );
 
-            include( query ).Load();
+            query = include( query );
 
             return query.ToList();
         }
@@ -219,12 +222,9 @@ namespace MBRepoCore.Repo.Specific
         /// <inheritdoc />
         public TEntity GetFirstOrDefault(Expression<Func<TEntity, bool>> @where, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include)
         {
-            // Change DbContext tracking behavior to track all entities
-            Context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.TrackAll;
-
             var query = Context.Set<TEntity>().Where(where);
 
-            include(query).Load();
+            query = include( query );
 
             return query.FirstOrDefault();
         }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using MBRepoCore.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 
 
@@ -13,6 +14,16 @@ namespace MBRepoCore.Repo.Abstractions
     /// </summary>
     public interface IAdvancedRepository
     {
+        #region Set
+
+        /// <summary>
+        /// Returns the original SET
+        /// </summary>
+        /// <typeparam name="TEntity">The entity that represents the SET</typeparam>
+        /// <returns><see cref="DbSet{T}"/></returns>
+        DbSet<TEntity> Set<TEntity>() where TEntity : class;
+
+        #endregion
 
         #region Get
 
@@ -286,6 +297,15 @@ namespace MBRepoCore.Repo.Abstractions
     /// <typeparam name="TEntity">Entity to create repository for</typeparam>
     public interface IAdvancedRepository<TEntity> where TEntity : class
     {
+        #region Set
+
+        /// <summary>
+        /// Returns the original SET
+        /// </summary>
+        /// <returns><see cref="DbSet{T}"/></returns>
+        DbSet<TEntity> Set();
+
+        #endregion
 
         #region Get
 

@@ -129,6 +129,13 @@ namespace MBRepoCore.Repo.Generic
 
         #region Routines
 
+        #region SET
+
+        /// <inheritdoc />
+        public DbSet<TEntity> Set<TEntity>() where TEntity : class => Context.Set<TEntity>();
+
+        #endregion
+
         #region Get
 
         /// <inheritdoc />
@@ -214,9 +221,9 @@ namespace MBRepoCore.Repo.Generic
         /// <inheritdoc />
         public virtual List<TEntity> Get<TEntity>(Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include) where  TEntity : class
         {
-            var query = Context.Set<TEntity>();
+            IQueryable<TEntity> query = Context.Set<TEntity>();
 
-            include(query);
+           query = include(query);
 
             return query.ToList();
         }
@@ -231,13 +238,9 @@ namespace MBRepoCore.Repo.Generic
         /// <inheritdoc />
         public virtual List<TEntity> Get<TEntity>(Expression<Func<TEntity, bool>> @where, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include) where TEntity : class
         {
-            // Change DbContext tracking behavior to track all entities
-            Context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.TrackAll;
-
-            // Get one object using primary key
             var query = Context.Set<TEntity>().Where( where );
 
-            include( query ).Load();
+            query = include( query );
 
             return query.ToList();
         }
@@ -296,13 +299,9 @@ namespace MBRepoCore.Repo.Generic
         /// <inheritdoc />
         public virtual TEntity GetFirstOrDefault<TEntity>(Expression<Func<TEntity, bool>> @where, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include) where TEntity : class
         {
-            // Change DbContext tracking behavior to track all entities
-            Context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.TrackAll;
-
-            // Get one object using primary key
             var query = Context.Set<TEntity>().Where( where );
 
-            include( query ).Load();
+            query = include( query );
 
             return query.FirstOrDefault();
         }
