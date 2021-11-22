@@ -295,7 +295,16 @@ namespace MBRepoCore.Repo.Abstractions
 
         #endregion
 
+        #region Remove
 
+        /// <summary>
+        /// Remove many <b><see cref="TEntity"/></b> records
+        /// </summary>
+        /// <typeparam name="TEntity">Entity to remove from</typeparam>
+        /// <param name="where">The filter expression</param>
+        void Remove<TEntity>( Expression<Func<TEntity , bool>> @where ) where TEntity : class;
+
+        #endregion
     }
 
     /// <summary>
@@ -596,6 +605,16 @@ namespace MBRepoCore.Repo.Abstractions
         /// <param name="andWhere">One or set of conditions to be applied on <b><typeparamref name="Tin"/></b></param>
         /// <returns><see cref="List{T}"/></returns>
         List<TEntity> GetWhereIn<Tin>(Expression<Func<TEntity, object>> check, Func<Tin, object> ifIn, Func<TEntity, bool> @where, Func<Tin, bool> andWhere) where Tin : class;
+
+        #endregion
+
+        #region Remove
+
+        /// <summary>
+        /// Remove many <b><see cref="TEntity"/></b> records
+        /// </summary>
+        /// <param name="where">The filter expression</param>
+        void Remove( Expression<Func<TEntity , bool>> @where );
 
         #endregion
 

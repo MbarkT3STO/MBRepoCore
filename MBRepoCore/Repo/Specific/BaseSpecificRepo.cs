@@ -431,6 +431,20 @@ namespace MBRepoCore.Repo.Specific
             return Task.Factory.StartNew( () => Remove( records ) );
         }
 
+
+        /// <inheritdoc />
+        public void Remove(Expression<Func<TEntity, bool>> @where)
+        {
+            var records = Context.Set<TEntity>().Where(@where);
+            Context.Set<TEntity>().RemoveRange(records);
+        }
+
+        /// <inheritdoc />
+        public Task RemoveAsync(Expression<Func<TEntity, bool>> @where)
+        {
+            return Task.Run(() => Remove(@where));
+        }
+
         #endregion
 
         #region Filter

@@ -39,7 +39,6 @@ namespace MBRepoCore.Repo.Generic
 
         #endregion
 
-
         #region Construcors
 
         /// <summary>
@@ -91,7 +90,6 @@ namespace MBRepoCore.Repo.Generic
 
         #endregion
 
-
         #region Repository private methods
 
         /// <summary>
@@ -125,7 +123,6 @@ namespace MBRepoCore.Repo.Generic
         }
 
         #endregion
-
 
         #region Routines
 
@@ -477,6 +474,19 @@ namespace MBRepoCore.Repo.Generic
             return Task.Factory.StartNew( () => Remove( records ) );
         }
 
+        /// <inheritdoc />
+        public void Remove<TEntity>(Expression<Func<TEntity, bool>> @where) where TEntity : class
+        {
+            var records = Context.Set<TEntity>().Where( @where );
+            Context.Set<TEntity>().RemoveRange( records );
+        }
+
+        /// <inheritdoc />
+        public Task RemoveAsync<TEntity>( Expression<Func<TEntity , bool>> @where ) where TEntity : class
+        {
+            return Task.Run( () => Remove( @where ) );
+        }
+
         #endregion
 
         #region Is Exist
@@ -747,7 +757,6 @@ namespace MBRepoCore.Repo.Generic
 
 
         #endregion
-
 
         #region Disposing
 

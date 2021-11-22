@@ -236,10 +236,20 @@ namespace MBRepoCore.Repo.Abstractions
 
         #endregion
 
+        #region Remove
+
+        /// <summary>
+        /// Asynchronously, <inheritdoc cref="IAdvancedRepository.Remove{TEntity}"/>
+        /// </summary>
+        /// <returns><see cref="Task{TResult}"/></returns>
+        /// <inheritdoc cref="IAdvancedRepository.Remove{TEntity}"/>
+        Task RemoveAsync<TEntity>(Expression<Func<TEntity, bool>> @where) where TEntity : class;
+
+        #endregion
     }
 
     /// <summary>
-    /// Represent the Asynchronous advanced speific Generic repository
+    /// Represent the Asynchronous advanced specific Generic repository
     /// </summary>
     public interface IAdvancedRepositoryAsync<TEntity> where TEntity : class
     {
@@ -495,6 +505,17 @@ namespace MBRepoCore.Repo.Abstractions
         /// <returns><see cref="Task{TResult}"/></returns>
         /// <inheritdoc cref="IAdvancedRepository{TEntity}.GetWhereIn{Tin}(Expression{Func{TEntity, object}}, Func{Tin, object}, Func{TEntity, bool}, Func{Tin, bool})"/>
         Task<List<TEntity>> GetWhereInAsync<Tin> (Expression<Func<TEntity, object>> check, Func<Tin, object> ifIn, Func<TEntity, bool> @where, Func<Tin, bool> andWhere) where Tin : class;
+
+        #endregion
+
+        #region Remove
+
+        /// <summary>
+        /// Asynchronously, <inheritdoc cref="IAdvancedRepository{TEntity}.Remove"/>
+        /// </summary>
+        /// <returns><see cref="Task{TResult}"/></returns>
+        /// <inheritdoc cref="IAdvancedRepository{TEntity}.Remove"/>
+        Task RemoveAsync( Expression<Func<TEntity , bool>> @where );
 
         #endregion
 
