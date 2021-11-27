@@ -688,7 +688,7 @@ namespace MBRepoCore.Repo.Specific
             var dataToLookIn = Context.Set<Tin>().Select(ifIn).ToList();
 
             // Get data in dataToLookIn
-            var result = Context.Set<TEntity>().Where(x => dataToLookIn.Contains(x.GetType().GetProperty(check.GetPropertyAccess().Name).GetValue(x, null))).ToList();
+            var result = Context.Set<TEntity>().AsEnumerable().Where(x => dataToLookIn.Contains(x.GetType().GetProperty(check.GetPropertyAccess().Name).GetValue(x, null))).ToList();
 
             return result;
         }
@@ -707,7 +707,7 @@ namespace MBRepoCore.Repo.Specific
             var dataToLookIn = Context.Set<Tin>().Select(ifIn).ToList();
 
             // Get data in dataToLookIn
-            var result = Context.Set<TEntity>().Where(@where).Where(x => dataToLookIn.Contains(x.GetType().GetProperty(check.GetPropertyAccess().Name).GetValue(x, null))).ToList();
+            var result = Context.Set<TEntity>().AsEnumerable().Where(@where).Where(x => dataToLookIn.Contains(x.GetType().GetProperty(check.GetPropertyAccess().Name).GetValue(x, null))).ToList();
 
             return result;
             }
@@ -726,7 +726,7 @@ namespace MBRepoCore.Repo.Specific
             var dataToLookIn = Context.Set<Tin>().Where(@where).Select(ifIn).ToList();
 
             // Get data in dataToLookIn
-            var result = Context.Set<TEntity>().Where(x => dataToLookIn.Contains(x.GetType().GetProperty(check.GetPropertyAccess().Name).GetValue(x, null))).ToList();
+            var result = Context.Set<TEntity>().AsEnumerable().Where(x => dataToLookIn.Contains(x.GetType().GetProperty(check.GetPropertyAccess().Name).GetValue(x, null))).ToList();
 
             return result;
          }
